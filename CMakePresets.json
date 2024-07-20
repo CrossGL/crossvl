@@ -1,0 +1,58 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "visualizer",
+      "hidden": true,
+      "generator": "Visual Studio 17 2022",
+
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/build/install/${presetName}",
+
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
+      "name": "win-debug",
+      "inherits": "visualizer",
+
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "win-release",
+      "inherits": "visualizer",
+
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_COMPILER": "cl"
+      }
+    }
+  ],
+
+  "buildPresets": [
+    {
+      "name": "Debug",
+      "configurePreset": "win-debug",
+
+      "configuration": "Debug"
+    },
+    {
+      "name": "Release",
+      "configurePreset": "win-release",
+
+      "configuration": "Release"
+    }
+  ]
+}
