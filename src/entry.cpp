@@ -86,8 +86,11 @@ int main()
                 state = SDL_FALSE;
             
         }
-
+#ifdef __WIN32__
         // Rendering
+    }
+#elif __APPLE__
+
         drawable = Layer->nextDrawable();
 
         rpDescriptor->colorAttachments()->object(0)->setTexture(drawable->texture());
@@ -111,8 +114,10 @@ int main()
 
 
     }
-
     SDL_Metal_DestroyView(metal_view);
+
+#endif
+
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
