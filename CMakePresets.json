@@ -1,8 +1,8 @@
 {
-  "version": 3,
+  "version": 6,
   "configurePresets": [
     {
-      "name": "visualizer",
+      "name": "windows-os",
       "hidden": true,
       "generator": "Visual Studio 17 2022",
 
@@ -12,8 +12,18 @@
       "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
     },
     {
+      "name": "mac-os",
+      "hidden": true,
+      "generator": "Unix Makefiles",
+
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/build/install/${presetName}",
+
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
       "name": "win-debug",
-      "inherits": "visualizer",
+      "inherits": "windows-os",
 
       "architecture": {
         "value": "x64",
@@ -27,7 +37,7 @@
     },
     {
       "name": "win-release",
-      "inherits": "visualizer",
+      "inherits": "windows-os",
 
       "architecture": {
         "value": "x64",
@@ -37,6 +47,24 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_CXX_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "mac-debug",
+      "inherits": "mac-os",
+
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "mac-release",
+      "inherits": "mac-os",
+      
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_COMPILER": "clang++"
       }
     }
   ],
@@ -51,6 +79,18 @@
     {
       "name": "Release",
       "configurePreset": "win-release",
+
+      "configuration": "Release"
+    },
+    {
+      "name": "DebugOSX",
+      "configurePreset": "mac-debug",
+
+      "configuration": "Debug"
+    },
+    {
+      "name": "ReleaseOSX",
+      "configurePreset": "mac-release",
 
       "configuration": "Release"
     }

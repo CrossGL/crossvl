@@ -2,7 +2,7 @@
 find_package(GLEW CONFIG REQUIRED)
 
 add_library(GLBuild STATIC 
-	"Application.cpp"
+	Application.cpp
 	Shader.cpp
 	Cube.cpp
 )

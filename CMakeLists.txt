@@ -2,14 +2,14 @@ cmake_minimum_required(VERSION 3.26)
 
 project(visualizer CXX)
 
-find_package(SDL2 CONFIG REQUIRED)
-find_package(imgui CONFIG REQUIRED)
-find_package(glm CONFIG REQUIRED)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin)
 
-add_subdirectory(src/opengl)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    add_subdirectory(src/opengl)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    add_subdirectory(src/metal)
+endif()
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/entry.cpp)
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
-
-target_link_libraries(${PROJECT_NAME} SDL2::SDL2 imgui::imgui glm::glm-header-only GLBuild)
+target_link_libraries(${PROJECT_NAME} PRIVATE metal-build)

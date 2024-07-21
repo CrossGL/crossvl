@@ -1,3 +1,7 @@
 ﻿
-# Hidden IDE files
 .vs
+
+build
+bin
+
+metal-cpp

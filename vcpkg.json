@@ -1,14 +1,23 @@
 {
   "dependencies": [
+    "sdl2",
     {
       "name": "imgui",
       "features": [
         "sdl2-binding",
-        "opengl3-binding"
+        {
+          "name": "opengl3-binding",
+          "platform": "windows"
+        },
+        { 
+          "name": "metal-binding",
+          "platform": "osx"
+        }
       ]
     },
-    "sdl2",
-    "glew",
-    "glm"
+    {
+      "name": "glew",
+      "platform": "windows"
+    }
   ]
 }
