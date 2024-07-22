@@ -1,7 +1,13 @@
-﻿
+# VSCode
 .vs
 
-build
-bin
+# Xmake cache
+.xmake/
+build/
+makefile
+vsxmake2022/
 
-metal-cpp
+# Compiler
+compile_commands.json
+compile_flags.txt
+.cache/
