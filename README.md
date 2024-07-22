@@ -1,46 +1,92 @@
-# visualizer
+# Visualizer
 
-tool for loading and testing shader files.
+Tool for loading and testing transpiled shader files.
 - Metal Shaders
 - GLSL Shaders
+- HLSL Shaders
 
-## Building on Windows
+# Project Structure
 
-Download the Requirements:
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) IDE
-- use cmake and vcpkg that comes with Visual Studio
+The project is divided into two sub projects
 
-Open up the Developer PowerShell for VS 2022 and navigate to the directory that contains `vcpkg.json`, then run:
+- **VisualizerCore**: Static library that contains the core functionality
+- **VisualizerApp**: Contains the platform independent GUI application that depends on the Core
 
-```shell
-vcpkg x-update-baseline --add-initial-baseline
+# Building The Project
+
+To build the project ensure you have the following toolsets
+
+- [Xmake](https://xmake.io/)
+- C++23 compiler
+
+</br>
+
+## Clone the repository
+
+```
+git clone https://github.com/CrossGL/visualizer.git
 ```
 
-this adds the **builtin-baseline** to the manifest file, 
-then run the following commands to build the project:
+## Load Build Macros
 
-```
-cmake --preset win-release
-cmake --build --preset Release
-```
+The repo comes with a couple helper xmake macros. Load these macros by running the [LoadMacros.bat](./LoadMacros.bat) file. **You only need to run this bat script only once, or if you delete the generated *`.xmake`* folder**.
 
-## Building on macOS
+After running the script the following macros will be imported (case insensitive):
 
-Download `cmake`, and `pkg-config` via Homebrew, then clone the `vcpkg` repo:
-```
-git clone https://github.com/microsoft/vcpkg.git
-cd vcpkg && ./bootstrap-vcpkg.sh
-```
-then set `VCPKG_ROOT` variable and add the `vcpkg` to the path in the `.zshrc` file located in the `HOME` directory:
+- **BuildAllConfigs**: Builds the visualizer for both debug and release configurations
+- **Clean**: Cleans the xmake configs and targets
+- **DeepClean**: Similar to the *Clean* macro but also deletes the build folder
+- **GenVS**: Generates Visual Studio 2022 solution files
 
-```shell
-export VCPKG_ROOT=/path/to/vcpkg
-export PATH="$VCPKG_ROOT:$PATH"
+You can run these above macros using the following command
+
+```bash
+xmake macro <macro name>
 ```
 
-clone the `visualizer` and then run the following commands to build the project:
+## Choosing The Build Configuration
 
-```shell
-cmake --preset mac-release
-cmake --build --preset ReleaseOSX
+Before compiling the project you can also set the build config
+
+To make use of the debug config
+
+```bash
+xmake f -m debug
 ```
+
+To make use of the release config
+
+```bash
+xmake f -m release
+```
+
+## Compiling The Project
+
+### Using The Macros
+
+Build all the configs
+
+```bash
+xmake macro buildallconfigs
+```
+
+### Compiling Using Visual Studio
+
+Generate VS 2022 files
+
+```bash
+xmake macro genvs
+```
+
+This will generate the solution files in the vsxmake2022 folder
+
+
+# Contributing
+
+When contributing to the project. Ensure the project passes the compilation test locally on your PC.
+
+```bash
+xmake test
+```
+
+The expected output should be such that all project compile and link successfully
