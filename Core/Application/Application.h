@@ -24,7 +24,9 @@ namespace CGL::Core
 		virtual void OnRender();
 		virtual void OnShutdown();
 		virtual void OnResize(u32 width, u32 height);
+#ifdef CGL_PLATFORM_WINDOWS
 		virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) override;
+#endif
 
 	protected:
 		bool m_isRunning;

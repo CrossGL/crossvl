@@ -38,6 +38,7 @@ namespace CGL::Core
 
 	void Application::OnUpdate()
 	{
+		Super::Update();
 	}
 
 	void Application::OnRender()
@@ -55,6 +56,7 @@ namespace CGL::Core
 		CGL_LOG(CoreApp, Debug, "Core application resized {}x{}", width, height);
 	}
 
+#ifdef CGL_PLATFORM_WINDOWS
 	LRESULT Application::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
@@ -68,4 +70,5 @@ namespace CGL::Core
 
 		return Super::HandleMessage(uMsg, wParam, lParam);
 	}
+#endif	
 }

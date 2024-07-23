@@ -38,6 +38,11 @@ namespace CGL::Core
 			m_impl.Show();
 		}
 
+		void Update()
+		{
+			m_impl.Update();
+		}
+
 		void Close()
 		{
 			m_impl.Close();
