@@ -80,7 +80,7 @@ xmake macro genvs
 
 This will generate the solution files in the vsxmake2022 folder
 
-### Using CMake
+### Compiling Using CMake
 
 Generate CMakeLists.txt
 
