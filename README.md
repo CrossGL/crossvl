@@ -80,6 +80,16 @@ xmake macro genvs
 
 This will generate the solution files in the vsxmake2022 folder
 
+### Using CMake
+
+Generate CMakeLists.txt
+
+```bash
+xmake project -k cmakelists
+```
+
+This will generate the CMakeLists.txt in the root folder
+
 
 # Contributing
 
