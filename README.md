@@ -42,6 +42,7 @@ After running the script the following macros will be imported (case insensitive
 - **Clean**: Cleans the xmake configs and targets
 - **DeepClean**: Similar to the *Clean* macro but also deletes the build folder
 - **GenVS**: Generates Visual Studio 2022 solution files
+- **GenXC**: Generates XCode project files
 
 You can run these above macros using the following command
 
