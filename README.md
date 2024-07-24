@@ -19,6 +19,11 @@ To build the project ensure you have the following toolsets
 - [Xmake](https://xmake.io/)
 - C++23 compiler
 
+## External Dependencies
+
+- SDL2
+- NCurses (linux/mac only)
+
 </br>
 
 ## Clone the repository
