@@ -83,6 +83,8 @@ namespace CGL::Core::Platform::Win32
 		, m_file(nullptr)
 	{
 		m_file = ::CreateFileA(m_name.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+		Write(LogLevel::Info, "Starting log file: " + m_name);
 	}
 
 	FileLogOutput::~FileLogOutput()
