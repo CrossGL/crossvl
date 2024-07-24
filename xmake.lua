@@ -22,11 +22,18 @@ set_policy("run.autobuild", true)
 -- Generate compile_commands.json on build_should_pas
 add_rules("plugin.compile_commands.autoupdate")
 
+-- user debug version of packages
+local use_package_debug = is_mode("debug")
+
 if is_os("windows") then
 	add_defines("NOMINMAX", "NOMCX", "NOSERVICE", "NOHELP", "WIN32_LEAN_AND_MEAN")
 	add_defines("CGL_PLATFORM_WINDOWS")
 elseif is_os("linux") then
 	add_defines("CGL_PLATFORM_LINUX")
+	add_requres("ncurses",
+	{
+		debug = use_package_debug
+	})
 elseif is_os("macosx") then
 	add_defines("CGL_PLATFORM_MACOSX")
 end
@@ -38,5 +45,15 @@ elseif is_mode("release") then
 	add_defines("CGL_BUILD_RELEASE", "NDEBUG")
 	set_runtimes("MD")
 end
+
+-- Use SDL2 library
+add_requires("libsdl",
+	{
+		debug =	use_package_debug,
+		configs =
+		{
+			sdlmain = false
+		}
+	})
 
 includes("**/xmake.lua")

@@ -3,6 +3,8 @@ target("VisualizerApp")
 	set_kind("binary")
 	set_group("CrossGL")
 
+	add_packages("libsdl")
+
 	add_includedirs("..")
 	add_files("**.cpp")
 	add_headerfiles("**.h", { install = false })
