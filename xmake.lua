@@ -61,7 +61,7 @@ option("rhi")
 					"opengl",
 					"dx11",
 					"dx12",
-					"vulkan"
+					"vulkan",
 					"metal")
 
 	set_showmenu(true)
