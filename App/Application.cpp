@@ -1,8 +1,11 @@
 #include "Application.h"
+#include <Core/Graphics/Renderer.h>
 
 namespace CGL
 {
 	CGL_DEFINE_LOG_CATEGORY(VisualizerApp);
+
+	Graphics::Renderer* renderer = nullptr;
 
 	Visualizer::Visualizer()
 	{
@@ -17,6 +20,8 @@ namespace CGL
 	{
 		if (!Super::OnInit())
 			return false;
+
+		renderer = new Graphics::Renderer(m_window, Graphics::RHIType::DirectX11);
 
 		CGL_LOG(VisualizerApp, Info, "Initialized Visualizer App");
 
@@ -41,6 +46,11 @@ namespace CGL
 
 	void Visualizer::OnShutdown()
 	{
+		if (renderer)
+		{
+			delete renderer;
+			renderer = nullptr;
+		}
 		CGL_LOG(VisualizerApp, Info, "Shutting down Visualizer App");
 		Super::OnShutdown();
 	}

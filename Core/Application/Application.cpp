@@ -32,16 +32,16 @@ namespace CGL::Core
 		while (m_isRunning)
 		{
 			// Handle events on queue
-			while (SDL_PollEvent(&e) != 0) 
+			while (SDL_PollEvent(&e) != 0)
 			{
 				// User requests quit
 				if (e.type == SDL_QUIT)
 				{
 					m_isRunning = false;
 				}
-				else if (e.type == SDL_WINDOWEVENT) 
+				else if (e.type == SDL_WINDOWEVENT)
 				{
-					switch (e.window.event) 
+					switch (e.window.event)
 					{
 					case SDL_WINDOWEVENT_RESIZED:
 						OnResize(e.window.data1, e.window.data2);
@@ -61,7 +61,7 @@ namespace CGL::Core
 	bool Application::OnInit()
 	{
 		// Create SDL window
-		u32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
+		u32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
 
 		// TODO: Add flags for different RHIs
 
