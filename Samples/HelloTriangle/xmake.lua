@@ -1,15 +1,15 @@
-target("VisualizerApp")
+target("HelloTriangle")
 	if has_config("rhi") then
 		set_suffixname("_" .. string.upper(get_config("rhi")))
 	end
 
 	set_default(true)
 	set_kind("binary")
-	set_group("CrossGL")
+	set_group("Samples")
 
 	add_packages("libsdl")
 
-	add_includedirs("..")
+	add_includedirs("..", "$(projectdir)")
 	add_files("**.cpp")
 	add_headerfiles("**.h", { install = false })
 
