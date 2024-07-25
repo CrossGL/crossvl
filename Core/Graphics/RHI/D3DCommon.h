@@ -2,8 +2,7 @@
 #include <Core/Common.h>
 #include <Core/Platform/Win32/Error/HResultError.h>
 #include <Core/Logging/Log.h>
-#include <dxgi.h>
-#include <dxgi.h>
+#include <dxgi1_6.h>
 #include <wrl/client.h>
 #ifdef CGL_BUILD_DEBUG
 #include <dxgidebug.h>
@@ -67,4 +66,13 @@ namespace CGL::Graphics
 	template <typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
+	template <class T>
+	void SafeRelease(T** ppT)
+	{
+		if (*ppT)
+		{
+			(*ppT)->Release();
+			*ppT = NULL;
+		}
+	}
 }

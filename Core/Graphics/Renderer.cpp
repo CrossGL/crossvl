@@ -18,6 +18,7 @@ namespace CGL::Graphics
 
 	Renderer::Renderer(SDL_Window* window, RHIType api)
 		: m_impl(nullptr)
+		, m_clearColor({ 1.0f, 0.0f, 1.0f, 1.0f })
 	{
 		g_api = api;
 
@@ -25,7 +26,7 @@ namespace CGL::Graphics
 		if (g_api == RHIType::DirectX11)
 		{
 			CGL_LOG(Renderer, Debug, "Using RHI: DirectX11");
-			Constructor_D3D11();
+			Constructor_D3D11(window);
 			return;
 		}
 #endif // CGL_RHI_DX11
@@ -107,10 +108,43 @@ namespace CGL::Graphics
 		}
 #endif // CGL_RHI_OPENGL
 
+		// We should always have an RHI, should never reach here
+		std::unreachable();
+
+	}
+
+	void Renderer::SetPrimitiveTopology(PrimitiveType topology)
+	{
+#ifdef CGL_RHI_DX11
+		if (g_api == RHIType::DirectX11)
+		{
+			SetPrimitiveTopology_D3D11(topology);
+			return;
+		}
+#endif // CGL_RHI_DX11
+
+#ifdef CGL_RHI_OPENGL
+		if (g_api == RHIType::OpenGL)
+		{
+			SetPrimitiveTopology_OPENGL();
+			return;
+		}
+#endif // CGL_RHI_OPENGL
+
+		// We should always have an RHI, should never reach here
+		std::unreachable();
 	}
 
 	void Renderer::Resize(u32 width, u32 height)
 	{
+		if (m_width == width && m_height == height)
+		{
+			return;
+		}
+
+		m_width = width;
+		m_height = height;
+
 #ifdef CGL_RHI_DX11
 		if (g_api == RHIType::DirectX11)
 		{

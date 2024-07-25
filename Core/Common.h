@@ -7,6 +7,8 @@
 #include <functional>
 #include <format>
 #include <fstream>
+#include <vector>
+#include <array>
 
 #include <Core/Types.h>
 #include <Core/Defines.h>
