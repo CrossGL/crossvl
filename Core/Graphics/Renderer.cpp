@@ -110,7 +110,11 @@ namespace CGL::Graphics
 
 		// We should always have an RHI, should never reach here
 		std::unreachable();
+	}
 
+	void Renderer::SetClearColor(f32 r, f32 g, f32 b, f32 a)
+	{
+		m_clearColor = { r, g, b, a };
 	}
 
 	void Renderer::SetPrimitiveTopology(PrimitiveType topology)

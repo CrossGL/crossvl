@@ -18,6 +18,8 @@ namespace CGL
 		if (!Super::OnInit())
 			return false;
 
+		m_renderer->SetClearColor(0.0f, 1.0f, 1.0f);
+
 		CGL_LOG(HelloTriangleApp, Info, "Initialized HelloTriangle App");
 
 		return true;
