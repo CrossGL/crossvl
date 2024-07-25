@@ -88,7 +88,7 @@ namespace CGL::Core
 #define CGL_DEFINE_LOG_CATEGORY(Name)	 Log##Name LOG_CONCATENATE(g_Log, Name)
 
 #ifdef CGL_LOGGING_ENABLED
-#define CGL_LOG(Name, Level, ...) LOG_CONCATENATE(g_Log, Name).##Level(__VA_ARGS__)
+#define CGL_LOG(Name, Level, ...) LOG_CONCATENATE(g_Log, Name).Level(__VA_ARGS__)
 #else
 #define CGL_LOG(Name, Level, ...) (void)0
 #endif
