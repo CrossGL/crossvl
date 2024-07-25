@@ -1,10 +1,15 @@
 target("VisualizerCore")
+	if has_config("rhi") then
+		set_suffixname("_" .. string.upper(get_config("rhi")))
+	end
+
 	set_default(false)
 	set_kind("static")
 	set_group("CrossGL")
 	
 	add_packages("libsdl")
-	
+	set_options("rhi")
+
 	add_includedirs("..")
 	
 	if is_os("windows") then
