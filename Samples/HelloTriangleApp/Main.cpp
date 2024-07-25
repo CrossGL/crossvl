@@ -1,4 +1,4 @@
-#include "HelloTriangle/HelloTriangleApp.h"
+#include "HelloTriangleApp/HelloTriangleApp.h"
 #include <Core/Utils/Singleton.h>
 #include <Core/Platform/LogOutput.h>
 #include <Core/Logging/LogManager.h>

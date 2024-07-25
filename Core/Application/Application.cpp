@@ -52,7 +52,10 @@ namespace CGL::Core
 
 			OnUpdate();
 
+			// Call begin and end frame before calling render itself
+			m_renderer->BeginFrame();
 			OnRender();
+			m_renderer->EndFrame();
 		}
 
 		OnShutdown();
@@ -63,7 +66,11 @@ namespace CGL::Core
 		// Create SDL window
 		u32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
 
-		// TODO: Add flags for different RHIs
+#if defined(CGL_RHI_OPENGL)
+		flags |= SDL_WINDOW_OPENGL;
+#elif defined(CGL_RHI_VULKAN)
+		flags |= SDL_WINDOW_VULKAN;
+#endif
 
 		m_window = SDL_CreateWindow("CGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, flags);
 		if (!m_window)
@@ -73,28 +80,45 @@ namespace CGL::Core
 			return false;
 		}
 
+#if defined(CGL_RHI_OPENGL)
+		Graphics::RHIType rhi = Graphics::RHIType::OpenGL;
+#elif defined (CGL_RHI_DX11)
+		Graphics::RHIType rhi = Graphics::RHIType::DirectX11;
+#elif defined(CGL_RHI_DX12)
+		Graphics::RHIType rhi = Graphics::RHIType::DirectX12;
+#elif defined(CGL_RHI_METAL)
+		Graphics::RHIType rhi = Graphics::RHIType::Metal;
+#elif defined(CGL_RHI_VULKAN)
+		Graphics::RHIType rhi = Graphics::RHIType::Vulkan;
+#endif
+
+		// Create renderer
+		m_renderer = std::make_unique<Graphics::Renderer>(m_window, rhi);
+		if (!m_renderer)
+		{
+			CGL_LOG(CoreApp, Error, "Failed to create renderer");
+			return false;
+		}
+
 		CGL_LOG(CoreApp, Debug, "Core application initialized");
 		return true;
 	}
 
-	void Application::OnUpdate()
-	{
-	}
-
-	void Application::OnRender()
-	{
-	}
-
 	void Application::OnShutdown()
 	{
+		m_renderer.reset();
+
 		SDL_DestroyWindow(m_window);
 		SDL_Quit();
 
 		CGL_LOG(CoreApp, Debug, "Core application shutdown");
 	}
 
-	void Application::OnResize([[maybe_unused]] u32 width, [[maybe_unused]] u32 height)
+	void Application::OnResize(u32 width, u32 height)
 	{
-		CGL_LOG(CoreApp, Debug, "Core application resized {}x{}", width, height);
+		if (m_renderer)
+		{
+			m_renderer->Resize(width, height);
+		}
 	}
 }

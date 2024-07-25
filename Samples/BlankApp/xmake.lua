@@ -1,4 +1,4 @@
-target("HelloTriangle")
+target("BlankApp")
 	if has_config("rhi") then
 		set_suffixname("_" .. string.upper(get_config("rhi")))
 	end
