@@ -4,16 +4,16 @@
 
 namespace CGL
 {
-	CGL_DECLARE_LOG_CATEGORY(VisualizerApp);
+	CGL_DECLARE_LOG_CATEGORY(HelloTriangleApp);
 
-	class Visualizer : public Core::Application
+	class HelloTriangleApp : public Core::Application
 	{
 	protected:
 		using Super = Core::Application;
 
 	public:
-		Visualizer();
-		~Visualizer();
+		HelloTriangleApp();
+		~HelloTriangleApp();
 
 	private:
 		bool OnInit() override final;

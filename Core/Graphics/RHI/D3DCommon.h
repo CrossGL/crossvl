@@ -1,0 +1,70 @@
+#pragma once
+#include <Core/Common.h>
+#include <Core/Platform/Win32/Error/HResultError.h>
+#include <Core/Logging/Log.h>
+#include <dxgi.h>
+#include <dxgi.h>
+#include <wrl/client.h>
+#ifdef CGL_BUILD_DEBUG
+#include <dxgidebug.h>
+#pragma comment(lib, "dxguid.lib")
+#endif // CGL_BUILD_DEBUG
+#pragma comment(lib, "dxgi.lib")
+#include <exception>
+
+namespace DirectX
+{
+	// Helper class for COM exceptions
+	class com_exception : public std::exception
+	{
+	public:
+		com_exception(HRESULT hr) noexcept : result(hr) {}
+
+		const char* what() const noexcept override
+		{
+			static char s_str[64] = {};
+			sprintf_s(s_str, "Failure with HRESULT of %08X", static_cast<unsigned int>(result));
+			return s_str;
+		}
+
+		HRESULT get_result() const noexcept { return result; }
+
+	private:
+		HRESULT result;
+	};
+
+	// Helper utility converts D3D API failures into exceptions.
+	inline void ThrowIfFailed(HRESULT hr) noexcept(false)
+	{
+		if (FAILED(hr))
+		{
+			throw com_exception(hr);
+		}
+	}
+}
+
+namespace CGL::Graphics
+{
+#ifdef CGL_BUILD_DEBUG
+#define DXCall(x)                                                                  \
+{                                                                                  \
+	try                                                                            \
+	{                                                                              \
+		DirectX::ThrowIfFailed(x);                                                 \
+	}                                                                              \
+	catch (const DirectX::com_exception& e)                                        \
+	{                                                                              \
+		CGL_DECLARE_LOG_CATEGORY_INLINE(D3DException);                             \
+		std::string msg(e.what());                                                 \
+		msg += " (" + ::CGL::Platform::Win32::GetErrorString(e.get_result()) + ")";\
+		CGL_LOG(D3DException, Fatal, msg);                                         \
+	}                                                                              \
+}
+#else
+#define DXCall(x) x
+#endif // CGL_BUILD_DEBUG
+
+	template <typename T>
+	using ComPtr = Microsoft::WRL::ComPtr<T>;
+
+}

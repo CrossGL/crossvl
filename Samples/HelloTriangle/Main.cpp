@@ -1,4 +1,4 @@
-#include <App/Application.h>
+#include "HelloTriangle/HelloTriangleApp.h"
 #include <Core/Utils/Singleton.h>
 #include <Core/Platform/LogOutput.h>
 #include <Core/Logging/LogManager.h>
@@ -9,10 +9,10 @@ int main()
 
 	auto& logManager = Utils::Singleton<LogManager>::Get();
 	logManager.AttachOutput<ConsoleLogOutput>("ConsoleLogOutput", "CGL Log");
-	logManager.AttachOutput<FileLogOutput>("FileLogOutput", "Log.txt");
+	logManager.AttachOutput<FileLogOutput>("FileLogOutput", "HelloTriangleSampleLog.txt");
 
 	{
-		CGL::Visualizer app;
+		CGL::HelloTriangleApp app;
 		app.Run();
 	}
 

@@ -11,15 +11,6 @@ namespace CGL::Core
 	class Application
 	{
 	public:
-		struct Config
-		{
-			u32 Width = 1280;
-			u32 Height = 720;
-			bool Fullscreen = false;
-			bool IsVsync = true;
-			
-			// Choose RHI here
-		};
 	public:
 		Application();
 		~Application() = default;
