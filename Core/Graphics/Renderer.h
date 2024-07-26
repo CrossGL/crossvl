@@ -17,6 +17,14 @@ namespace CGL::Graphics
 	class OPENGLRendererImpl;
 #endif // CGL_RHI_OPENGL
 
+#ifdef CGL_RHI_METAL
+<<<<<<< HEAD
+     class METALRendererImpl;
+=======
+	class METALRendererImpl;
+>>>>>>> c83f60b (implemented RHI for Metal)
+#endif
+
 	RHIType GetAPI();
 
 	class Renderer
@@ -26,6 +34,7 @@ namespace CGL::Graphics
 		~Renderer();
 
 		void BeginFrame();
+		void OnRender();
 		void EndFrame();
 
 		void SetClearColor(f32 r, f32 g, f32 b, f32 a = 1.0f);
@@ -51,6 +60,26 @@ namespace CGL::Graphics
 		void Resize_OPENGL(u32 width, u32 height);
 		OPENGLRendererImpl* GetImpl() const;
 #endif // CGL_RHI_OPENGL
+
+#ifdef CGL_RHI_METAL
+<<<<<<< HEAD
+          void Constructor_METAL(SDL_Window* window);
+          void Destructor_METAL();
+          void BeginFrame_METAL();
+          void OnRender_METAL();
+          void EndFrame_METAL();
+          void Resize_METAL(u32 width, u32 height);
+          METALRendererImpl* GetImpl() const;
+=======
+		void Constructor_METAL(SDL_Window* window);
+		void Destructor_METAL();
+		void BeginFrame_METAL();
+		void OnRender_METAL();
+		void EndFrame_METAL();
+		void Resize_METAL(u32 width, u32 height);
+		METALRendererImpl* GetImpl() const;
+>>>>>>> c83f60b (implemented RHI for Metal)
+#endif
 
 	private:
 		void* m_impl;

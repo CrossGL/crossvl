@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "Core/Graphics/Types.h"
 #include <Core/Graphics/RendererImpl.h>
 #include <SDL2/SDL.h>
 
@@ -40,6 +41,24 @@ namespace CGL::Graphics
 		}
 #endif // CGL_RHI_OPENGL
 
+#ifdef CGL_RHI_METAL
+<<<<<<< HEAD
+          if(g_api == RHIType::Metal)
+          {
+               CGL_LOG(Renderer, Debug, "Using RHI: Metal");
+			Constructor_METAL(window);
+			return;
+          }
+=======
+		if (g_api == RHIType::Metal)
+		{
+			CGL_LOG(Renderer, Debug, "Using RHI: Metal");
+			Constructor_METAL(window);
+			return;
+		}
+>>>>>>> c83f60b (implemented RHI for Metal)
+#endif
+
 		// We should always have an RHI, should never reach here
 		std::unreachable();
 	}
@@ -64,6 +83,24 @@ namespace CGL::Graphics
 		}
 #endif // CGL_RHI_OPENGL
 
+#ifdef CGL_RHI_METAL
+<<<<<<< HEAD
+          if(g_api == RHIType::Metal)
+          {
+               CGL_LOG(Renderer, Info, "Destructing RHI: Metal");
+			Destructor_METAL();
+			return;
+          }
+=======
+		if (g_api == RHIType::Metal)
+		{
+			CGL_LOG(Renderer, Info, "Destructing RHI: Metal");
+			Destructor_METAL();
+			return;
+		}
+>>>>>>> c83f60b (implemented RHI for Metal)
+#endif
+
 		// We should always have an RHI, should never reach here
 		std::unreachable();
 	}
@@ -86,8 +123,41 @@ namespace CGL::Graphics
 		}
 #endif // CGL_RHI_OPENGL
 
+#ifdef CGL_RHI_METAL
+		if (g_api == RHIType::Metal)
+		{
+			BeginFrame_METAL();
+			return;
+		}
+#endif
+
 		// We should always have an RHI, should never reach here
 		std::unreachable();
+	}
+
+	void Renderer::OnRender()
+	{
+
+#ifdef CGL_RHI_METAL
+<<<<<<< HEAD
+          if(g_api == RHIType::Metal)
+          {
+               OnRender_METAL();
+               return;
+          }
+#endif
+
+          std::unreachable();
+=======
+		if (g_api == RHIType::Metal)
+		{
+			OnRender_METAL();
+			return;
+		}
+#endif
+
+		std::unreachable();
+>>>>>>> c83f60b (implemented RHI for Metal)
 	}
 
 	void Renderer::EndFrame()
@@ -107,6 +177,14 @@ namespace CGL::Graphics
 			return;
 		}
 #endif // CGL_RHI_OPENGL
+
+#ifdef CGL_RHI_METAL
+		if (g_api == RHIType::Metal)
+		{
+			EndFrame_METAL();
+			return;
+		}
+#endif
 
 		// We should always have an RHI, should never reach here
 		std::unreachable();
@@ -164,6 +242,14 @@ namespace CGL::Graphics
 			return;
 		}
 #endif // CGL_RHI_OPENGL
+
+#ifdef CGL_RHI_METAL
+		if (g_api == RHIType::Metal)
+		{
+			Resize_METAL(width, height);
+			return;
+		}
+#endif
 
 		// We should always have an RHI, should never reach here
 		std::unreachable();
