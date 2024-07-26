@@ -21,8 +21,10 @@ target("VisualizerCore")
 	    add_headerfiles("**.h|Platform/Win32/**.h|Platform/MacOSX/**.hpp", { install = false })
 	elseif is_os("macosx") then
 		add_packages("ncurses")
-	    add_includedirs("Platform/MacOSX/metal-cpp/")
-	    add_files("**.cpp|Platform/Linux/**.cpp|Platform/Win32/**.cpp")
+	    add_files(
+			"**.cpp|Platform/Linux/**.cpp|Platform/Win32/**.cpp|Graphics/RHI/**.cpp",
+		    "Graphics/RHI/Metal/**.cpp"
+		)
 	    add_headerfiles("**.h|Platform/Linux/**.h|Platform/Win32/**.hpp", { install = false })
 
 		add_links("ncurses")
