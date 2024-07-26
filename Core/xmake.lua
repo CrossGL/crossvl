@@ -11,6 +11,12 @@ target("VisualizerCore")
 	set_options("rhi")
 
 	add_includedirs("..")
+
+	on_config(function (target)
+		import("core.project.config")
+		local msg = format("Using RHI: %s\nUsing platform: %s", string.upper(get_config("rhi")), string.upper(config.get("plat")))
+		print(msg)
+		end)
 	
 	if is_os("windows") then
 	    add_files("**.cpp|Platform/Linux/**.cpp|Platform/MacOSX/**.cpp")
