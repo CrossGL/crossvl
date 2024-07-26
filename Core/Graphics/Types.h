@@ -8,7 +8,8 @@ namespace CGL::Graphics
 		OpenGL,
 		DirectX11,
 		DirectX12,
-		Vulkan
+		Vulkan,
+		Metal
 	};
 
 	enum class PrimitiveType

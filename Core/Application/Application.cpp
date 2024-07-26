@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "SDL_scancode.h"
 #include <SDL2/SDL.h>
 
 
@@ -35,7 +36,7 @@ namespace CGL::Core
 			while (SDL_PollEvent(&e) != 0)
 			{
 				// User requests quit
-				if (e.type == SDL_QUIT)
+				if (e.type == SDL_QUIT || e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 				{
 					m_isRunning = false;
 				}
@@ -70,6 +71,8 @@ namespace CGL::Core
 		flags |= SDL_WINDOW_OPENGL;
 #elif defined(CGL_RHI_VULKAN)
 		flags |= SDL_WINDOW_VULKAN;
+#elif defined(CGL_RHI_METAL)
+          flags |= SDL_WINDOW_METAL;
 #endif
 
 		m_window = SDL_CreateWindow("CGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, flags);

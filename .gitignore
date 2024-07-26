@@ -11,3 +11,6 @@ vsxmake2022/
 compile_commands.json
 compile_flags.txt
 .cache/
+
+# Metal headers
+metal-cpp

@@ -1,11 +1,12 @@
 function main(argv)
     os.exec(
-        "curl -o ./Core/Platform/MacOSX/metalcpp.zip https://developer.apple.com/metal/cpp/files/metal-cpp_macOS14.2_iOS17.2.zip"
+        "curl -o metalcpp.zip https://developer.apple.com/metal/cpp/files/metal-cpp_macOS14.2_iOS17.2.zip"
     )
 
-    print("extracting metal-cpp")
+    os.exec("unzip ./metalcpp.zip -d .")
+    os.exec("clear")
 
-    os.exec("unzip ./Core/Platform/MacOSX/metalcpp.zip -d ./Core/Platform/MacOSX/")
-
-    os.exec("rm ./Core/Platform/MacOSX/metalcpp.zip")
+    print("downloaded metal-cpp")
+    
+    os.exec("rm metalcpp.zip")
 end

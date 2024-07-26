@@ -36,6 +36,7 @@ elseif is_os("linux") then
 	})
 elseif is_os("macosx") then
 	add_defines("CGL_PLATFORM_MACOSX")
+	add_includedirs("./metal-cpp/")
 end
 
 if is_mode("debug") then

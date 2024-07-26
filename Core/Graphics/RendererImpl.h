@@ -22,5 +22,5 @@
 #endif // CGL_RHI_VULKAN
 
 #ifdef CGL_RHI_METAL
-//#include <Core/Graphics/RHI/Metal/METALRendererImpl.h>
+#include <Core/Graphics/RHI/Metal/METALRendererImpl.h>
 #endif // CGL_RHI_METAL
