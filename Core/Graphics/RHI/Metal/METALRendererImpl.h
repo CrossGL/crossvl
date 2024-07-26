@@ -11,6 +11,7 @@
 
 namespace CGL::Graphics
 {
+<<<<<<< HEAD
      CGL_DECLARE_LOG_CATEGORY(METALRendererImpl);
 
      class METALRendererImpl
@@ -45,4 +46,40 @@ namespace CGL::Graphics
 
         NS::AutoreleasePool*  arPool;
      };
+=======
+   CGL_DECLARE_LOG_CATEGORY(METALRendererImpl);
+
+   class METALRendererImpl
+   {
+   public:
+      METALRendererImpl(SDL_Window* window);
+      ~METALRendererImpl();
+
+      inline CA::MetalLayer* GetMetalLayer() const { return mLayer; }
+
+      inline MTL::Device* GetDevice() const { return mDevice; }
+      inline MTL::CommandQueue* GetQueue() const { return mQueue; }
+
+      inline void SetCmdBuffer(MTL::CommandBuffer* cBuffer) { cmdBuffer = cBuffer; }
+      inline MTL::CommandBuffer* GetCmdBuffer() { return cmdBuffer; }
+
+      inline NS::AutoreleasePool* GetPoolRef() const { return arPool; }
+
+      inline void SetDrawable(CA::MetalDrawable* drawable) { mDrawable = drawable; }
+      inline CA::MetalDrawable* GetDrawable() const { return mDrawable; }
+
+      METALRendererImpl() = delete;
+
+   private:
+      SDL_MetalView           mView;
+      CA::MetalLayer*         mLayer;
+      CA::MetalDrawable*      mDrawable;
+
+      MTL::Device*            mDevice;
+      MTL::CommandQueue*      mQueue;
+      MTL::CommandBuffer*     cmdBuffer;
+
+      NS::AutoreleasePool*    arPool;
+   };
+>>>>>>> c83f60b (implemented RHI for Metal)
 }
