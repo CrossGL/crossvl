@@ -18,7 +18,8 @@ namespace CGL::Graphics
 		PointList,
 		TriangleStrip,
 		LineStrip,
-		TriangleFan
+		TriangleFan,
+		COUNT
 	};
 
 	enum class BlendMode

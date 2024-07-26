@@ -54,7 +54,7 @@ namespace CGL::Core
 		template<typename... Args>
 		void DispatchLog(LogLevel level, std::string_view message, Args&&... args)
 		{
-			std::string msg = std::vformat(message, std::make_format_args(std::forward<Args>(args)...));
+			std::string msg = std::vformat(std::string(message), std::make_format_args(std::forward<Args>(args)...));
 			Write(level, LogMessage{ .Payload = std::string_view(msg.data(), msg.size()) });
 		}
 
