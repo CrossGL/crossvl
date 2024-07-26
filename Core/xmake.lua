@@ -17,8 +17,13 @@ target("VisualizerCore")
 	    add_headerfiles("**.h|Platform/Linux/**.h|Platform/MacOSX/**.hpp", { install = false })
 	    add_links("user32.lib")
 	elseif is_os("linux") then
+	    add_packages("ncurses")
 	    add_files("**.cpp|Platform/Win32/**.cpp|Platform/MacOSX/**.cpp")
 	    add_headerfiles("**.h|Platform/Win32/**.h|Platform/MacOSX/**.hpp", { install = false })
+
+	    add_links("GL")
+	    add_links("ncurses")
+
 	elseif is_os("macosx") then
 		add_packages("ncurses")
 	    add_files(
