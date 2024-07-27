@@ -18,11 +18,7 @@ namespace CGL::Graphics
 #endif // CGL_RHI_OPENGL
 
 #ifdef CGL_RHI_METAL
-<<<<<<< HEAD
-	 class METALRendererImpl;
-=======
 	class METALRendererImpl;
->>>>>>> c83f60b (implemented RHI for Metal)
 #endif
 
 	RHIType GetAPI();
