@@ -18,5 +18,11 @@ target("HelloTriangleApp")
 		add_links("VisualizerCore" .. "_" .. string.upper(get_config("rhi")))
 	end
 
+	on_config (function (target)
+			local asset_dir = path.join("$(scriptdir)", "Assets")
+			local macro = "CGL_ASSET_DIR=".. "\"" .. asset_dir .. "\""
+			target:add("defines", macro)
+		end)
+
 	add_tests("compile_pass", {build_should_pass = true})
 target_end()
