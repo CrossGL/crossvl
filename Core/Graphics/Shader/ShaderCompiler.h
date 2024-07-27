@@ -24,7 +24,7 @@ namespace CGL::Graphics
 
 		std::string EntryPoint;
 #if defined(CGL_RHI_DX11) || defined(CGL_RHI_DX12)
-		std::string Profile;
+		std::string Target;
 		std::array<D3D_SHADER_MACRO, MAX_DEFINES> Defines;
 #endif
 		bool Optimize = true;
