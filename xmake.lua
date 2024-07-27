@@ -30,6 +30,7 @@ if is_os("windows") then
 	add_defines("CGL_PLATFORM_WINDOWS")
 elseif is_os("linux") then
 	add_defines("CGL_PLATFORM_LINUX")
+	add_requires("glew")
 	add_requires("ncurses",
 	{
 		debug = use_package_debug

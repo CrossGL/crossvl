@@ -49,7 +49,7 @@ namespace CGL::Graphics
 #endif // CGL_RHI_DX11
 
 #ifdef CGL_RHI_OPENGL
-		void Constructor_OPENGL();
+		void Constructor_OPENGL(SDL_Window* window);
 		void Destructor_OPENGL();
 		void BeginFrame_OPENGL();
 		void EndFrame_OPENGL();

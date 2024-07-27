@@ -23,8 +23,9 @@ target("VisualizerCore")
 	    add_headerfiles("**.h|Platform/Linux/**.h|Platform/MacOSX/**.hpp", { install = false })
 	    add_links("user32.lib")
 	elseif is_os("linux") then
+		add_packages("glew")
 	    add_packages("ncurses")
-	    add_files("**.cpp|Platform/Win32/**.cpp|Platform/MacOSX/**.cpp|Graphics/RHI/Metal/**.cpp")
+	    add_files("**.cpp|Platform/Win32/**.cpp|Platform/MacOSX/**.cpp|Graphics/RHI/**.cpp", "Graphics/RHI/OPENGL/**.cpp")
 	    add_headerfiles("**.h|Platform/Win32/**.h|Platform/MacOSX/**.hpp", { install = false })
 
 	    add_links("GL")
