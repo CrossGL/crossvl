@@ -6,7 +6,7 @@ target("VisualizerCore")
 	set_default(false)
 	set_kind("static")
 	set_group("CrossGL")
-	
+
 	add_packages("libsdl")
 	set_options("rhi")
 
@@ -17,14 +17,14 @@ target("VisualizerCore")
 		local msg = format("Using RHI: %s\nUsing platform: %s", string.upper(get_config("rhi")), string.upper(config.get("plat")))
 		print(msg)
 		end)
-	
+
 	if is_os("windows") then
-	    add_files("**.cpp|Platform/Linux/**.cpp|Platform/MacOSX/**.cpp")
+	    add_files("**.cpp|Platform/Linux/**.cpp|Platform/MacOSX/**.cpp|Graphics/RHI/Metal/**.cpp")
 	    add_headerfiles("**.h|Platform/Linux/**.h|Platform/MacOSX/**.hpp", { install = false })
 	    add_links("user32.lib")
 	elseif is_os("linux") then
 	    add_packages("ncurses")
-	    add_files("**.cpp|Platform/Win32/**.cpp|Platform/MacOSX/**.cpp")
+	    add_files("**.cpp|Platform/Win32/**.cpp|Platform/MacOSX/**.cpp|Graphics/RHI/Metal/**.cpp")
 	    add_headerfiles("**.h|Platform/Win32/**.h|Platform/MacOSX/**.hpp", { install = false })
 
 	    add_links("GL")
@@ -41,6 +41,6 @@ target("VisualizerCore")
 		add_links("ncurses")
 	    add_frameworks("Foundation", "Metal", "MetalFX", "QuartzCore")
 	end
-	
+
 	add_tests("compile_pass", { build_should_pass = true })
 target_end()
