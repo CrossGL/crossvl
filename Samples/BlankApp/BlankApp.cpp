@@ -31,8 +31,6 @@ namespace CGL
 
 	void BlankApp::OnRender()
 	{
-		// Add render code here
-		m_renderer->OnRender();
 	}
 
 	void BlankApp::OnResize(u32 width, u32 height)

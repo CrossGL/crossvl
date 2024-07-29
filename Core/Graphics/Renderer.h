@@ -30,7 +30,6 @@ namespace CGL::Graphics
 		~Renderer();
 
 		void BeginFrame();
-		void OnRender();
 		void EndFrame();
 
 		void SetClearColor(f32 r, f32 g, f32 b, f32 a = 1.0f);
@@ -52,7 +51,6 @@ namespace CGL::Graphics
 		void Constructor_OPENGL(SDL_Window* window);
 		void Destructor_OPENGL();
 		void BeginFrame_OPENGL();
-		void OnRender_OPENGL();
 		void EndFrame_OPENGL();
 		void Resize_OPENGL(u32 width, u32 height);
 		OPENGLRendererImpl* GetImpl() const;
