@@ -14,7 +14,7 @@
 #endif // CGL_RHI_DX12
 
 #ifdef CGL_RHI_OPENGL
-#include <Core/Graphics/RHI/OPENGL/OPENGLRendererImpl.h>
+#include <Core/Graphics/RHI/OpenGL/OPENGLRendererImpl.h>
 #endif // CGL_RHI_OPENGL
 
 #ifdef CGL_RHI_VULKAN

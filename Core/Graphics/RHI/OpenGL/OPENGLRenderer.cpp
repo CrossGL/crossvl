@@ -1,5 +1,5 @@
 #include <Core/Graphics/Renderer.h>
-#include <Core/Graphics/RHI/OPENGL/OPENGLRendererImpl.h>
+#include <Core/Graphics/RHI/OpenGL/OPENGLRendererImpl.h>
 
 namespace CGL::Graphics
 {
@@ -28,7 +28,13 @@ namespace CGL::Graphics
     void Renderer::BeginFrame_OPENGL()
     {
         glClearDepth(1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        
+    }
+    
+    void Renderer::OnRender_OPENGL()
+    {
+        
+
     }
     
     void Renderer::EndFrame_OPENGL()

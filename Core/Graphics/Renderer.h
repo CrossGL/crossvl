@@ -52,6 +52,7 @@ namespace CGL::Graphics
 		void Constructor_OPENGL(SDL_Window* window);
 		void Destructor_OPENGL();
 		void BeginFrame_OPENGL();
+		void OnRender_OPENGL();
 		void EndFrame_OPENGL();
 		void Resize_OPENGL(u32 width, u32 height);
 		OPENGLRendererImpl* GetImpl() const;

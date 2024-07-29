@@ -65,6 +65,15 @@ add_requires("dxmath",
 		}
 	})
 
+
+-- Include the GLEW package when building with OpenGL RHI on any operating system
+if has_config("rhi") then
+	local rhi = string.upper(get_config("rhi"))
+	if rhi == "OPENGL" then
+		add_requires("glew")
+	end
+end
+
 if is_os("linux") then
 	add_requires("ncurses", { debug = use_package_debug })
 end

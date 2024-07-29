@@ -19,9 +19,7 @@ namespace CGL::Graphics
         glewError = glewInit();
         
         glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-        SDL_GL_SetSwapInterval(1);    
-
-        
+        SDL_GL_SetSwapInterval(1);            
     }
 
     OPENGLRendererImpl::~OPENGLRendererImpl()

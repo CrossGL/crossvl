@@ -119,6 +119,13 @@ namespace CGL::Graphics
 
 	void Renderer::OnRender()
 	{
+#ifdef CGL_RHI_OPENGL
+		if(g_api == RHIType::OpenGL)
+		{
+			OnRender_OPENGL();
+			return;
+		}
+#endif // CGL_RHI_OPENGL
 
 #ifdef CGL_RHI_METAL
 		if (g_api == RHIType::Metal)
