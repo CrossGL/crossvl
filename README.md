@@ -116,6 +116,15 @@ Where the valid platforms are:
 - linux
 - macosx
 
-This will run a series of matrix test for each valid API for that platform (e.g. for macosx it will test compilation for opengl, metal and vulkan). Make sure to test in both debug and build configs.
+This will run a series of matrix test for each valid API for that platform (e.g. for macosx it will test compilation for opengl, metal and vulkan). Make sure to test in both debug and release build configs.
+
+The complete testing process should look as follows (using windows as example):
+```bash
+xmake f -m debug
+xmake rhitest -p windows
+
+xmake f -m release
+xmake rhitest -p windows
+```
 
 The expected output should be such that all projects compile and link successfully
