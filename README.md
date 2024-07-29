@@ -5,6 +5,13 @@ Tool for loading and testing transpiled shader files.
 - GLSL Shaders
 - HLSL Shaders
 
+  
+| Platform |     DX11      |      DX12       |   OpenGL    |     Metal     |     Vulkan      |
+|----------|---------------|-----------------|-------------|---------------|-----------------|
+| **Windows**  | In Progress   | Not Implemented | In Progress | Not Supported | Not Implemented |
+| **Linux**    | Not Supported | Not Supported   | In Progress | Not Supported | Not Implemented |
+| **MacOSX**   | Not Supported | Not Supported   | In Progress | In Progress   | Not Implemented |
+
 # Project Structure
 
 The project is divided into two sub projects
