@@ -116,6 +116,6 @@ Where the valid platforms are:
 - linux
 - macosx
 
-This will run a series of matrix test for both `release` and `debug' configuration for each valid API for that platform (e.g. for macosx it will test compilation for opengl, metal and vulkan)
+This will run a series of matrix test for each valid API for that platform (e.g. for macosx it will test compilation for opengl, metal and vulkan). Make sure to test in both debug and build configs.
 
 The expected output should be such that all projects compile and link successfully
