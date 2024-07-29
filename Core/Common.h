@@ -13,10 +13,3 @@
 
 #include <Core/Types.h>
 #include <Core/Defines.h>
-
-#include <Core/External/SimpleMath.h>
-
-namespace CGL
-{
-	namespace Math = DirectX::SimpleMath;
-}

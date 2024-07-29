@@ -7,40 +7,73 @@ target("VisualizerCore")
 	set_kind("static")
 	set_group("CrossGL")
 
-	add_packages("libsdl", "directxmath")
+	add_packages("libsdl", "dxmath")
 	set_options("rhi")
 
 	add_includedirs("..")
 
 	on_config(function (target)
 		import("core.project.config")
-		local msg = format("Using RHI: %s\nUsing platform: %s", string.upper(get_config("rhi")), string.upper(config.get("plat")))
-		print(msg)
+
+		local rhi = string.upper(get_config("rhi"))
+		local plat = string.upper(config.get("plat"))
+		cprint(format("Configuring Visualizer Core using:\n${cyan}RHI: ${clear}%s\n${cyan}Platform: ${clear}%s", rhi, plat))
 		end)
 
+	-- Recursively add all files except:
+	-- -> Files in the Platform folder
+	-- -> Files in the Graphics/RHI folder
+	add_files("**.cpp|Platform/**.cpp|Graphics/RHI/**.cpp")
+	add_headerfiles("**.h|Platform/**.h|Graphics/RHI/**.h")
+
+	-- Add platform settings
 	if is_os("windows") then
-	    add_files("**.cpp|Platform/Linux/**.cpp|Platform/MacOSX/**.cpp|Graphics/RHI/Metal/**.cpp")
-	    add_headerfiles("**.h|Platform/Linux/**.h|Platform/MacOSX/**.hpp", { install = false })
-	    add_links("user32.lib")
+		add_files("Platform/Win32/**.cpp")
+		add_headerfiles("Platform/Win32/**.h")
+		add_links("user32.lib")
 	elseif is_os("linux") then
-		add_packages("glew")
-	    add_packages("ncurses")
-	    add_files("**.cpp|Platform/Win32/**.cpp|Platform/MacOSX/**.cpp|Graphics/RHI/**.cpp", "Graphics/RHI/OPENGL/**.cpp")
-	    add_headerfiles("**.h|Platform/Win32/**.h|Platform/MacOSX/**.hpp", { install = false })
-
-	    add_links("GL")
-	    add_links("ncurses")
-
-	elseif is_os("macosx") then
-		add_packages("ncurses")
-	    add_files(
-			"**.cpp|Platform/Linux/**.cpp|Platform/Win32/**.cpp|Graphics/RHI/**.cpp",
-		    "Graphics/RHI/Metal/**.cpp"
-		)
-	    add_headerfiles("**.h|Platform/Linux/**.h|Platform/Win32/**.hpp", { install = false })
-
+		add_files("Platform/Linux/**.cpp")
+		add_headerfiles("Platform/Linux/**.h")
 		add_links("ncurses")
-	    add_frameworks("Foundation", "Metal", "MetalFX", "QuartzCore")
+	elseif is_os("macosx") then
+		add_files("Platform/MacOSX/**.cpp")
+		add_headerfiles("Platform/MacOSX/**.h")
+		add_frameworks("Foundation", "Metal", "MetalFX", "QuartzCore")
+		add_packages("ncurses")
+	end
+
+	-- Add RHI files
+	if has_config("rhi") then
+		local rhi = string.upper(get_config("rhi"))
+
+		if rhi == "DX11" or rhi == "DX12" then
+			add_links("dxgi.lib", "d3dcompiler.lib")
+			add_headerfiles("Graphics/RHI/D3DCommon.h")
+
+			if is_mode("debug") then
+				add_links("dxguid.lib")
+			end
+
+			if rhi == "DX11" then
+				add_files("Graphics/RHI/D3D11/**.cpp")
+				add_headerfiles("Graphics/RHI/D3D11/**.h")
+				add_links("d3d11.lib")
+			elseif rhi == "DX12" then
+				add_files("Graphics/RHI/D3D12/**.cpp")
+				add_headerfiles("Graphics/RHI/D3D12/**.h")
+				add_links("d3d12.lib")
+			end
+		elseif rhi == "OPENGL" then
+			add_files("Graphics/RHI/OpenGL/**.cpp")
+			add_headerfiles("Graphics/RHI/OpenGL/**.h")
+			add_links("GL")
+		elseif rhi == "VULKAN" then
+			add_files("Graphics/RHI/Vulkan/**.cpp")
+			add_headerfiles("Graphics/RHI/Vulkan/**.h")
+		elseif rhi == "METAL" then
+			add_files("Graphics/RHI/Metal/**.cpp")
+			add_headerfiles("Graphics/RHI/Metal/**.h")
+		end
 	end
 
 	add_tests("compile_pass", { build_should_pass = true })

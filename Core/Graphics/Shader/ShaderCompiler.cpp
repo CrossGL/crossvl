@@ -8,7 +8,7 @@ namespace CGL::Graphics
 {
 	CGL_DEFINE_LOG_CATEGORY(ShaderCompiler);
 
-#if defined(CGL_RHI_DX11) || defined(CGL_RHI_DX12)
+#if defined(CGL_RHI_D3D)
 	ShaderCompileResult ShaderCompiler::Compile(const ShaderSource& shader, const CompileConfig& config, ComPtr<ID3DBlob>& outBlob)
 	{
 		ShaderCompileResult result{};
