@@ -109,7 +109,13 @@ This will generate the CMakeLists.txt in the root folder
 When contributing to the project. Ensure the project passes the compilation test locally on your PC.
 
 ```bash
-xmake test
+xmake rhitest -p <platform>
 ```
+Where the valid platforms are:
+- windows
+- linux
+- macosx
 
-The expected output should be such that all project compile and link successfully
+This will run a series of matrix test for both `release` and `debug' configuration for each valid API for that platform (e.g. for macosx it will test compilation for opengl, metal and vulkan)
+
+The expected output should be such that all projects compile and link successfully
