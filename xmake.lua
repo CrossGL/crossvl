@@ -57,6 +57,16 @@ add_requires("libsdl",
 		}
 	})
 
+-- Add DirectXMath library
+add_requires("directxmath",
+	{
+		debug =	use_package_debug,
+		configs =
+		{
+			lto = true,
+		}
+	})
+
 option("rhi")
 	set_description("Set Graphics API",
 					"opengl",
