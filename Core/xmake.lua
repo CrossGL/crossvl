@@ -7,21 +7,32 @@ target("VisualizerCore")
 	set_kind("static")
 	set_group("CrossGL")
 
-	add_packages("libsdl", "directxmath")
+	add_packages("libsdl", "dxmath")
 	set_options("rhi")
 
 	add_includedirs("..")
 
 	on_config(function (target)
 		import("core.project.config")
-		local msg = format("Using RHI: %s\nUsing platform: %s", string.upper(get_config("rhi")), string.upper(config.get("plat")))
-		print(msg)
+		print(format("Using RHI: %s\nUsing platform: %s", string.upper(get_config("rhi")), string.upper(config.get("plat"))))
 		end)
 
 	if is_os("windows") then
 	    add_files("**.cpp|Platform/Linux/**.cpp|Platform/MacOSX/**.cpp|Graphics/RHI/Metal/**.cpp")
 	    add_headerfiles("**.h|Platform/Linux/**.h|Platform/MacOSX/**.hpp", { install = false })
 	    add_links("user32.lib")
+
+		if has_config("rhi") then
+			if string.upper(get_config("rhi")) == "DX11" then
+	    		add_links("d3d11.lib")
+			elseif string.upper(get_config("rhi")) == "DX12" then
+	    		add_links("d3d12.lib")
+			end
+
+			if is_mode("debug") then
+				add_links("dxguid.lib", "dxgi.lib")
+			end
+		end
 	elseif is_os("linux") then
 	    add_packages("ncurses")
 	    add_files("**.cpp|Platform/Win32/**.cpp|Platform/MacOSX/**.cpp|Graphics/RHI/Metal/**.cpp")

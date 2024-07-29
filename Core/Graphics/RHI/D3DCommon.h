@@ -4,12 +4,11 @@
 #include <Core/Logging/Log.h>
 #include <dxgi1_6.h>
 #include <wrl/client.h>
+#include <exception>
+
 #ifdef CGL_BUILD_DEBUG
 #include <dxgidebug.h>
-#pragma comment(lib, "dxguid.lib")
 #endif // CGL_BUILD_DEBUG
-#pragma comment(lib, "dxgi.lib")
-#include <exception>
 
 namespace DirectX
 {
