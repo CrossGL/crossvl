@@ -30,7 +30,6 @@ namespace CGL::Graphics
 		~Renderer();
 
 		void BeginFrame();
-		void OnRender();
 		void EndFrame();
 
 		void SetClearColor(f32 r, f32 g, f32 b, f32 a = 1.0f);
@@ -61,7 +60,6 @@ namespace CGL::Graphics
 		void Constructor_METAL(SDL_Window* window);
 		void Destructor_METAL();
 		void BeginFrame_METAL();
-		void OnRender_METAL();
 		void EndFrame_METAL();
 		void Resize_METAL(u32 width, u32 height);
 		METALRendererImpl* GetImpl() const;

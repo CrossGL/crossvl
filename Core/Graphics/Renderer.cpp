@@ -117,20 +117,6 @@ namespace CGL::Graphics
 		std::unreachable();
 	}
 
-	void Renderer::OnRender()
-	{
-
-#ifdef CGL_RHI_METAL
-		if (g_api == RHIType::Metal)
-		{
-			OnRender_METAL();
-			return;
-		}
-#endif
-
-		std::unreachable();
-	}
-
 	void Renderer::EndFrame()
 	{
 #ifdef CGL_RHI_DX11
