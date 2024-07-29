@@ -3,10 +3,9 @@
 #include <Core/Graphics/Types.h>
 #include <Core/Logging/Log.h>
 
-#if defined(CGL_RHI_DX11) || defined(CGL_RHI_DX12)
+#if defined(CGL_RHI_D3D)
 #include <Core/Graphics/RHI/D3DCommon.h>
 #include <d3dcompiler.h>
-#pragma comment(lib, "d3dcompiler.lib")
 #endif
 
 namespace CGL::Graphics
@@ -24,7 +23,7 @@ namespace CGL::Graphics
 		static constexpr u32 MAX_DEFINES = 16;
 
 		std::string EntryPoint;
-#if defined(CGL_RHI_DX11) || defined(CGL_RHI_DX12)
+#if defined(CGL_RHI_D3D)
 		std::string Target;
 		std::array<D3D_SHADER_MACRO, MAX_DEFINES> Defines;
 #endif
@@ -36,7 +35,7 @@ namespace CGL::Graphics
 	class ShaderCompiler
 	{
 	private:
-#if defined(CGL_RHI_DX11) || defined(CGL_RHI_DX12)
+#if defined(CGL_RHI_D3D)
 		static ShaderCompileResult Compile(const ShaderSource& shader, const CompileConfig& config, ComPtr<ID3DBlob>& outBlob);
 #endif
 	};
