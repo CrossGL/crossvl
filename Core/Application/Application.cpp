@@ -72,11 +72,8 @@ namespace CGL::Core
 #elif defined(CGL_RHI_VULKAN)
 		flags |= SDL_WINDOW_VULKAN;
 #elif defined(CGL_RHI_METAL)
-<<<<<<< HEAD
-          flags |= SDL_WINDOW_METAL;
-=======
+
 		flags |= SDL_WINDOW_METAL;
->>>>>>> c83f60b (implemented RHI for Metal)
 #endif
 
 		m_window = SDL_CreateWindow("CGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, flags);

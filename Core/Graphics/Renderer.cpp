@@ -75,21 +75,12 @@ namespace CGL::Graphics
 #endif // CGL_RHI_OPENGL
 
 #ifdef CGL_RHI_METAL
-<<<<<<< HEAD
-		  if(g_api == RHIType::Metal)
-		  {
-			   CGL_LOG(Renderer, Info, "Destructing RHI: Metal");
-			Destructor_METAL();
-			return;
-		  }
-=======
 		if (g_api == RHIType::Metal)
 		{
 			CGL_LOG(Renderer, Info, "Destructing RHI: Metal");
 			Destructor_METAL();
 			return;
 		}
->>>>>>> c83f60b (implemented RHI for Metal)
 #endif
 
 		// We should always have an RHI, should never reach here

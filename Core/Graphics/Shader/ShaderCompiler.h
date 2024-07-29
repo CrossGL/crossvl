@@ -1,6 +1,7 @@
 #pragma once
 #include <Core/Graphics/Shader/ShaderCompileResult.h>
 #include <Core/Graphics/Types.h>
+#include <Core/Logging/Log.h>
 
 #if defined(CGL_RHI_DX11) || defined(CGL_RHI_DX12)
 #include <Core/Graphics/RHI/D3DCommon.h>
