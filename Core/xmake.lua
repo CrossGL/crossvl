@@ -40,6 +40,7 @@ target("VisualizerCore")
 		add_headerfiles("Platform/MacOSX/**.h")
 		add_frameworks("Foundation", "Metal", "MetalFX", "QuartzCore")
 		add_packages("ncurses")
+		add_links("ncurses")
 	end
 
 	-- Add RHI files
