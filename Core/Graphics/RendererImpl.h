@@ -10,7 +10,7 @@
 #endif // CGL_RHI_DX11
 
 #ifdef CGL_RHI_DX12
-//#include <Core/Graphics/RHI/D3D12/D3D12RendererImpl.h>
+#include <Core/Graphics/RHI/D3D12/D3D12RendererImpl.h>
 #endif // CGL_RHI_DX12
 
 #ifdef CGL_RHI_OPENGL
@@ -18,7 +18,7 @@
 #endif // CGL_RHI_OPENGL
 
 #ifdef CGL_RHI_VULKAN
-//#include <Core/Graphics/RHI/Vulkan/VULKANRendererImpl.h>
+#include <Core/Graphics/RHI/Vulkan/VULKANRendererImpl.h>
 #endif // CGL_RHI_VULKAN
 
 #ifdef CGL_RHI_METAL
