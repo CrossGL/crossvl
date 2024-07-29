@@ -33,8 +33,6 @@ namespace CGL::Graphics
     
     void Renderer::OnRender_OPENGL()
     {
-        
-
     }
     
     void Renderer::EndFrame_OPENGL()

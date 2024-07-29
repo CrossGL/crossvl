@@ -12,7 +12,7 @@ target("VisualizerCore")
 
 	add_includedirs("..")
 
-	on_config(function (target)
+	before_build(function (target)
 		import("core.project.config")
 
 		local rhi = string.upper(get_config("rhi"))
