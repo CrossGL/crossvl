@@ -36,7 +36,7 @@ namespace CGL::Graphics
 		if (g_api == RHIType::OpenGL)
 		{
 			CGL_LOG(Renderer, Debug, "Using RHI: OpenGL");
-			Constructor_OPENGL();
+			Constructor_OPENGL(window);
 			return;
 		}
 #endif // CGL_RHI_OPENGL
@@ -161,15 +161,6 @@ namespace CGL::Graphics
 			return;
 		}
 #endif // CGL_RHI_DX11
-
-#ifdef CGL_RHI_OPENGL
-		if (g_api == RHIType::OpenGL)
-		{
-			SetPrimitiveTopology_OPENGL();
-			return;
-		}
-#endif // CGL_RHI_OPENGL
-
 		// We should always have an RHI, should never reach here
 		std::unreachable();
 	}

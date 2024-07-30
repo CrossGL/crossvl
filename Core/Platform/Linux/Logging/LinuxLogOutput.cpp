@@ -80,4 +80,3 @@ namespace CGL::Core::Platform::Linux
 		m_callback(level, message);
 	}
 }
-}
