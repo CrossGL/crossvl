@@ -15,26 +15,27 @@ namespace CGL::Graphics
 	struct ShaderSource
 	{
 		ShaderType Type;
-		std::string FilePath;
+		std::string SourceData;
+		std::string Name;
 	};
 
 	struct CompileConfig
 	{
-		static constexpr u32 MAX_DEFINES = 16;
-
-		std::string EntryPoint;
+		std::string_view EntryPoint;
 #if defined(CGL_RHI_D3D)
 		std::string Target;
-		std::array<D3D_SHADER_MACRO, MAX_DEFINES> Defines;
+		std::vector<D3D_SHADER_MACRO> Defines;
 #endif
-		bool Optimize = true;
-		bool Debug = false;
+		bool Optimize     = true;
+		bool Debug        = false;
 		bool SkipValidate = false;
 	};
 
 	class ShaderCompiler
 	{
-	private:
+	public:
+		static void ReportResult(const ShaderCompileResult& result, const std::string& source);
+
 #if defined(CGL_RHI_D3D)
 		static ShaderCompileResult Compile(const ShaderSource& shader, const CompileConfig& config, ComPtr<ID3DBlob>& outBlob);
 #endif

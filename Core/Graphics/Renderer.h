@@ -2,6 +2,8 @@
 #include <Core/Common.h>
 #include <Core/Graphics/Types.h>
 #include <Core/Logging/Log.h>
+#include <Core/Graphics/Shader/Shader.h>
+#include <Core/Graphics/Shader/ShaderCompiler.h>
 
 struct SDL_Window;
 
@@ -9,16 +11,16 @@ namespace CGL::Graphics
 {
 	CGL_DECLARE_LOG_CATEGORY(Renderer);
 
-#ifdef CGL_RHI_DX11
+#if defined(CGL_RHI_DX11)
 	class D3D11RendererImpl;
-#endif // CGL_RHI_DX11
-
-#ifdef CGL_RHI_OPENGL
+#elif defined(CGL_RHI_DX12)
+	class D3D12RendererImpl;
+#elif defined(CGL_RHI_OPENGL)
 	class OPENGLRendererImpl;
-#endif // CGL_RHI_OPENGL
-
-#ifdef CGL_RHI_METAL
+#elif defined(CGL_RHI_METAL)
 	class METALRendererImpl;
+#elif defined(CGL_RHI_VULKAN)
+	class VULKANRendererImpl;
 #endif
 
 	RHIType GetAPI();
@@ -36,6 +38,8 @@ namespace CGL::Graphics
 		void SetPrimitiveTopology(PrimitiveType topology);
 		void Resize(u32 width, u32 height);
 
+		std::shared_ptr<VertexShader> CreateVertexShader(const ShaderSource& source);
+
 	private:
 #ifdef CGL_RHI_DX11
 		void Constructor_D3D11(SDL_Window* window);
@@ -44,6 +48,7 @@ namespace CGL::Graphics
 		void EndFrame_D3D11();
 		void Resize_D3D11(u32 width, u32 height);
 		void SetPrimitiveTopology_D3D11(PrimitiveType topology);
+		ShaderCompileResult CreateVertexShader_D3D11(const ShaderSource& source, std::shared_ptr<VertexShader>& outShader);
 		D3D11RendererImpl* GetImpl() const;
 #endif // CGL_RHI_DX11
 
