@@ -2,8 +2,6 @@
 #include <Core/Graphics/RHI/D3DCommon.h>
 #include <Core/Graphics/Types.h>
 
-#include <d3d11.h>
-
 namespace CGL::Graphics
 {
 	CGL_DECLARE_LOG_CATEGORY(D3D11RendererImpl);

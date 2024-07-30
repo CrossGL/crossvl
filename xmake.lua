@@ -57,8 +57,8 @@ end
 
 -- Set RHI macros
 if has_config("rhi") then
-	local rhi = get_config("rhi")
-	local macro = "CGL_RHI_" .. string.upper(rhi)
+	local rhi = string.upper(get_config("rhi"))
+	local macro = "CGL_RHI_" .. rhi
 	add_defines(macro)
 
 	if rhi == "DX11" or rhi == "DX12" then

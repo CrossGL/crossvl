@@ -7,7 +7,7 @@ namespace CGL::Graphics
 	namespace
 	{
 		template<typename T, UINT TNameLength>
-		inline void SetDebugObjectName(_In_ T* resource, _In_z_ const char(&name)[TNameLength])
+		inline void SetDebugObjectName([[maybe_unused]]_In_ T* resource, [[maybe_unused]]_In_z_ const char(&name)[TNameLength])
 		{
 #ifdef CGL_BUILD_DEBUG
 			if (resource)

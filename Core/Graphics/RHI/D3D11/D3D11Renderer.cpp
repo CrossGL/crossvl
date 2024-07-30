@@ -1,5 +1,6 @@
 #include <Core/Graphics/Renderer.h>
 #include <Core/Graphics/RHI/D3D11/D3D11RendererImpl.h>
+#include <Core/Graphics/Shader/ShaderCompiler.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
 
@@ -82,6 +83,118 @@ namespace CGL::Graphics
 		assert(impl && impl->GetContext());
 
 		impl->GetContext()->IASetPrimitiveTopology(mapping[size_t(topology)]);
+	}
+
+	ShaderCompileResult Renderer::CreateVertexShader_D3D11(const ShaderSource& source, std::shared_ptr<VertexShader>& outShader)
+	{
+		assert(GetImpl() && GetImpl()->GetDevice());
+
+		CompileConfig cfg{};
+		cfg.Target = "vs_5_0";
+		cfg.EntryPoint = "main";
+#ifdef CGL_BUILD_DEBUG
+		cfg.Debug = true;
+		cfg.Optimize = false;
+#endif
+
+		ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->m_blob);
+
+		if (result.Status != ShaderCompileStatus::Failure)
+		{
+			assert(outShader->m_blob);
+
+			HRESULT hr{ S_OK };
+			// Shader compiled with warnings, try compiling the shader
+			DXCall(hr = GetImpl()->GetDevice()->CreateVertexShader(
+				outShader->m_blob->GetBufferPointer(),
+				outShader->m_blob->GetBufferSize(),
+				nullptr,
+				&outShader->m_shader
+			));
+
+			// Create reflection
+			ComPtr<ID3D11ShaderReflection> vsReflection = nullptr;
+
+			DXCall(hr = D3DReflect(
+				outShader->m_blob->GetBufferPointer(),
+				outShader->m_blob->GetBufferSize(),
+				IID_PPV_ARGS(&vsReflection)
+			));
+
+			D3D11_SHADER_DESC desc{};
+			DXCall(hr = vsReflection->GetDesc(&desc));
+
+			// Create input layout
+			std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayout;
+			for (u32 i = 0; i < desc.InputParameters; i++)
+			{
+				// Get input parameter at index
+				D3D11_SIGNATURE_PARAMETER_DESC paramDesc;
+				ZeroMemory(&paramDesc, sizeof(paramDesc));
+				DXCall(hr = vsReflection->GetInputParameterDesc(i, &paramDesc));
+
+				// Create input element description
+				D3D11_INPUT_ELEMENT_DESC elementDesc;
+				ZeroMemory(&elementDesc, sizeof(D3D11_INPUT_ELEMENT_DESC));
+
+				elementDesc.SemanticName         = paramDesc.SemanticName;
+				elementDesc.SemanticIndex        = paramDesc.SemanticIndex;
+				elementDesc.InputSlot            = 0;
+				elementDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
+				elementDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+				elementDesc.InstanceDataStepRate = 0;
+
+				// Determine DXGI format
+				if (paramDesc.Mask == 1)
+				{
+					if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+						elementDesc.Format = DXGI_FORMAT_R32_UINT;
+					else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+						elementDesc.Format = DXGI_FORMAT_R32_SINT;
+					else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+						elementDesc.Format = DXGI_FORMAT_R32_FLOAT;
+				}
+				else if (paramDesc.Mask <= 3)
+				{
+					if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+						elementDesc.Format = DXGI_FORMAT_R32G32_UINT;
+					else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+						elementDesc.Format = DXGI_FORMAT_R32G32_SINT;
+					else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+						elementDesc.Format = DXGI_FORMAT_R32G32_FLOAT;
+				}
+				else if (paramDesc.Mask <= 7)
+				{
+					if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+						elementDesc.Format = DXGI_FORMAT_R32G32B32_UINT;
+					else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+						elementDesc.Format = DXGI_FORMAT_R32G32B32_SINT;
+					else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+						elementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+				}
+				else if (paramDesc.Mask <= 15)
+				{
+					if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_UINT32)
+						elementDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+					else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_SINT32)
+						elementDesc.Format = DXGI_FORMAT_R32G32B32A32_SINT;
+					else if (paramDesc.ComponentType == D3D_REGISTER_COMPONENT_FLOAT32)
+						elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+				}
+
+				inputLayout.push_back(elementDesc);
+			}
+
+			DXCall(hr = GetImpl()->GetDevice()->CreateInputLayout(
+				inputLayout.data(),
+				(u32)inputLayout.size(),
+				outShader->m_blob->GetBufferPointer(),
+				outShader->m_blob->GetBufferSize(),
+				&outShader->m_layout
+			));
+		}
+
+		return result;
 	}
 #endif // CGL_RHI_DX11
 }
