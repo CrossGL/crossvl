@@ -202,4 +202,20 @@ namespace CGL::Graphics
 		// We should always have an RHI, should never reach here
 		std::unreachable();
 	}
+
+	std::shared_ptr<VertexShader> Renderer::CreateVertexShader(const ShaderSource& source)
+	{
+#ifdef CGL_RHI_DX11
+		if (g_api == RHIType::DirectX11)
+		{
+			std::shared_ptr<VertexShader> vs = std::make_shared<VertexShader>();
+			ShaderCompileResult result = CreateVertexShader_D3D11(source, vs);
+
+			ShaderCompiler::ReportResult(result, source.Name.data());
+
+			// Return even if we have warnings
+			return (result.Status != ShaderCompileStatus::Failure) ? std::move(vs) : nullptr;
+		}
+#endif // CGL_RHI_DX11
+	}
 }

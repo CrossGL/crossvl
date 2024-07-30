@@ -1,9 +1,16 @@
 #include "HelloTriangleApp.h"
 #include <Core/Graphics/Renderer.h>
+#include <Core/Application/AssetFinder.h>
 
 namespace CGL
 {
 	CGL_DEFINE_LOG_CATEGORY(HelloTriangleApp);
+
+	static constexpr byte s_vertexShader[] =
+	{
+		#include "HelloTriangleVS.hlsl.h"
+	};
+
 	HelloTriangleApp::HelloTriangleApp()
 	{
 		CGL_LOG(HelloTriangleApp, Trace, "Created HelloTriangle App");
@@ -18,7 +25,13 @@ namespace CGL
 		if (!Super::OnInit())
 			return false;
 
-		m_renderer->SetClearColor(0.0f, 1.0f, 1.0f);
+		GetRenderer()->SetClearColor(0.0f, 1.0f, 1.0f);
+
+		Graphics::ShaderSource vsSrc;
+		vsSrc.SourceData = Core::DataToString(s_vertexShader, sizeof(s_vertexShader));
+		vsSrc.Type       = Graphics::ShaderType::Vertex;
+		vsSrc.Name       = "HelloTriangleVS";
+		m_vertexShader   = GetRenderer()->CreateVertexShader(vsSrc);
 
 		CGL_LOG(HelloTriangleApp, Info, "Initialized HelloTriangle App");
 

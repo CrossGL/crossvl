@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
+#include <Core/Types.h>
 
 namespace CGL::Core
 {
-	std::string GetAssetPath(std::string_view rootPath, std::string_view assetName);
-	std::wstring GetAssetPathW(std::string_view rootPath, std::string_view assetName);
+	std::string DataToString(const byte* data, size_t size);
 }

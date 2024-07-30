@@ -3,8 +3,15 @@
 #include <Core/Platform/Win32/Error/HResultError.h>
 #include <Core/Logging/Log.h>
 #include <dxgi1_6.h>
+#include <d3d11shader.h>
 #include <wrl/client.h>
 #include <exception>
+
+#if defined(CGL_RHI_DX11)
+#include <d3d11.h>
+#elif defined(CGL_RHI_DX12)
+#include <d3d12.h>
+#endif
 
 #ifdef CGL_BUILD_DEBUG
 #include <dxgidebug.h>
