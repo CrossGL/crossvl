@@ -15,6 +15,8 @@ namespace CGL::Core
 		Application();
 		~Application() = default;
 
+		inline SDL_Window* GetWindow() const noexcept { return m_window; }
+
 		void Run();
 
 	protected:
@@ -28,6 +30,8 @@ namespace CGL::Core
 
 	protected:
 		bool m_isRunning;
+
+	private:
 		SDL_Window* m_window;
 		std::unique_ptr<Graphics::Renderer> m_renderer;
 	};

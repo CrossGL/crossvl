@@ -21,5 +21,8 @@ namespace CGL
 		void OnRender() override final;
 		void OnResize(u32 width, u32 height) override final;
 		void OnShutdown() override final;
+
+	private:
+		std::shared_ptr<Graphics::VertexShader> m_vertexShader;
 	};
 }

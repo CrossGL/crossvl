@@ -49,12 +49,8 @@ target("VisualizerCore")
 		local rhi = string.upper(get_config("rhi"))
 
 		if rhi == "DX11" or rhi == "DX12" then
-			add_links("dxgi.lib", "d3dcompiler.lib")
+			add_links("dxgi.lib", "d3dcompiler.lib", "dxguid.lib")
 			add_headerfiles("Graphics/RHI/D3DCommon.h")
-
-			if is_mode("debug") then
-				add_links("dxguid.lib")
-			end
 
 			if rhi == "DX11" then
 				add_files("Graphics/RHI/D3D11/**.cpp")
