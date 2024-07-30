@@ -15,7 +15,6 @@ namespace CGL::Graphics
     {
     public:
         explicit OPENGLRendererImpl(SDL_Window* window);
-        OPENGLRendererImpl();
         ~OPENGLRendererImpl();
         
         void SwapWindow();
