@@ -25,14 +25,16 @@ namespace CGL::Graphics
          GetImpl()->SetDrawable(GetImpl()->GetMetalLayer()->nextDrawable());
 
          GetImpl()->SetCmdBuffer(GetImpl()->GetQueue()->commandBuffer());
-    }
 
-    void Renderer::OnRender_METAL()
-    {
+         const f32 r = m_clearColor[0];
+         const f32 g = m_clearColor[1];
+         const f32 b = m_clearColor[2];
+         const f32 a = m_clearColor[3];
+
          auto  rpDescriptor = MTL::RenderPassDescriptor::alloc()->init();
          rpDescriptor->colorAttachments()->object(0)->setTexture(GetImpl()->GetDrawable()->texture());
          rpDescriptor->colorAttachments()->object(0)->setLoadAction(MTL::LoadActionClear);
-         rpDescriptor->colorAttachments()->object(0)->setClearColor(MTL::ClearColor{ 0.4, 0.3, 0.6, 1.0 });
+         rpDescriptor->colorAttachments()->object(0)->setClearColor(MTL::ClearColor{ r, g, b, a });
          rpDescriptor->colorAttachments()->object(0)->setStoreAction(MTL::StoreActionStore);
 
          auto rCmdEncoder = GetImpl()->GetCmdBuffer()->renderCommandEncoder(rpDescriptor);
@@ -43,7 +45,6 @@ namespace CGL::Graphics
 
     void Renderer::EndFrame_METAL()
     {
-         // present the frame
          GetImpl()->GetCmdBuffer()->presentDrawable(GetImpl()->GetDrawable());
          GetImpl()->GetCmdBuffer()->commit();
 

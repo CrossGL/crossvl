@@ -74,7 +74,7 @@ elseif is_os("linux") then
 	add_defines("CGL_PLATFORM_LINUX")
 elseif is_os("macosx") then
 	add_defines("CGL_PLATFORM_MACOSX")
-	-- add_includedirs("./metal-cpp/")
+	add_includedirs("./metal-cpp/")
 end
 
 -- Add build config specific macros (and set runtimes)

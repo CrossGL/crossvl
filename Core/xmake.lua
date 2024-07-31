@@ -34,12 +34,14 @@ target("VisualizerCore")
 	elseif is_os("linux") then
 		add_files("Platform/Linux/**.cpp")
 		add_headerfiles("Platform/Linux/**.h")
+		add_packages("ncurses")
 		add_links("ncurses")
 	elseif is_os("macosx") then
 		add_files("Platform/MacOSX/**.cpp")
 		add_headerfiles("Platform/MacOSX/**.h")
 		add_frameworks("Foundation", "Metal", "MetalFX", "QuartzCore")
 		add_packages("ncurses")
+		add_links("ncurses")
 	end
 
 	-- Add RHI files
@@ -62,6 +64,7 @@ target("VisualizerCore")
 		elseif rhi == "OPENGL" then
 			add_files("Graphics/RHI/OpenGL/**.cpp")
 			add_headerfiles("Graphics/RHI/OpenGL/**.h")
+			add_packages("glew")
 			add_links("GL")
 		elseif rhi == "VULKAN" then
 			add_files("Graphics/RHI/Vulkan/**.cpp")
