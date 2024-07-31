@@ -7,6 +7,30 @@
 namespace CGL::Graphics
 {
 #ifdef CGL_RHI_DX11
+	namespace Mapping
+	{
+		static constexpr std::array PrimitiveTopology =
+		{
+			D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+			D3D_PRIMITIVE_TOPOLOGY_LINELIST,
+			D3D_PRIMITIVE_TOPOLOGY_POINTLIST,
+			D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
+			D3D_PRIMITIVE_TOPOLOGY_LINESTRIP,
+			D3D_PRIMITIVE_TOPOLOGY_TRIANGLEFAN
+		};
+
+		static constexpr std::array BufferUsage =
+		{
+			D3D11_USAGE_DEFAULT,
+			D3D11_USAGE_IMMUTABLE,
+			D3D11_USAGE_DYNAMIC,
+			D3D11_USAGE_STAGING
+		};
+
+		static_assert(PrimitiveTopology.size() == size_t(PrimitiveType::COUNT));
+		static_assert(BufferUsage.size() == size_t(BufferUsage::COUNT));
+	}
+
 	void Renderer::Constructor_D3D11(SDL_Window* window)
 	{
 		// Get Win32 window handle from SDL_Window
@@ -68,21 +92,35 @@ namespace CGL::Graphics
 
 	void Renderer::SetPrimitiveTopology_D3D11(PrimitiveType topology)
 	{
-		static constexpr std::array mapping = 
-		{ 
-			D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, 
-			D3D_PRIMITIVE_TOPOLOGY_LINELIST, 
-			D3D_PRIMITIVE_TOPOLOGY_POINTLIST,
-			D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
-			D3D_PRIMITIVE_TOPOLOGY_LINESTRIP,
-			D3D_PRIMITIVE_TOPOLOGY_TRIANGLEFAN
-		};
-		static_assert(mapping.size() == size_t(PrimitiveType::COUNT));
-
 		const auto impl = GetImpl();
 		assert(impl && impl->GetContext());
 
-		impl->GetContext()->IASetPrimitiveTopology(mapping[size_t(topology)]);
+		impl->GetContext()->IASetPrimitiveTopology(Mapping::PrimitiveTopology[size_t(topology)]);
+	}
+
+	void Renderer::SetVertexShader_D3D11(const std::shared_ptr<VertexShader>& shader)
+	{
+		assert(GetImpl() && GetImpl()->GetContext());
+		GetImpl()->GetContext()->VSSetShader(shader->m_shader.Get(), nullptr, 0);
+		GetImpl()->GetContext()->IASetInputLayout(shader->m_layout.Get());
+	}
+
+	void Renderer::SetPixelShader_D3D11(const std::shared_ptr<PixelShader>& shader)
+	{
+		assert(GetImpl() && GetImpl()->GetContext());
+		GetImpl()->GetContext()->PSSetShader(shader->m_shader.Get(), nullptr, 0);
+	}
+
+	void Renderer::SetVertexBuffer_D3D11(const std::shared_ptr<VertexBuffer>& buffer)
+	{
+		assert(GetImpl() && GetImpl()->GetContext());
+		GetImpl()->GetContext()->IASetVertexBuffers(0, 1, buffer->m_buffer.GetAddressOf(), &buffer->m_stride, &buffer->m_offset);
+	}
+
+	void Renderer::SetIndexBuffer_D3D11(const std::shared_ptr<IndexBuffer>& buffer)
+	{
+		assert(GetImpl() && GetImpl()->GetContext());
+		GetImpl()->GetContext()->IASetIndexBuffer(buffer->m_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	}
 
 	ShaderCompileResult Renderer::CreateVertexShader_D3D11(const ShaderSource& source, std::shared_ptr<VertexShader>& outShader)
@@ -90,11 +128,11 @@ namespace CGL::Graphics
 		assert(GetImpl() && GetImpl()->GetDevice());
 
 		CompileConfig cfg{};
-		cfg.Target = "vs_5_0";
+		cfg.Target     = "vs_5_0";
 		cfg.EntryPoint = "main";
 #ifdef CGL_BUILD_DEBUG
-		cfg.Debug = true;
-		cfg.Optimize = false;
+		cfg.Debug      = true;
+		cfg.Optimize   = false;
 #endif
 
 		ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->m_blob);
@@ -104,7 +142,7 @@ namespace CGL::Graphics
 			assert(outShader->m_blob);
 
 			HRESULT hr{ S_OK };
-			// Shader compiled with warnings, try compiling the shader
+			// Shader compiled with warnings, try creating the shader
 			DXCall(hr = GetImpl()->GetDevice()->CreateVertexShader(
 				outShader->m_blob->GetBufferPointer(),
 				outShader->m_blob->GetBufferSize(),
@@ -196,5 +234,97 @@ namespace CGL::Graphics
 
 		return result;
 	}
+	
+	ShaderCompileResult Renderer::CreatePixelShader_D3D11(const ShaderSource& source, std::shared_ptr<PixelShader>& outShader)
+	{
+		assert(GetImpl() && GetImpl()->GetDevice());
+
+		CompileConfig cfg{};
+		cfg.Target     = "ps_5_0";
+		cfg.EntryPoint = "main";
+#ifdef CGL_BUILD_DEBUG
+		cfg.Debug      = true;
+		cfg.Optimize   = false;
+#endif
+
+		ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->m_blob);
+
+		if (result.Status != ShaderCompileStatus::Failure)
+		{
+			HRESULT hr{ S_OK };
+			// Shader compiled with warnings, try creating the shader
+			DXCall(hr = GetImpl()->GetDevice()->CreatePixelShader(
+				outShader->m_blob->GetBufferPointer(),
+				outShader->m_blob->GetBufferSize(),
+				nullptr,
+				&outShader->m_shader
+			));
+		}
+
+		return result;
+	}
+
+	ID3D11Buffer* Renderer::CreateVertexBuffer_D3D11(const BufferSource& source)
+	{
+
+		assert(source.Type == BufferType::Vertex);
+		assert(GetImpl() && GetImpl()->GetDevice());
+
+		CD3D11_BUFFER_DESC desc{};
+		desc.Usage          = Mapping::BufferUsage[size_t(source.Usage)];
+		desc.BindFlags      = D3D11_BIND_VERTEX_BUFFER;
+		desc.ByteWidth      = source.Size * source.Count;
+		desc.CPUAccessFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA resourceData{};
+		resourceData.pSysMem          = source.Data;
+		resourceData.SysMemPitch      = 0;
+		resourceData.SysMemSlicePitch = 0;
+
+		ID3D11Buffer* buffer = nullptr;
+		DXCall(GetImpl()->GetDevice()->CreateBuffer(&desc, &resourceData, &buffer));
+
+		CGL_LOG(Renderer, Trace, "D3D11 Vertex Buffer Created");
+
+		return buffer;
+	}
+
+	ID3D11Buffer* Renderer::CreateIndexBuffer_D3D11(const BufferSource& source)
+	{
+		assert(source.Type == BufferType::Index);
+		assert(GetImpl() && GetImpl()->GetDevice());
+
+		CD3D11_BUFFER_DESC desc{};
+		desc.Usage          = Mapping::BufferUsage[size_t(source.Usage)];
+		desc.BindFlags      = D3D11_BIND_INDEX_BUFFER;
+		desc.ByteWidth      = u32(source.Size * source.Count);
+		desc.CPUAccessFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA resourceData{};
+		resourceData.pSysMem          = source.Data;
+		resourceData.SysMemPitch      = 0;
+		resourceData.SysMemSlicePitch = 0;
+
+		ID3D11Buffer* buffer = nullptr;
+		DXCall(GetImpl()->GetDevice()->CreateBuffer(&desc, &resourceData, &buffer));
+
+		CGL_LOG(Renderer, Trace, "D3D11 Index Buffer Created");
+
+		return buffer;
+	}
+
+	void Renderer::Draw_D3D11(u32 vertexCount, u32 startVertex)
+	{
+		assert(GetImpl() && GetImpl()->GetContext());
+		GetImpl()->GetContext()->Draw(vertexCount, startVertex);
+	}
+
+	void Renderer::DrawIndexed_D3D11(u32 indexCount, u32 startIndex, u32 baseVertex)
+	{
+		assert(GetImpl() && GetImpl()->GetContext());
+		GetImpl()->GetContext()->DrawIndexed(indexCount, startIndex, baseVertex);
+	}
+
+
 #endif // CGL_RHI_DX11
 }
