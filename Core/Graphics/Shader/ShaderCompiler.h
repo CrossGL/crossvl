@@ -23,7 +23,7 @@ namespace CGL::Graphics
 	{
 		std::string_view EntryPoint;
 #if defined(CGL_RHI_D3D)
-		std::string Target;
+		std::string_view Target;
 		std::vector<D3D_SHADER_MACRO> Defines;
 #endif
 		bool Optimize     = true;

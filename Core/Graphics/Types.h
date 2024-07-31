@@ -1,4 +1,5 @@
 #pragma once
+#include <Core/Math/Internal/MathInternal.h>
 
 namespace CGL::Graphics
 {
@@ -119,4 +120,48 @@ namespace CGL::Graphics
 		Compute,
 		Library
 	};
+
+	enum class BufferUsage
+	{
+		Default,
+		Immutable,
+		Dynamic,
+		Staging,
+		COUNT
+	};
+
+	enum class BufferType
+	{
+		None,
+		Vertex,
+		Index,
+		Constant
+	};
+
+	namespace VertexTypes
+	{
+		struct Position
+		{
+			DX::XMFLOAT3 Position;
+		};
+
+		struct PositionColor
+		{
+			DX::XMFLOAT3 Position;
+			DX::XMFLOAT4 Color;
+		};
+
+		struct PositionTexture
+		{
+			DX::XMFLOAT3 Position;
+			DX::XMFLOAT2 Texture;
+		};
+
+		struct PositionColorTexture
+		{
+			DX::XMFLOAT3 Position;
+			DX::XMFLOAT4 Color;
+			DX::XMFLOAT2 Texture;
+		};
+	}
 }
