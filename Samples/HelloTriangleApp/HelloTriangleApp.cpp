@@ -46,8 +46,34 @@ namespace CGL
 		psSrc.Name       = "HelloTrianglePS";
 		m_pixelShader    = GetRenderer()->CreatePixelShader(psSrc);
 
-		CGL_LOG(HelloTriangleApp, Info, "Initialized HelloTriangle App");
+		// Create vertex buffer
+		constexpr std::array vertices =
+		{
+			Graphics::VertexTypes::PositionColor
+			{
+				.Position = DX::XMFLOAT3(  0.0f,  0.5f, 0.0f ),
+				.Color    = DX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ),
+			},
+			Graphics::VertexTypes::PositionColor
+			{
+				.Position = DX::XMFLOAT3(  0.5f, -0.5f, 0.0f ),
+				.Color    = DX::XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ),
+			},
+			Graphics::VertexTypes::PositionColor
+			{
+				.Position = DX::XMFLOAT3( -0.5f, -0.5f, 0.0f ),
+				.Color    = DX::XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ),
+			},
+		};
 
+		Graphics::BufferSource vbs;
+		vbs.Data       = (void*)vertices.data();
+		vbs.Type       = Graphics::BufferType::Vertex;
+		vbs.Size       = sizeof(Graphics::VertexTypes::PositionColor);
+		vbs.Count      = u32(vertices.size());
+		m_vertexBuffer = GetRenderer()->CreateVertexBuffer(vbs);
+
+		CGL_LOG(HelloTriangleApp, Info, "Initialized HelloTriangle App");
 		return true;
 	}
 
@@ -57,6 +83,11 @@ namespace CGL
 
 	void HelloTriangleApp::OnRender()
 	{
+		GetRenderer()->SetPrimitiveTopology(Graphics::PrimitiveType::TriangleList);
+		GetRenderer()->SetVertexShader(m_vertexShader);
+		GetRenderer()->SetPixelShader(m_pixelShader);
+		GetRenderer()->SetVertexBuffer(m_vertexBuffer);
+		GetRenderer()->Draw(3, 0);
 	}
 
 	void HelloTriangleApp::OnResize(u32 width, u32 height)

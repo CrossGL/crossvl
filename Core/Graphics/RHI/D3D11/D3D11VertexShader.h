@@ -13,7 +13,6 @@ namespace CGL::Graphics
 			, m_shader(nullptr)
 			, m_layout(nullptr)
 		{};
-
 		
 	private:
 		std::string                m_path;
