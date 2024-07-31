@@ -24,5 +24,8 @@ namespace CGL
 
 	private:
 		std::shared_ptr<Graphics::VertexShader> m_vertexShader;
+		std::shared_ptr<Graphics::PixelShader> m_pixelShader;
+		std::shared_ptr<Graphics::VertexBuffer> m_vertexBuffer;
+		std::shared_ptr<Graphics::IndexBuffer> m_indexBuffer;
 	};
 }

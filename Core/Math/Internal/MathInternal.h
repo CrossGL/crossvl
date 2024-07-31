@@ -4,7 +4,4 @@
 #include <utility>
 #include <DirectXMath.h>
 
-namespace CGL::Math
-{
-	using namespace DirectX;
-}
+namespace DX = DirectX;

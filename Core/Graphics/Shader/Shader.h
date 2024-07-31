@@ -1,6 +1,7 @@
 #pragma once
 #if defined(CGL_RHI_DX11)
 #include <Core/Graphics/RHI/D3D11/D3D11VertexShader.h>
+#include <Core/Graphics/RHI/D3D11/D3D11PixelShader.h>
 #endif
 
 #if defined(CGL_RHI_DX12)
@@ -23,7 +24,7 @@ namespace CGL::Graphics
 {
 #if defined(CGL_RHI_DX11)
 	using VertexShader = D3D11VertexShader;
-	//using PixelShader  = D3D11PixelShader;
+	using PixelShader  = D3D11PixelShader;
 #elif defined(CGL_RHI_DX12)
 	using VertexShader = D3D12VertexShader;
 	using PixelShader  = D3D12PixelShader;

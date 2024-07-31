@@ -2,6 +2,7 @@
 #include <Core/Common.h>
 #include <Core/Graphics/Types.h>
 #include <Core/Logging/Log.h>
+#include <Core/Graphics/Buffer.h>
 #include <Core/Graphics/Shader/Shader.h>
 #include <Core/Graphics/Shader/ShaderCompiler.h>
 
@@ -33,12 +34,22 @@ namespace CGL::Graphics
 
 		void BeginFrame();
 		void EndFrame();
+		void Resize(u32 width, u32 height);
 
 		void SetClearColor(f32 r, f32 g, f32 b, f32 a = 1.0f);
 		void SetPrimitiveTopology(PrimitiveType topology);
-		void Resize(u32 width, u32 height);
+		void SetVertexShader(const std::shared_ptr<VertexShader>& shader);
+		void SetPixelShader(const std::shared_ptr<PixelShader>& shader);
+		void SetVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer);
+		void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer);
 
 		std::shared_ptr<VertexShader> CreateVertexShader(const ShaderSource& source);
+		std::shared_ptr<PixelShader> CreatePixelShader(const ShaderSource& source);
+		std::shared_ptr<VertexBuffer> CreateVertexBuffer(const BufferSource& source);
+		std::shared_ptr<IndexBuffer> CreateIndexBuffer(const BufferSource& source);
+
+		void Draw(u32 vertexCount, u32 startVertex = 0);
+		void DrawIndexed(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
 
 	private:
 #ifdef CGL_RHI_DX11
@@ -48,7 +59,16 @@ namespace CGL::Graphics
 		void EndFrame_D3D11();
 		void Resize_D3D11(u32 width, u32 height);
 		void SetPrimitiveTopology_D3D11(PrimitiveType topology);
+		void SetVertexShader_D3D11(const std::shared_ptr<VertexShader>& shader);
+		void SetPixelShader_D3D11(const std::shared_ptr<PixelShader>& shader);
+		void SetVertexBuffer_D3D11(const std::shared_ptr<VertexBuffer>& buffer);
+		void SetIndexBuffer_D3D11(const std::shared_ptr<IndexBuffer>& buffer);
 		ShaderCompileResult CreateVertexShader_D3D11(const ShaderSource& source, std::shared_ptr<VertexShader>& outShader);
+		ShaderCompileResult CreatePixelShader_D3D11(const ShaderSource& source, std::shared_ptr<PixelShader>& outShader);
+		ID3D11Buffer* CreateVertexBuffer_D3D11(const BufferSource& source);
+		ID3D11Buffer* CreateIndexBuffer_D3D11(const BufferSource& source);
+		void Draw_D3D11(u32 vertexCount, u32 startVertex = 0);
+		void DrawIndexed_D3D11(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
 		D3D11RendererImpl* GetImpl() const;
 #endif // CGL_RHI_DX11
 
