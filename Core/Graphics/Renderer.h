@@ -39,6 +39,7 @@ namespace CGL::Graphics
 		void Resize(u32 width, u32 height);
 
 		std::shared_ptr<VertexShader> CreateVertexShader(const ShaderSource& source);
+		std::shared_ptr<PixelShader> CreatePixelShader(const ShaderSource& source);
 
 	private:
 #ifdef CGL_RHI_DX11

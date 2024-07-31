@@ -90,11 +90,11 @@ namespace CGL::Graphics
 		assert(GetImpl() && GetImpl()->GetDevice());
 
 		CompileConfig cfg{};
-		cfg.Target = "vs_5_0";
+		cfg.Target     = "vs_5_0";
 		cfg.EntryPoint = "main";
 #ifdef CGL_BUILD_DEBUG
-		cfg.Debug = true;
-		cfg.Optimize = false;
+		cfg.Debug      = true;
+		cfg.Optimize   = false;
 #endif
 
 		ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->m_blob);
@@ -104,7 +104,7 @@ namespace CGL::Graphics
 			assert(outShader->m_blob);
 
 			HRESULT hr{ S_OK };
-			// Shader compiled with warnings, try compiling the shader
+			// Shader compiled with warnings, try creating the shader
 			DXCall(hr = GetImpl()->GetDevice()->CreateVertexShader(
 				outShader->m_blob->GetBufferPointer(),
 				outShader->m_blob->GetBufferSize(),
@@ -191,6 +191,35 @@ namespace CGL::Graphics
 				outShader->m_blob->GetBufferPointer(),
 				outShader->m_blob->GetBufferSize(),
 				&outShader->m_layout
+			));
+		}
+
+		return result;
+	}
+	
+	ShaderCompileResult Renderer::CreatePixelShader_D3D11(const ShaderSource& source, std::shared_ptr<PixelShader>& outShader)
+	{
+		assert(GetImpl() && GetImpl()->GetDevice());
+
+		CompileConfig cfg{};
+		cfg.Target     = "ps_5_0";
+		cfg.EntryPoint = "main";
+#ifdef CGL_BUILD_DEBUG
+		cfg.Debug      = true;
+		cfg.Optimize   = false;
+#endif
+
+		ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->m_blob);
+
+		if (result.Status != ShaderCompileStatus::Failure)
+		{
+			HRESULT hr{ S_OK };
+			// Shader compiled with warnings, try creating the shader
+			DXCall(hr = GetImpl()->GetDevice()->CreatePixelShader(
+				outShader->m_blob->GetBufferPointer(),
+				outShader->m_blob->GetBufferSize(),
+				nullptr,
+				&outShader->m_shader
 			));
 		}
 

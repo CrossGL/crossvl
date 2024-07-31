@@ -61,11 +61,11 @@ namespace CGL::Graphics
 		HRESULT hr = D3DCompile(
 			shader.SourceData.c_str(),
 			shader.SourceData.length(),
-			shader.Name.data(),
+			shader.Name.c_str(),
 			config.Defines.data(),
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
 			config.EntryPoint.data(),
-			config.Target.c_str(),
+			config.Target.data(),
 			compileFlags,
 			0,
 			&shaderBlob,

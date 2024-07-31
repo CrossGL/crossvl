@@ -218,4 +218,19 @@ namespace CGL::Graphics
 		}
 #endif // CGL_RHI_DX11
 	}
+	std::shared_ptr<PixelShader> Renderer::CreatePixelShader(const ShaderSource& source)
+	{
+#ifdef CGL_RHI_DX11
+		if (g_api == RHIType::DirectX11)
+		{
+			std::shared_ptr<PixelShader> ps = std::make_shared<PixelShader>();
+			ShaderCompileResult result = CreatePixelShader_D3D11(source, ps);
+
+			ShaderCompiler::ReportResult(result, source.Name.data());
+
+			// Return even if we have warnings
+			return (result.Status != ShaderCompileStatus::Failure) ? std::move(ps) : nullptr;
+		}
+#endif // CGL_RHI_DX11
+	}
 }
