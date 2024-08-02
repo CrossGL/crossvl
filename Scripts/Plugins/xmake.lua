@@ -18,3 +18,25 @@ task("rhitest")
         }
     }
 task_end()
+
+-- Create new sample
+task("cgl-create")
+	set_category("action")
+	on_run("CreateSample")
+
+    -- Set the command line options for the plugin. There are no parameter options here, just the plugin description.
+    set_menu
+    {
+        -- Settings menu usage
+        usage = "xmake cgl-create [sample-name]",
+        -- Setup menu description
+        description = "Create a new CGL sample app project",
+
+        -- Set menu options, if there are no options, you can set it to {}
+        options =
+        {
+            -- Set kv as the key-value parameter and set the default value: black
+            {'p', "project", "kv", "CGLSampleApp", "Set the app name." }
+        }
+    }
+task_end()
