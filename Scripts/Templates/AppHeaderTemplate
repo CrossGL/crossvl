@@ -1,0 +1,25 @@
+#pragma once
+#include <Core/Common.h>
+#include <Core/Application/Application.h>
+
+namespace CGL
+{
+	CGL_DECLARE_LOG_CATEGORY(%PROJECT_NAME%);
+
+	class %PROJECT_NAME% : public Core::Application
+	{
+	protected:
+		using Super = Core::Application;
+
+	public:
+		%PROJECT_NAME%();
+		~%PROJECT_NAME%();
+
+	private:
+		bool OnInit() override final;
+		void OnUpdate() override final;
+		void OnRender() override final;
+		void OnResize(u32 width, u32 height) override final;
+		void OnShutdown() override final;
+	};
+}

@@ -1,0 +1,46 @@
+#include "%PROJECT_NAME%.h"
+
+namespace CGL
+{
+	CGL_DEFINE_LOG_CATEGORY(%PROJECT_NAME%);
+
+	%PROJECT_NAME%::%PROJECT_NAME%()
+	{
+		CGL_LOG(%PROJECT_NAME%, Trace, "Created %PROJECT_NAME%");
+	}
+
+	%PROJECT_NAME%::~%PROJECT_NAME%()
+	{
+		CGL_LOG(%PROJECT_NAME%, Trace, "Destroyed %PROJECT_NAME%");
+	}
+
+	bool %PROJECT_NAME%::OnInit()
+	{
+		if (!Super::OnInit())
+			return false;
+
+		CGL_LOG(%PROJECT_NAME%, Info, "Initialized %PROJECT_NAME%");
+
+		return true;
+	}
+
+	void %PROJECT_NAME%::OnUpdate()
+	{
+		// Update app here
+	}
+
+	void %PROJECT_NAME%::OnRender()
+	{
+	}
+
+	void %PROJECT_NAME%::OnResize(u32 width, u32 height)
+	{
+		Super::OnResize(width, height);
+	}
+
+	void %PROJECT_NAME%::OnShutdown()
+	{
+		CGL_LOG(%PROJECT_NAME%, Info, "Shutting down %PROJECT_NAME%");
+		Super::OnShutdown();
+	}
+}
