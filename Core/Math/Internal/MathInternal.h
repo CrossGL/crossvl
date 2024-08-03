@@ -1,7 +1,13 @@
 #pragma once
 
-#include <algorithm>
-#include <utility>
-#include <DirectXMath.h>
+// Including these to enable API conversion functions
+#if defined(CGL_RHI_DX11)
+#include <d3d11.h>
+#elif defined(CGL_RHI_DX12)
+#include <d3d12.h>
+#endif
 
-namespace DX = DirectX;
+#include <Core/External/SimpleMath.h>
+
+using namespace DirectX;
+namespace SM = DirectX::SimpleMath;

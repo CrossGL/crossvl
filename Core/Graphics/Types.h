@@ -142,26 +142,26 @@ namespace CGL::Graphics
 	{
 		struct Position
 		{
-			DX::XMFLOAT3 Position;
+			SM::Vector3 Position;
 		};
 
 		struct PositionColor
 		{
-			DX::XMFLOAT3 Position;
-			DX::XMFLOAT4 Color;
+			SM::Vector3 Position;
+			SM::Vector4 Color;
 		};
 
 		struct PositionTexture
 		{
-			DX::XMFLOAT3 Position;
-			DX::XMFLOAT2 Texture;
+			SM::Vector3 Position;
+			SM::Vector2 Texture;
 		};
 
 		struct PositionColorTexture
 		{
-			DX::XMFLOAT3 Position;
-			DX::XMFLOAT4 Color;
-			DX::XMFLOAT2 Texture;
+			SM::Vector3 Position;
+			SM::Vector4 Color;
+			SM::Vector2 Texture;
 		};
 	}
 }
