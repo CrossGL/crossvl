@@ -15,7 +15,6 @@ namespace CGL::Graphics
 		{};
 		
 	private:
-		std::string                m_path;
 		ComPtr<ID3DBlob>           m_blob;
 		ComPtr<ID3D11VertexShader> m_shader;
 		ComPtr<ID3D11InputLayout>  m_layout;

@@ -1,7 +1,7 @@
 struct PS_INPUT
 {
     float4 Position : SV_Position;
-    float3 Color : COLOR0;
+    float3 Color    : COLOR0;
 };
 
 struct PS_OUTPUT

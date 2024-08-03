@@ -98,6 +98,12 @@ namespace CGL
 	void HelloTriangleApp::OnShutdown()
 	{
 		CGL_LOG(HelloTriangleApp, Info, "Shutting down HelloTriangle App");
+
+		m_indexBuffer.reset();
+		m_vertexBuffer.reset();
+		m_pixelShader.reset();
+		m_vertexShader.reset();
+
 		Super::OnShutdown();
 	}
 }

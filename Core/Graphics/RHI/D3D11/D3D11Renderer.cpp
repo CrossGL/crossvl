@@ -7,6 +7,22 @@
 namespace CGL::Graphics
 {
 #ifdef CGL_RHI_DX11
+
+	namespace
+	{
+		template<typename T, UINT TNameLength>
+		inline void SetDebugObjectName([[maybe_unused]] _In_ T* resource, [[maybe_unused]] _In_z_ const char(&name)[TNameLength])
+		{
+#ifdef CGL_BUILD_DEBUG
+			if (resource)
+			{
+				resource->SetPrivateData(WKPDID_D3DDebugObjectName, TNameLength - 1, name);
+			}
+#endif  // CGL_BUILD_DEBUG
+		}
+
+	}
+
 	namespace Mapping
 	{
 		static constexpr std::array PrimitiveTopology =
@@ -150,6 +166,12 @@ namespace CGL::Graphics
 				&outShader->m_shader
 			));
 
+			{
+				char name[64];
+				sprintf_s(name, "[VS] %s", source.Name.c_str());
+				SetDebugObjectName(outShader->m_shader.Get(), name);
+			}
+
 			// Create reflection
 			ComPtr<ID3D11ShaderReflection> vsReflection = nullptr;
 
@@ -230,6 +252,10 @@ namespace CGL::Graphics
 				outShader->m_blob->GetBufferSize(),
 				&outShader->m_layout
 			));
+
+			char name[64];
+			sprintf_s(name, "[VS ~ Input Layout] %s", source.Name.c_str());
+			SetDebugObjectName(outShader->m_shader.Get(), name);
 		}
 
 		return result;
@@ -259,6 +285,12 @@ namespace CGL::Graphics
 				nullptr,
 				&outShader->m_shader
 			));
+
+			{
+				char name[64];
+				sprintf_s(name, "[PS] %s", source.Name.c_str());
+				SetDebugObjectName(outShader->m_shader.Get(), name);
+			}
 		}
 
 		return result;
@@ -286,6 +318,8 @@ namespace CGL::Graphics
 
 		CGL_LOG(Renderer, Trace, "D3D11 Vertex Buffer Created");
 
+		SetDebugObjectName(buffer, "D3D11VertexBuffer");
+
 		return buffer;
 	}
 
@@ -309,6 +343,8 @@ namespace CGL::Graphics
 		DXCall(GetImpl()->GetDevice()->CreateBuffer(&desc, &resourceData, &buffer));
 
 		CGL_LOG(Renderer, Trace, "D3D11 Index Buffer Created");
+
+		SetDebugObjectName(buffer, "D3D11IndexBuffer");
 
 		return buffer;
 	}
