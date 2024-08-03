@@ -57,18 +57,18 @@ namespace CGL
 		{
 			Graphics::VertexTypes::PositionColor
 			{
-				.Position = DX::XMFLOAT3(  0.0f,  0.5f, 0.0f ),
-				.Color    = DX::XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ),
+				.Position = SM::Vector3(  0.0f,  0.5f, 0.0f ),
+				.Color    = SM::Vector4( 1.0f, 0.0f, 0.0f, 1.0f ),
 			},
 			Graphics::VertexTypes::PositionColor
 			{
-				.Position = DX::XMFLOAT3(  0.5f, -0.5f, 0.0f ),
-				.Color    = DX::XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ),
+				.Position = SM::Vector3(  0.5f, -0.5f, 0.0f ),
+				.Color    = SM::Vector4( 0.0f, 1.0f, 0.0f, 1.0f ),
 			},
 			Graphics::VertexTypes::PositionColor
 			{
-				.Position = DX::XMFLOAT3( -0.5f, -0.5f, 0.0f ),
-				.Color    = DX::XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ),
+				.Position = SM::Vector3( -0.5f, -0.5f, 0.0f ),
+				.Color    = SM::Vector4( 0.0f, 0.0f, 1.0f, 1.0f ),
 			},
 		};
 
