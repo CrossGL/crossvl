@@ -1,10 +1,10 @@
-#include "HelloTriangleApp.h"
+#include "HelloTriangle.h"
 #include <Core/Graphics/Renderer.h>
 #include <Core/Application/AssetFinder.h>
 
 namespace CGL
 {
-	CGL_DEFINE_LOG_CATEGORY(HelloTriangleApp);
+	CGL_DEFINE_LOG_CATEGORY(HelloTriangle);
 
 	static constexpr byte s_vertexShader[] =
 	{
@@ -16,16 +16,16 @@ namespace CGL
 		#include "HelloTrianglePS.hlsl.h"
 	};
 
-	HelloTriangleApp::HelloTriangleApp()
+	HelloTriangle::HelloTriangle()
 	{
-		CGL_LOG(HelloTriangleApp, Trace, "Created HelloTriangle App");
+		CGL_LOG(HelloTriangle, Trace, "Created HelloTriangle App");
 	}
-	HelloTriangleApp::~HelloTriangleApp()
+	HelloTriangle::~HelloTriangle()
 	{
-		CGL_LOG(HelloTriangleApp, Trace, "Destroyed HelloTriangle App");
+		CGL_LOG(HelloTriangle, Trace, "Destroyed HelloTriangle App");
 	}
 
-	bool HelloTriangleApp::OnInit()
+	bool HelloTriangle::OnInit()
 	{
 		if (!Super::OnInit())
 			return false;
@@ -49,7 +49,7 @@ namespace CGL
 		m_material.AddSource(psSrc);
 		if (!GetRenderer()->CompileMaterial(&m_material))
 		{
-			CGL_LOG(HelloTriangleApp, Error, "Failed to compile material for triangle");
+			CGL_LOG(HelloTriangle, Error, "Failed to compile material for triangle");
 		}
 
 		 // Define triangle vertices
@@ -79,15 +79,15 @@ namespace CGL
 		vbs.Count      = u32(vertices.size());
 		m_vertexBuffer = GetRenderer()->CreateVertexBuffer(vbs);
 
-		CGL_LOG(HelloTriangleApp, Info, "Initialized HelloTriangle App");
+		CGL_LOG(HelloTriangle, Info, "Initialized HelloTriangle App");
 		return true;
 	}
 
-	void HelloTriangleApp::OnUpdate()
+	void HelloTriangle::OnUpdate([[maybe_unused]] const SDL_Event& e)
 	{
 	}
 
-	void HelloTriangleApp::OnRender()
+	void HelloTriangle::OnRender()
 	{
 		GetRenderer()->SetPrimitiveTopology(Graphics::PrimitiveType::TriangleList);
 		GetRenderer()->SetMaterial(m_material);
@@ -95,14 +95,14 @@ namespace CGL
 		GetRenderer()->Draw(3, 0);
 	}
 
-	void HelloTriangleApp::OnResize(u32 width, u32 height)
+	void HelloTriangle::OnResize(u32 width, u32 height)
 	{
 		Super::OnResize(width, height);
 	}
 
-	void HelloTriangleApp::OnShutdown()
+	void HelloTriangle::OnShutdown()
 	{
-		CGL_LOG(HelloTriangleApp, Info, "Shutting down HelloTriangle App");
+		CGL_LOG(HelloTriangle, Info, "Shutting down HelloTriangle App");
 
 		Super::OnShutdown();
 	}

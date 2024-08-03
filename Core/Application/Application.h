@@ -1,6 +1,7 @@
 #pragma once
 #include <Core/Common.h>
 #include <Core/Graphics/Renderer.h>
+#include <SDL2/SDL_events.h>
 
 struct SDL_Window;
 
@@ -21,7 +22,7 @@ namespace CGL::Core
 
 	protected:
 		virtual bool OnInit();
-		virtual void OnUpdate() = 0;
+		virtual void OnUpdate(const SDL_Event& e) = 0;
 		virtual void OnRender() = 0;
 		virtual void OnShutdown();
 		virtual void OnResize(u32 width, u32 height);

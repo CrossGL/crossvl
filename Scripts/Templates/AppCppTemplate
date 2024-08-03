@@ -24,7 +24,7 @@ namespace CGL
 		return true;
 	}
 
-	void %PROJECT_NAME%::OnUpdate()
+	void %PROJECT_NAME%::OnUpdate([[maybe_unused]] const SDL_Event& e)
 	{
 		// Update app here
 	}
