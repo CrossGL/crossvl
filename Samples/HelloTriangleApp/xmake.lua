@@ -3,7 +3,7 @@ target("HelloTriangleApp")
 		set_suffixname("_" .. string.upper(get_config("rhi")))
 	end
 
-	set_default(false)
+	set_default(true)
 	set_kind("binary")
 	set_group("Samples")
 	

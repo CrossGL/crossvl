@@ -32,21 +32,27 @@ namespace CGL
 
 		GetRenderer()->SetClearColor(0.0f, 1.0f, 1.0f);
 
-		// Create vertex shader
+		// Define vertex shader source
 		Graphics::ShaderSource vsSrc;
 		vsSrc.SourceData = Core::DataToString(s_vertexShader, sizeof(s_vertexShader));
 		vsSrc.Type       = Graphics::ShaderType::Vertex;
 		vsSrc.Name       = "HelloTriangleVS";
-		m_vertexShader   = GetRenderer()->CreateVertexShader(vsSrc);
 
-		// Create pixel shader
+		// Define pixel shader source
 		Graphics::ShaderSource psSrc;
 		psSrc.SourceData = Core::DataToString(s_pixelShader, sizeof(s_pixelShader));
-		psSrc.Type       = Graphics::ShaderType::Pixel;
-		psSrc.Name       = "HelloTrianglePS";
-		m_pixelShader    = GetRenderer()->CreatePixelShader(psSrc);
+		psSrc.Type = Graphics::ShaderType::Pixel;
+		psSrc.Name = "HelloTrianglePS";
+		
+		// Compile material
+		m_material.AddSource(vsSrc);
+		m_material.AddSource(psSrc);
+		if (!GetRenderer()->CompileMaterial(&m_material))
+		{
+			CGL_LOG(HelloTriangleApp, Error, "Failed to compile material for triangle");
+		}
 
-		// Create vertex buffer
+		 // Define triangle vertices
 		constexpr std::array vertices =
 		{
 			Graphics::VertexTypes::PositionColor
@@ -84,8 +90,7 @@ namespace CGL
 	void HelloTriangleApp::OnRender()
 	{
 		GetRenderer()->SetPrimitiveTopology(Graphics::PrimitiveType::TriangleList);
-		GetRenderer()->SetVertexShader(m_vertexShader);
-		GetRenderer()->SetPixelShader(m_pixelShader);
+		GetRenderer()->SetMaterial(m_material);
 		GetRenderer()->SetVertexBuffer(m_vertexBuffer);
 		GetRenderer()->Draw(3, 0);
 	}
@@ -98,6 +103,7 @@ namespace CGL
 	void HelloTriangleApp::OnShutdown()
 	{
 		CGL_LOG(HelloTriangleApp, Info, "Shutting down HelloTriangle App");
+
 		Super::OnShutdown();
 	}
 }

@@ -5,22 +5,14 @@
 #endif
 
 
-#ifdef CGL_RHI_DX11
+#if defined(CGL_RHI_DX11)
 #include <Core/Graphics/RHI/D3D11/D3D11RendererImpl.h>
-#endif // CGL_RHI_DX11
-
-#ifdef CGL_RHI_DX12
+#elif defined(CGL_RHI_DX12)
 #include <Core/Graphics/RHI/D3D12/D3D12RendererImpl.h>
-#endif // CGL_RHI_DX12
-
-#ifdef CGL_RHI_OPENGL
+#elif defined(CGL_RHI_OPENGL)
 #include <Core/Graphics/RHI/OpenGL/OPENGLRendererImpl.h>
-#endif // CGL_RHI_OPENGL
-
-#ifdef CGL_RHI_VULKAN
+#elif defined(CGL_RHI_VULKAN)
 #include <Core/Graphics/RHI/Vulkan/VULKANRendererImpl.h>
-#endif // CGL_RHI_VULKAN
-
-#ifdef CGL_RHI_METAL
+#elif defined(CGL_RHI_METAL)
 #include <Core/Graphics/RHI/Metal/METALRendererImpl.h>
-#endif // CGL_RHI_METAL
+#endif

@@ -6,7 +6,23 @@
 
 namespace CGL::Graphics
 {
-#ifdef CGL_RHI_DX11
+#if defined(CGL_RHI_DX11)
+
+	namespace
+	{
+		template<typename T, UINT TNameLength>
+		inline void SetDebugObjectName([[maybe_unused]] _In_ T* resource, [[maybe_unused]] _In_z_ const char(&name)[TNameLength])
+		{
+#ifdef CGL_BUILD_DEBUG
+			if (resource)
+			{
+				resource->SetPrivateData(WKPDID_D3DDebugObjectName, TNameLength - 1, name);
+			}
+#endif  // CGL_BUILD_DEBUG
+		}
+
+	}
+
 	namespace Mapping
 	{
 		static constexpr std::array PrimitiveTopology =
@@ -54,7 +70,6 @@ namespace CGL::Graphics
 
 	D3D11RendererImpl* Renderer::GetImpl() const
 	{
-		assert(GetAPI() == RHIType::DirectX11);
 		return static_cast<D3D11RendererImpl*>(m_impl);
 	}
 
@@ -98,34 +113,34 @@ namespace CGL::Graphics
 		impl->GetContext()->IASetPrimitiveTopology(Mapping::PrimitiveTopology[size_t(topology)]);
 	}
 
-	void Renderer::SetVertexShader_D3D11(const std::shared_ptr<VertexShader>& shader)
+	void Renderer::SetVertexShader_D3D11(const VertexShader& shader)
 	{
 		assert(GetImpl() && GetImpl()->GetContext());
-		GetImpl()->GetContext()->VSSetShader(shader->m_shader.Get(), nullptr, 0);
-		GetImpl()->GetContext()->IASetInputLayout(shader->m_layout.Get());
+		GetImpl()->GetContext()->VSSetShader(shader.Shader.Get(), nullptr, 0);
+		GetImpl()->GetContext()->IASetInputLayout(shader.InputLayout.Get());
 	}
 
-	void Renderer::SetPixelShader_D3D11(const std::shared_ptr<PixelShader>& shader)
+	void Renderer::SetPixelShader_D3D11(const PixelShader& shader)
 	{
 		assert(GetImpl() && GetImpl()->GetContext());
-		GetImpl()->GetContext()->PSSetShader(shader->m_shader.Get(), nullptr, 0);
+		GetImpl()->GetContext()->PSSetShader(shader.Shader.Get(), nullptr, 0);
 	}
 
-	void Renderer::SetVertexBuffer_D3D11(const std::shared_ptr<VertexBuffer>& buffer)
+	void Renderer::SetVertexBuffer_D3D11(const VertexBuffer& buffer)
 	{
 		assert(GetImpl() && GetImpl()->GetContext());
-		GetImpl()->GetContext()->IASetVertexBuffers(0, 1, buffer->m_buffer.GetAddressOf(), &buffer->m_stride, &buffer->m_offset);
+		GetImpl()->GetContext()->IASetVertexBuffers(0, 1, buffer.Buffer.GetAddressOf(), &buffer.Stride, &buffer.Offset);
 	}
 
-	void Renderer::SetIndexBuffer_D3D11(const std::shared_ptr<IndexBuffer>& buffer)
+	void Renderer::SetIndexBuffer_D3D11(const IndexBuffer& buffer)
 	{
 		assert(GetImpl() && GetImpl()->GetContext());
-		GetImpl()->GetContext()->IASetIndexBuffer(buffer->m_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		GetImpl()->GetContext()->IASetIndexBuffer(buffer.Buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	}
 
-	ShaderCompileResult Renderer::CreateVertexShader_D3D11(const ShaderSource& source, std::shared_ptr<VertexShader>& outShader)
+	ShaderCompileResult Renderer::CompileVertexShader_D3D11(const ShaderSource& source, VertexShader* outShader)
 	{
-		assert(GetImpl() && GetImpl()->GetDevice());
+		assert(GetImpl() && GetImpl()->GetDevice() && outShader);
 
 		CompileConfig cfg{};
 		cfg.Target     = "vs_5_0";
@@ -135,27 +150,36 @@ namespace CGL::Graphics
 		cfg.Optimize   = false;
 #endif
 
-		ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->m_blob);
+		ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->Blob);
 
 		if (result.Status != ShaderCompileStatus::Failure)
 		{
-			assert(outShader->m_blob);
+			assert(outShader->Blob);
 
 			HRESULT hr{ S_OK };
 			// Shader compiled with warnings, try creating the shader
 			DXCall(hr = GetImpl()->GetDevice()->CreateVertexShader(
-				outShader->m_blob->GetBufferPointer(),
-				outShader->m_blob->GetBufferSize(),
+				outShader->Blob->GetBufferPointer(),
+				outShader->Blob->GetBufferSize(),
 				nullptr,
-				&outShader->m_shader
+				&outShader->Shader
 			));
+
+#ifdef CGL_BUILD_DEBUG
+			{
+				char name[64];
+				sprintf_s(name, "[VS] %s", source.Name.c_str());
+				SetDebugObjectName(outShader->Shader.Get(), name);
+			}
+#endif // CGL_BUILD_DEBUG
+
 
 			// Create reflection
 			ComPtr<ID3D11ShaderReflection> vsReflection = nullptr;
 
 			DXCall(hr = D3DReflect(
-				outShader->m_blob->GetBufferPointer(),
-				outShader->m_blob->GetBufferSize(),
+				outShader->Blob->GetBufferPointer(),
+				outShader->Blob->GetBufferSize(),
 				IID_PPV_ARGS(&vsReflection)
 			));
 
@@ -175,11 +199,11 @@ namespace CGL::Graphics
 				D3D11_INPUT_ELEMENT_DESC elementDesc;
 				ZeroMemory(&elementDesc, sizeof(D3D11_INPUT_ELEMENT_DESC));
 
-				elementDesc.SemanticName         = paramDesc.SemanticName;
-				elementDesc.SemanticIndex        = paramDesc.SemanticIndex;
-				elementDesc.InputSlot            = 0;
-				elementDesc.AlignedByteOffset    = D3D11_APPEND_ALIGNED_ELEMENT;
-				elementDesc.InputSlotClass       = D3D11_INPUT_PER_VERTEX_DATA;
+				elementDesc.SemanticName = paramDesc.SemanticName;
+				elementDesc.SemanticIndex = paramDesc.SemanticIndex;
+				elementDesc.InputSlot = 0;
+				elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+				elementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 				elementDesc.InstanceDataStepRate = 0;
 
 				// Determine DXGI format
@@ -226,18 +250,27 @@ namespace CGL::Graphics
 			DXCall(hr = GetImpl()->GetDevice()->CreateInputLayout(
 				inputLayout.data(),
 				(u32)inputLayout.size(),
-				outShader->m_blob->GetBufferPointer(),
-				outShader->m_blob->GetBufferSize(),
-				&outShader->m_layout
+				outShader->Blob->GetBufferPointer(),
+				outShader->Blob->GetBufferSize(),
+				&outShader->InputLayout
 			));
+
+#ifdef CGL_BUILD_DEBUG
+			{
+				char name[64];
+				sprintf_s(name, "[VS ~ Input Layout] %s", source.Name.c_str());
+				SetDebugObjectName(outShader->Shader.Get(), name);
+			}
+#endif // CGL_BUILD_DEBUG
+
 		}
 
 		return result;
 	}
-	
-	ShaderCompileResult Renderer::CreatePixelShader_D3D11(const ShaderSource& source, std::shared_ptr<PixelShader>& outShader)
+
+	ShaderCompileResult Renderer::CompilePixelShader_D3D11(const ShaderSource& source, PixelShader* outShader)
 	{
-		assert(GetImpl() && GetImpl()->GetDevice());
+		assert(GetImpl() && GetImpl()->GetDevice() && outShader);
 
 		CompileConfig cfg{};
 		cfg.Target     = "ps_5_0";
@@ -247,24 +280,33 @@ namespace CGL::Graphics
 		cfg.Optimize   = false;
 #endif
 
-		ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->m_blob);
+		ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->Blob);
 
 		if (result.Status != ShaderCompileStatus::Failure)
 		{
 			HRESULT hr{ S_OK };
 			// Shader compiled with warnings, try creating the shader
 			DXCall(hr = GetImpl()->GetDevice()->CreatePixelShader(
-				outShader->m_blob->GetBufferPointer(),
-				outShader->m_blob->GetBufferSize(),
+				outShader->Blob->GetBufferPointer(),
+				outShader->Blob->GetBufferSize(),
 				nullptr,
-				&outShader->m_shader
+				&outShader->Shader
 			));
+
+#ifdef CGL_BUILD_DEBUG
+			{
+				char name[64];
+				sprintf_s(name, "[PS] %s", source.Name.c_str());
+				SetDebugObjectName(outShader->Shader.Get(), name);
+			}
+#endif // CGL_BUILD_DEBUG
+
 		}
 
 		return result;
 	}
 
-	ID3D11Buffer* Renderer::CreateVertexBuffer_D3D11(const BufferSource& source)
+	VertexBuffer Renderer::CreateVertexBuffer_D3D11(const BufferSource& source)
 	{
 
 		assert(source.Type == BufferType::Vertex);
@@ -286,10 +328,17 @@ namespace CGL::Graphics
 
 		CGL_LOG(Renderer, Trace, "D3D11 Vertex Buffer Created");
 
-		return buffer;
+		VertexBuffer vb;
+		vb.Buffer.Attach(buffer);
+		vb.Stride = source.Size;
+		vb.Offset = 0;
+
+		SetDebugObjectName(vb.Buffer.Get(), "D3D11VertexBuffer");
+
+		return vb;
 	}
 
-	ID3D11Buffer* Renderer::CreateIndexBuffer_D3D11(const BufferSource& source)
+	IndexBuffer Renderer::CreateIndexBuffer_D3D11(const BufferSource& source)
 	{
 		assert(source.Type == BufferType::Index);
 		assert(GetImpl() && GetImpl()->GetDevice());
@@ -310,7 +359,12 @@ namespace CGL::Graphics
 
 		CGL_LOG(Renderer, Trace, "D3D11 Index Buffer Created");
 
-		return buffer;
+		IndexBuffer ib;
+		ib.Buffer.Attach(buffer);
+
+		SetDebugObjectName(ib.Buffer.Get(), "D3D11IndexBuffer");
+
+		return ib;
 	}
 
 	void Renderer::Draw_D3D11(u32 vertexCount, u32 startVertex)
