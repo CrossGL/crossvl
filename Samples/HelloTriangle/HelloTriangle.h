@@ -4,20 +4,20 @@
 
 namespace CGL
 {
-	CGL_DECLARE_LOG_CATEGORY(HelloTriangleApp);
+	CGL_DECLARE_LOG_CATEGORY(HelloTriangle);
 
-	class HelloTriangleApp : public Core::Application
+	class HelloTriangle : public Core::Application
 	{
 	protected:
 		using Super = Core::Application;
 
 	public:
-		HelloTriangleApp();
-		~HelloTriangleApp();
+		HelloTriangle();
+		~HelloTriangle();
 
 	private:
 		bool OnInit() override final;
-		void OnUpdate() override final;
+		void OnUpdate(const SDL_Event& e) override final;
 		void OnRender() override final;
 		void OnResize(u32 width, u32 height) override final;
 		void OnShutdown() override final;

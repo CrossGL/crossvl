@@ -51,7 +51,7 @@ namespace CGL::Core
 				}
 			}
 
-			OnUpdate();
+			OnUpdate(e);
 
 			// Call begin and end frame before calling render itself
 			m_renderer->BeginFrame();

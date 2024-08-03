@@ -24,7 +24,7 @@ namespace CGL
 		return true;
 	}
 
-	void BlankApp::OnUpdate()
+	void BlankApp::OnUpdate([[maybe_unused]] const SDL_Event& e)
 	{
 		// Update app here
 	}

@@ -9,7 +9,7 @@ int main()
 
 	auto& logManager = Utils::Singleton<LogManager>::Get();
 	logManager.AttachOutput<ConsoleLogOutput>("ConsoleLogOutput", "CGL Log");
-	logManager.AttachOutput<FileLogOutput>("FileLogOutput", "BlankApp.txt");
+	logManager.AttachOutput<FileLogOutput>("FileLogOutput", "BlankAppSampleLog.txt");
 
 	{
 		CGL::BlankApp app;
