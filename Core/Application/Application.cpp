@@ -84,20 +84,8 @@ namespace CGL::Core
 			return false;
 		}
 
-#if defined(CGL_RHI_OPENGL)
-		Graphics::RHIType rhi = Graphics::RHIType::OpenGL;
-#elif defined (CGL_RHI_DX11)
-		Graphics::RHIType rhi = Graphics::RHIType::DirectX11;
-#elif defined(CGL_RHI_DX12)
-		Graphics::RHIType rhi = Graphics::RHIType::DirectX12;
-#elif defined(CGL_RHI_METAL)
-		Graphics::RHIType rhi = Graphics::RHIType::Metal;
-#elif defined(CGL_RHI_VULKAN)
-		Graphics::RHIType rhi = Graphics::RHIType::Vulkan;
-#endif
-
 		// Create renderer
-		m_renderer = std::make_unique<Graphics::Renderer>(m_window, rhi);
+		m_renderer = std::make_unique<Graphics::Renderer>(m_window);
 		if (!m_renderer)
 		{
 			CGL_LOG(CoreApp, Error, "Failed to create renderer");

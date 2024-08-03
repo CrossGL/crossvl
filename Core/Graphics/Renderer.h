@@ -5,6 +5,7 @@
 #include <Core/Graphics/Buffer.h>
 #include <Core/Graphics/Shader/Shader.h>
 #include <Core/Graphics/Shader/ShaderCompiler.h>
+#include <Core/Graphics/Material.h>
 
 struct SDL_Window;
 
@@ -24,12 +25,10 @@ namespace CGL::Graphics
 	class VULKANRendererImpl;
 #endif
 
-	RHIType GetAPI();
-
 	class Renderer
 	{
 	public:
-		explicit Renderer(SDL_Window* window, RHIType api);
+		explicit Renderer(SDL_Window* window);
 		~Renderer();
 
 		void BeginFrame();
@@ -38,50 +37,48 @@ namespace CGL::Graphics
 
 		void SetClearColor(f32 r, f32 g, f32 b, f32 a = 1.0f);
 		void SetPrimitiveTopology(PrimitiveType topology);
-		void SetVertexShader(const std::shared_ptr<VertexShader>& shader);
-		void SetPixelShader(const std::shared_ptr<PixelShader>& shader);
-		void SetVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer);
-		void SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer);
+		void SetVertexShader(const VertexShader& shader);
+		void SetPixelShader(const PixelShader& shader);
+		void SetMaterial(const Material& material);
+		void SetVertexBuffer(const VertexBuffer& buffer);
+		void SetIndexBuffer(const IndexBuffer& buffer);
 
-		std::shared_ptr<VertexShader> CreateVertexShader(const ShaderSource& source);
-		std::shared_ptr<PixelShader> CreatePixelShader(const ShaderSource& source);
-		std::shared_ptr<VertexBuffer> CreateVertexBuffer(const BufferSource& source);
-		std::shared_ptr<IndexBuffer> CreateIndexBuffer(const BufferSource& source);
+		VertexBuffer CreateVertexBuffer(const BufferSource& source);
+		IndexBuffer CreateIndexBuffer(const BufferSource& source);
+		bool CompilePixelShader(const ShaderSource& source, PixelShader* outShader);
+		bool CompileVertexShader(const ShaderSource& source, VertexShader* outShader);
+		bool CompileMaterial(Material* material);
 
 		void Draw(u32 vertexCount, u32 startVertex = 0);
 		void DrawIndexed(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
 
 	private:
-#ifdef CGL_RHI_DX11
+#if defined(CGL_RHI_DX11)
 		void Constructor_D3D11(SDL_Window* window);
 		void Destructor_D3D11();
 		void BeginFrame_D3D11();
 		void EndFrame_D3D11();
 		void Resize_D3D11(u32 width, u32 height);
 		void SetPrimitiveTopology_D3D11(PrimitiveType topology);
-		void SetVertexShader_D3D11(const std::shared_ptr<VertexShader>& shader);
-		void SetPixelShader_D3D11(const std::shared_ptr<PixelShader>& shader);
-		void SetVertexBuffer_D3D11(const std::shared_ptr<VertexBuffer>& buffer);
-		void SetIndexBuffer_D3D11(const std::shared_ptr<IndexBuffer>& buffer);
-		ShaderCompileResult CreateVertexShader_D3D11(const ShaderSource& source, std::shared_ptr<VertexShader>& outShader);
-		ShaderCompileResult CreatePixelShader_D3D11(const ShaderSource& source, std::shared_ptr<PixelShader>& outShader);
-		ID3D11Buffer* CreateVertexBuffer_D3D11(const BufferSource& source);
-		ID3D11Buffer* CreateIndexBuffer_D3D11(const BufferSource& source);
+		void SetVertexShader_D3D11(const VertexShader& shader);
+		void SetPixelShader_D3D11(const PixelShader& shader);
+		void SetVertexBuffer_D3D11(const VertexBuffer& buffer);
+		void SetIndexBuffer_D3D11(const IndexBuffer& buffer);
+		ShaderCompileResult CompileVertexShader_D3D11(const ShaderSource& source, VertexShader* outShader);
+		ShaderCompileResult CompilePixelShader_D3D11(const ShaderSource& source, PixelShader* outShader);
+		VertexBuffer CreateVertexBuffer_D3D11(const BufferSource& source);
+		IndexBuffer CreateIndexBuffer_D3D11(const BufferSource& source);
 		void Draw_D3D11(u32 vertexCount, u32 startVertex = 0);
 		void DrawIndexed_D3D11(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
 		D3D11RendererImpl* GetImpl() const;
-#endif // CGL_RHI_DX11
-
-#ifdef CGL_RHI_OPENGL
+#elif defined(CGL_RHI_OPENGL)
 		void Constructor_OPENGL(SDL_Window* window);
 		void Destructor_OPENGL();
 		void BeginFrame_OPENGL();
 		void EndFrame_OPENGL();
 		void Resize_OPENGL(u32 width, u32 height);
 		OPENGLRendererImpl* GetImpl() const;
-#endif // CGL_RHI_OPENGL
-
-#ifdef CGL_RHI_METAL
+#elif defined(CGL_RHI_METAL)
 		void Constructor_METAL(SDL_Window* window);
 		void Destructor_METAL();
 		void BeginFrame_METAL();

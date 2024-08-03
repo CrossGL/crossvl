@@ -1,6 +1,6 @@
 #pragma once
 #include <Core/Graphics/Shader/ShaderCompileResult.h>
-#include <Core/Graphics/Types.h>
+#include <Core/Graphics/Shader/ShaderSource.h>
 #include <Core/Logging/Log.h>
 
 #if defined(CGL_RHI_D3D)
@@ -11,13 +11,6 @@
 namespace CGL::Graphics
 {
 	CGL_DECLARE_LOG_CATEGORY(ShaderCompiler);
-
-	struct ShaderSource
-	{
-		ShaderType Type;
-		std::string SourceData;
-		std::string Name;
-	};
 
 	struct CompileConfig
 	{
