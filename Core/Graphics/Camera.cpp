@@ -23,7 +23,7 @@ namespace CGL::Graphics
 
 	void Camera::InitAsPerspective(const f32 angle, const f32 width, const f32 height, const f32 nearPlane, const f32 farPlane)
 	{
-		m_angle     = XMConvertToRadians(angle);
+		m_angle     = angle;
 		m_width     = width;
 		m_height    = height;
 		m_nearPlane = nearPlane;
