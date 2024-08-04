@@ -7,8 +7,9 @@ namespace CGL::Core
 {
 	CGL_DEFINE_LOG_CATEGORY(CoreApp);
 
-	Application::Application()
-		: m_isRunning(true)
+	Application::Application(std::string_view name)
+		: m_name(name)
+		, m_isRunning(true)
 		, m_window(nullptr)
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -76,7 +77,7 @@ namespace CGL::Core
 		flags |= SDL_WINDOW_METAL;
 #endif
 
-		m_window = SDL_CreateWindow("CGL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, flags);
+		m_window = SDL_CreateWindow(m_name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, flags);
 		if (!m_window)
 		{
 			std::string err(SDL_GetError());

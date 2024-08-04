@@ -4,7 +4,7 @@ namespace CGL
 {
 	CGL_DEFINE_LOG_CATEGORY(BlankApp);
 
-	BlankApp::BlankApp()
+	BlankApp::BlankApp() : Super("[CGL] Blank App")
 	{
 		CGL_LOG(BlankApp, Trace, "Created Blank App");
 	}
