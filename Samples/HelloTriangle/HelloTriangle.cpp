@@ -1,5 +1,4 @@
 #include "HelloTriangle.h"
-#include <Core/Graphics/Renderer.h>
 #include <Core/Application/AssetFinder.h>
 
 namespace CGL
@@ -16,7 +15,8 @@ namespace CGL
 		#include "HelloTrianglePS.hlsl.h"
 	};
 
-	HelloTriangle::HelloTriangle()
+	HelloTriangle::HelloTriangle(i32 argc, char** argv) 
+		: Super("[CGL] Hello Triangle Sample", argc, argv)
 	{
 		CGL_LOG(HelloTriangle, Trace, "Created HelloTriangle App");
 	}
@@ -75,7 +75,7 @@ namespace CGL
 		Graphics::BufferSource vbs;
 		vbs.Data       = (void*)vertices.data();
 		vbs.Type       = Graphics::BufferType::Vertex;
-		vbs.Size       = sizeof(Graphics::VertexTypes::PositionColor);
+		vbs.TypeSize   = sizeof(decltype(vertices)::value_type);
 		vbs.Count      = u32(vertices.size());
 		m_vertexBuffer = GetRenderer()->CreateVertexBuffer(vbs);
 

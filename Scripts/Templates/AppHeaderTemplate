@@ -12,7 +12,7 @@ namespace CGL
 		using Super = Core::Application;
 
 	public:
-		%PROJECT_NAME%();
+		%PROJECT_NAME%(i32 argc, char** argv);
 		~%PROJECT_NAME%();
 
 	private:

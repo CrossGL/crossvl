@@ -31,6 +31,9 @@ namespace CGL::Graphics
 		explicit Renderer(SDL_Window* window);
 		~Renderer();
 
+		inline u32 GetWidth() const noexcept { return m_width; }
+		inline u32 GetHeight() const noexcept { return m_height; }
+
 		void BeginFrame();
 		void EndFrame();
 		void Resize(u32 width, u32 height);
@@ -49,6 +52,10 @@ namespace CGL::Graphics
 		bool CompileVertexShader(const ShaderSource& source, VertexShader* outShader);
 		bool CompileMaterial(Material* material);
 
+		template <typename T> void CreateContantBuffer(const BufferSource& source, ConstantBuffer<T>& outBuffer);
+		template <typename T> void SetConstantBufferData(const ConstantBuffer<T>& buffer, const T& data);
+		template <typename T> void SetContantBuffer(ShaderType shaderType, u32 startSlot, const ConstantBuffer<T>& buffer);
+
 		void Draw(u32 vertexCount, u32 startVertex = 0);
 		void DrawIndexed(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
 
@@ -66,6 +73,9 @@ namespace CGL::Graphics
 		void SetIndexBuffer_D3D11(const IndexBuffer& buffer);
 		ShaderCompileResult CompileVertexShader_D3D11(const ShaderSource& source, VertexShader* outShader);
 		ShaderCompileResult CompilePixelShader_D3D11(const ShaderSource& source, PixelShader* outShader);
+		void CreateContantBuffer_D3D11(const BufferSource& source, ComPtr<ID3D11Buffer>& outBuffer);
+		void SetConstantBufferData_D3D11(ID3D11Buffer* buffer, const void* data, size_t size);
+		void SetContantBuffer_D3D11(ShaderType type, u32 startSlot, const ComPtr<ID3D11Buffer>& buffer);
 		VertexBuffer CreateVertexBuffer_D3D11(const BufferSource& source);
 		IndexBuffer CreateIndexBuffer_D3D11(const BufferSource& source);
 		void Draw_D3D11(u32 vertexCount, u32 startVertex = 0);
@@ -94,3 +104,6 @@ namespace CGL::Graphics
 		u32 m_height;
 	};
 }
+
+// Contains template bodies
+#include "Renderer.inl"

@@ -1,4 +1,4 @@
-#include "HelloTriangle/HelloTriangle.h"
+#include "SpinningCube/SpinningCube.h"
 #include <Core/Utils/Singleton.h>
 #include <Core/Platform/LogOutput.h>
 #include <Core/Logging/LogManager.h>
@@ -9,10 +9,10 @@ int main(int argc, char** argv)
 
 	auto& logManager = Utils::Singleton<LogManager>::Get();
 	logManager.AttachOutput<ConsoleLogOutput>("ConsoleLogOutput", "CGL Log");
-	logManager.AttachOutput<FileLogOutput>("FileLogOutput", "HelloTriangleSampleLog.txt");
+	logManager.AttachOutput<FileLogOutput>("FileLogOutput", "SpinningCubeLog.txt");
 
 	{
-		CGL::HelloTriangle app(argc, argv);
+		CGL::SpinningCube app(argc, argv);
 		app.Run();
 	}
 

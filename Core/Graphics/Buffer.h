@@ -2,6 +2,7 @@
 #if defined(CGL_RHI_DX11)
 #include <Core/Graphics/RHI/D3D11/D3D11VertexBuffer.h>
 #include <Core/Graphics/RHI/D3D11/D3D11IndexBuffer.h>
+#include <Core/Graphics/RHI/D3D11/D3D11ConstantBuffer.h>
 #endif
 
 #if defined(CGL_RHI_DX12)
@@ -30,7 +31,7 @@ namespace CGL::Graphics
 	{
 		BufferType Type   = BufferType::None;
 		BufferUsage Usage = BufferUsage::Default;
-		u32 Size          = 0;
+		u32 TypeSize      = 0;
 		u32 Count         = 0;
 		void* Data        = nullptr;
 	};
@@ -38,6 +39,7 @@ namespace CGL::Graphics
 #if defined(CGL_RHI_DX11)
 	using VertexBuffer = D3D11VertexBuffer;
 	using IndexBuffer  = D3D11IndexBuffer;
+	template <typename T> using ConstantBuffer = D3D11ConstantBuffer<T>;
 #elif defined(CGL_RHI_DX12)
 	using VertexBuffer = D3D12VertexBuffer;
 	using IndexBuffer  = D3D12IndexBuffer;

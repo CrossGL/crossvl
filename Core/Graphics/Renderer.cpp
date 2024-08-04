@@ -1,6 +1,5 @@
 #include "Renderer.h"
 #include "Core/Graphics/Types.h"
-#include <Core/Graphics/RendererImpl.h>
 #include <SDL2/SDL.h>
 
 namespace CGL::Graphics
@@ -11,6 +10,10 @@ namespace CGL::Graphics
 		: m_impl(nullptr)
 		, m_clearColor({ 1.0f, 0.0f, 1.0f, 1.0f })
 	{
+		i32 width, height;
+		SDL_GetWindowSize(window, &width, &height);
+		m_width  = u32(width);
+		m_height = u32(height);
 
 #if defined(CGL_RHI_DX11)
 		CGL_LOG(Renderer, Debug, "Using RHI: DirectX11");

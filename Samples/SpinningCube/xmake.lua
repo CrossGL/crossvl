@@ -1,4 +1,4 @@
-target("BlankApp")
+target("SpinningCube")
 	if has_config("rhi") then
 		set_suffixname("_" .. string.upper(get_config("rhi")))
 	end
@@ -6,12 +6,13 @@ target("BlankApp")
 	set_default(true)
 	set_kind("binary")
 	set_group("Samples")
-
+	
 	add_packages("libsdl")
 
 	add_includedirs("..", "$(projectdir)")
-	add_files("**.cpp")
+	add_files("**.cpp", "Assets/**.hlsl")
 	add_headerfiles("**.h", { install = false })
+	add_rules("utils.bin2c", { extensions = { ".hlsl" } })
 
 	add_deps("VisualizerCore")
 	if has_config("rhi") then

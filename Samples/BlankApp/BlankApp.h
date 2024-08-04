@@ -12,7 +12,7 @@ namespace CGL
 		using Super = Core::Application;
 
 	public:
-		BlankApp();
+		BlankApp(i32 argc, char** argv);
 		~BlankApp();
 
 	private:

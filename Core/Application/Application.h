@@ -13,7 +13,7 @@ namespace CGL::Core
 	{
 	public:
 	public:
-		Application();
+		Application(std::string_view name, i32 argc, char** argv);
 		~Application() = default;
 
 		inline SDL_Window* GetWindow() const noexcept { return m_window; }
@@ -33,6 +33,7 @@ namespace CGL::Core
 		bool m_isRunning;
 
 	private:
+		std::string m_name;
 		SDL_Window* m_window;
 		std::unique_ptr<Graphics::Renderer> m_renderer;
 	};

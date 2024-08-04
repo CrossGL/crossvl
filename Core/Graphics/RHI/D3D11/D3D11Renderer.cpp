@@ -135,7 +135,7 @@ namespace CGL::Graphics
 	void Renderer::SetIndexBuffer_D3D11(const IndexBuffer& buffer)
 	{
 		assert(GetImpl() && GetImpl()->GetContext());
-		GetImpl()->GetContext()->IASetIndexBuffer(buffer.Buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		GetImpl()->GetContext()->IASetIndexBuffer(buffer.Buffer.Get(), buffer.Format, 0);
 	}
 
 	ShaderCompileResult Renderer::CompileVertexShader_D3D11(const ShaderSource& source, VertexShader* outShader)
@@ -308,14 +308,13 @@ namespace CGL::Graphics
 
 	VertexBuffer Renderer::CreateVertexBuffer_D3D11(const BufferSource& source)
 	{
-
 		assert(source.Type == BufferType::Vertex);
 		assert(GetImpl() && GetImpl()->GetDevice());
 
 		CD3D11_BUFFER_DESC desc{};
 		desc.Usage          = Mapping::BufferUsage[size_t(source.Usage)];
 		desc.BindFlags      = D3D11_BIND_VERTEX_BUFFER;
-		desc.ByteWidth      = source.Size * source.Count;
+		desc.ByteWidth      = source.TypeSize * source.Count;
 		desc.CPUAccessFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA resourceData{};
@@ -330,7 +329,7 @@ namespace CGL::Graphics
 
 		VertexBuffer vb;
 		vb.Buffer.Attach(buffer);
-		vb.Stride = source.Size;
+		vb.Stride = source.TypeSize;
 		vb.Offset = 0;
 
 		SetDebugObjectName(vb.Buffer.Get(), "D3D11VertexBuffer");
@@ -346,8 +345,9 @@ namespace CGL::Graphics
 		CD3D11_BUFFER_DESC desc{};
 		desc.Usage          = Mapping::BufferUsage[size_t(source.Usage)];
 		desc.BindFlags      = D3D11_BIND_INDEX_BUFFER;
-		desc.ByteWidth      = u32(source.Size * source.Count);
+		desc.ByteWidth      = source.TypeSize * source.Count;
 		desc.CPUAccessFlags = 0;
+
 
 		D3D11_SUBRESOURCE_DATA resourceData{};
 		resourceData.pSysMem          = source.Data;
@@ -361,10 +361,78 @@ namespace CGL::Graphics
 
 		IndexBuffer ib;
 		ib.Buffer.Attach(buffer);
+		ib.IndicesCount = source.Count;
+		ib.Format = (source.TypeSize == sizeof(u16) ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT);
 
 		SetDebugObjectName(ib.Buffer.Get(), "D3D11IndexBuffer");
 
 		return ib;
+	}
+	
+	void Renderer::CreateContantBuffer_D3D11(const BufferSource& source, ComPtr<ID3D11Buffer>& outBuffer)
+	{
+		assert(source.Type == BufferType::Constant);
+		assert(GetImpl() && GetImpl()->GetDevice());
+
+		CD3D11_BUFFER_DESC desc{};
+		desc.Usage          = Mapping::BufferUsage[size_t(source.Usage)];
+		desc.BindFlags      = D3D11_BIND_CONSTANT_BUFFER;
+		desc.ByteWidth      = source.TypeSize;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+		DXCall(GetImpl()->GetDevice()->CreateBuffer(&desc, nullptr , &outBuffer));
+
+		SetDebugObjectName(outBuffer.Get(), "D3D11ConstantBuffer");
+	}
+
+	void Renderer::SetConstantBufferData_D3D11(ID3D11Buffer* buffer, const void* data, size_t size)
+	{
+		assert(buffer && GetImpl() && GetImpl()->GetContext());
+
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		if (SUCCEEDED(GetImpl()->GetContext()->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+		{
+			// Ensure the data size fits within the mapped resource
+			assert(size <= mappedResource.RowPitch); // RowPitch is used for 1D and 2D data
+			memcpy(mappedResource.pData, data, size);
+
+			GetImpl()->GetContext()->Unmap(buffer, 0);
+		}
+		else
+		{
+			CGL_LOG(Renderer, Error, "Failed to map constant buffer data");
+		}
+	}
+
+	void Renderer::SetContantBuffer_D3D11(ShaderType type, u32 startSlot, const ComPtr<ID3D11Buffer>& buffer)
+	{
+		assert(GetImpl() && GetImpl()->GetContext() && buffer);
+
+		switch (type)
+		{
+		case CGL::Graphics::ShaderType::Vertex:
+			GetImpl()->GetContext()->VSSetConstantBuffers(startSlot, 1, buffer.GetAddressOf());
+			break;
+		case CGL::Graphics::ShaderType::Hull:
+			GetImpl()->GetContext()->HSSetConstantBuffers(startSlot, 1, buffer.GetAddressOf());
+			break;
+		case CGL::Graphics::ShaderType::Domain:
+			GetImpl()->GetContext()->DSSetConstantBuffers(startSlot, 1, buffer.GetAddressOf());
+			break;
+		case CGL::Graphics::ShaderType::Geometry:
+			GetImpl()->GetContext()->GSSetConstantBuffers(startSlot, 1, buffer.GetAddressOf());
+			break;
+		case CGL::Graphics::ShaderType::Pixel:
+			GetImpl()->GetContext()->PSSetConstantBuffers(startSlot, 1, buffer.GetAddressOf());
+			break;
+		case CGL::Graphics::ShaderType::Compute:
+			GetImpl()->GetContext()->CSSetConstantBuffers(startSlot, 1, buffer.GetAddressOf());
+			break;
+
+		default:
+			CGL_LOG(Renderer, Error, "Unable set contant buffer for input shader type");
+			break;
+		}
 	}
 
 	void Renderer::Draw_D3D11(u32 vertexCount, u32 startVertex)
@@ -378,7 +446,6 @@ namespace CGL::Graphics
 		assert(GetImpl() && GetImpl()->GetContext());
 		GetImpl()->GetContext()->DrawIndexed(indexCount, startIndex, baseVertex);
 	}
-
 
 #endif // CGL_RHI_DX11
 }
