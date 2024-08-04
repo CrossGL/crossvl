@@ -8,6 +8,7 @@
 #endif
 
 #include <Core/External/SimpleMath.h>
+#include <DirectXColors.h>
 
 using namespace DirectX;
 namespace SM = DirectX::SimpleMath;
