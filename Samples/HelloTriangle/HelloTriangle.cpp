@@ -1,5 +1,4 @@
 #include "HelloTriangle.h"
-#include <Core/Graphics/Renderer.h>
 #include <Core/Application/AssetFinder.h>
 
 namespace CGL
