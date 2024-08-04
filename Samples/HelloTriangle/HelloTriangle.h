@@ -12,7 +12,7 @@ namespace CGL
 		using Super = Core::Application;
 
 	public:
-		HelloTriangle();
+		HelloTriangle(i32 argc, char** argv);
 		~HelloTriangle();
 
 	private:

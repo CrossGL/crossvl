@@ -16,7 +16,8 @@ namespace CGL
 		#include "HelloTrianglePS.hlsl.h"
 	};
 
-	HelloTriangle::HelloTriangle() : Super("[CGL] Hello Triangle Sample")
+	HelloTriangle::HelloTriangle(i32 argc, char** argv) 
+		: Super("[CGL] Hello Triangle Sample", argc, argv)
 	{
 		CGL_LOG(HelloTriangle, Trace, "Created HelloTriangle App");
 	}

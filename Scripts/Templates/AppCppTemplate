@@ -4,7 +4,8 @@ namespace CGL
 {
 	CGL_DEFINE_LOG_CATEGORY(%PROJECT_NAME%);
 
-	%PROJECT_NAME%::%PROJECT_NAME%() : Super("[CGL] %PROJECT_NAME%")
+	%PROJECT_NAME%::%PROJECT_NAME%(i32 argc, char** argv) 
+		: Super("[CGL] %PROJECT_NAME%", argc, argv)
 	{
 		CGL_LOG(%PROJECT_NAME%, Trace, "Created %PROJECT_NAME%");
 	}

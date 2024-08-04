@@ -13,7 +13,7 @@ namespace CGL::Core
 	{
 	public:
 	public:
-		Application(std::string_view name);
+		Application(std::string_view name, i32 argc, char** argv);
 		~Application() = default;
 
 		inline SDL_Window* GetWindow() const noexcept { return m_window; }

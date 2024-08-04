@@ -1,17 +1,30 @@
 #include "Application.h"
 #include "SDL_scancode.h"
+#include <chrono>
 #include <SDL2/SDL.h>
-
 
 namespace CGL::Core
 {
 	CGL_DEFINE_LOG_CATEGORY(CoreApp);
 
-	Application::Application(std::string_view name)
+	bool g_isTestMode{ false };
+
+	Application::Application(std::string_view name, i32 argc, char** argv)
 		: m_name(name)
 		, m_isRunning(true)
 		, m_window(nullptr)
 	{
+		// Parse command line arguments
+		for (int i = 1; i < argc; ++i)
+		{
+			if (std::string(argv[i]) == "-test")
+			{
+				CGL_LOG(CoreApp, Info, "Running Visualizer in test mode");
+				m_name.append(" - TEST");
+				g_isTestMode = true;
+			}
+		}
+
 		if (SDL_Init(SDL_INIT_VIDEO) != 0)
 		{
 			std::string err(SDL_GetError());
@@ -28,6 +41,7 @@ namespace CGL::Core
 	{
 		CGL_LOG(CoreApp, Trace, "Running application");
 
+		auto startTime = std::chrono::steady_clock::now();
 		OnInit();
 
 		SDL_Event e;
@@ -58,6 +72,18 @@ namespace CGL::Core
 			m_renderer->BeginFrame();
 			OnRender();
 			m_renderer->EndFrame();
+
+			// Check for test mode and elapsed time
+			if (g_isTestMode)
+			{
+				auto currentTime = std::chrono::steady_clock::now();
+				auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
+				if (elapsedTime >= 5)  // Run for 5 Seconds
+				{
+					CGL_LOG(CoreApp, Info, "Test run completed after 5 seconds. Shutting Down...");
+					m_isRunning = false;
+				}
+			}
 		}
 
 		OnShutdown();
