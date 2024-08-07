@@ -1,0 +1,31 @@
+# Ensures all xmake compile tests pass on windows for every RHI
+name: Windows
+
+on:
+    pull_request:
+        branches: [ "main" ]
+
+jobs:
+    build:
+        runs-on: windows-latest
+    
+        strategy:
+            fail-fast: false
+
+            matrix:
+                build-config: [ debug, release ]
+                rhi: [ dx11, dx12, opengl, vulkan ]
+
+        steps:
+            - uses: actions/checkout@v4
+            - uses: xmake-io/github-action-setup-xmake@v1
+              with:
+                  xmake-version: latest
+                  
+            - name: Set RHI and build config
+              run: |
+                  xmake f --file=${GITHUB_WORKSPACE}/xmake.lua --rhi=${{ matrix.rhi }} -m=${{ matrix.build-config }} -y
+                  
+            - name: Run xmake tests
+              run: |
+                  xmake test test */compile_pass --file=${GITHUB_WORKSPACE}/xmake.lua -y
