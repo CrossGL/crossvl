@@ -50,13 +50,15 @@ jobs:
           key: ${{ matrix.rhi }}-${{ matrix.arch }}-${{ matrix.mode }}-${{ env.hash }}-W${{ env.key }}
 
       - name: Check xmake packages directory exists
+        shell: bash
         run: |
           if [ -d "${{ env.XMAKE_GLOBALDIR }}/.xmake/packages" ]; then
             echo "Packages directory exists."
+            ls -la "${{ env.XMAKE_GLOBALDIR }}/.xmake/packages"
           else
             echo "Packages directory does not exist."
           fi
-          ls -la ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+
 
       - name: Configure xmake and install dependencies
         run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --ccache=n --rhi=${{ matrix.rhi }} --yes
