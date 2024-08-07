@@ -2,10 +2,9 @@
 name: Windows
 
 on:
-    push:
-        branches: [ "main" ]
     pull_request:
         branches: [ "main" ]
+    workflow_dispatch:
 
 jobs:
     build:
@@ -16,13 +15,19 @@ jobs:
 
             matrix:
                 build-config: [ debug, release ]
-                rhi: [ dx11, dx12, opengl, vulkan ]
+                rhi: [ dx11 ] # We currently do not support the other API's
+                # rhi: [ dx11, dx12, opengl, vulkan ]
+        
+        concurrency:
+            group: ${{ github.ref }}-${{ github.base_ref }}-${{ github.head_ref }}-${{ matrix.os }}-${{ matrix.arch }}-Windows
+            cancel-in-progress: true
 
         steps:
             - uses: actions/checkout@v4
             - uses: xmake-io/github-action-setup-xmake@v1
               with:
                   xmake-version: latest
+                  actions-cache-folder: '.xmake-cache'
                   
             - name: Set RHI and build config
               run: |
@@ -30,4 +35,4 @@ jobs:
                   
             - name: Run xmake tests
               run: |
-                  xmake test test */compile_pass --file=${GITHUB_WORKSPACE}/xmake.lua -y
+                  xmake test */compile_pass --file=${GITHUB_WORKSPACE}/xmake.lua -y -vD
