@@ -1,71 +1,63 @@
-# Ensures all xmake compile tests pass on windows for every RHI
 name: Windows
 
 on:
-    pull_request:
-        branches: [ "main" ]
-    workflow_dispatch:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-    build:
-        runs-on: windows-latest
-    
-        strategy:
-            fail-fast: false
+  build:
+    runs-on: windows-latest
 
-            matrix:
-                mode: [ debug]
-                arch: [ x64 ]
-                rhi: [ dx11 ] # We currently do not support the other API's
-                # rhi: [ dx11, dx12, opengl, vulkan ]
-        
-        steps:
-            - name: Get current date as package key
-              id: cache_key
-              run: echo "key=$(date +'%W')" >> $GITHUB_OUTPUT
-              shell: bash
-      
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [ debug ]
+        arch: [ x64 ]
+        rhi: [ dx11 ] # We currently do not support the other APIs
+        # rhi: [ dx11, dx12, opengl, vulkan ]
 
-            # Force xmake to a specific folder (for cache)
-            - name: Set xmake env
-              run: echo "XMAKE_GLOBALDIR=${{ github.workspace }}/xmake-global" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-            
-            - uses: xmake-io/github-action-setup-xmake@v1
-              with:
-                  xmake-version: latest
-                  actions-cache-folder: .xmake-cache-W${{ steps.cache_key.outputs.key }}
+    steps:
+      - name: Get current date as package key
+        id: cache_key
+        run: echo "key=$(date +'%W')" >> $GITHUB_ENV
+        shell: bash
 
-            # Update xmake repository (in order to have the file that will be cached)
-            - name: Update xmake repository
-              run: xmake repo --update
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            # Fetch xmake dephash
-            - name: Retrieve dependencies hash
-              id: dep_hash
-              run: echo "hash=$(xmake l utils.ci.packageskey)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+      - name: Set xmake env
+        run: echo "XMAKE_GLOBALDIR=${{ github.workspace }}/xmake-global" >> $GITHUB_ENV
 
-            # Cache xmake dependencies
-            - name: Restore cached xmake dependencies
-              id: restore-depcache
-              uses: actions/cache/restore@v4
-              with:
-                path: ${{ env.XMAKE_GLOBALDIR }}\.xmake\packages
-                key: ${{ matrix.rhi }}-${{ matrix.arch }}-${{ matrix.mode }}-${{ steps.dep_hash.outputs.hash }}-W${{ steps.cache_key.outputs.key }}
+      - uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+          actions-cache-folder: .xmake-cache-W${{ env.key }}
 
-            # Setup compilation mode and install project dependencies
-            - name: Configure xmake and install dependencies
-              run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --ccache=n --rhi=${{ matrix.rhi }} --yes
+      - name: Update xmake repository
+        run: xmake repo --update
 
-            # Save dependencies
-            - name: Save cached xmake dependencies
-              if: ${{ !steps.restore-depcache.outputs.cache-hit }}
-              uses: actions/cache/save@v4
-              with:
-                path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
-                key: ${{ steps.restore-depcache.outputs.cache-primary-key }}
+      - name: Retrieve dependencies hash
+        id: dep_hash
+        run: echo "hash=$(xmake l utils.ci.packageskey)" >> $GITHUB_ENV
+        shell: bash
 
-            # Build the visualizer
-            - name: Build Visualizer
-              run: xmake --all --yes
+      - name: Restore cached xmake dependencies
+        id: restore-depcache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+          key: ${{ matrix.rhi }}-${{ matrix.arch }}-${{ matrix.mode }}-${{ env.hash }}-W${{ env.key }}
+
+      - name: Configure xmake and install dependencies
+        run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --ccache=n --rhi=${{ matrix.rhi }} --yes
+
+      - name: Save cached xmake dependencies
+        if: ${{ !steps.restore-depcache.outputs.cache-hit }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+          key: ${{ steps.restore-depcache.outputs.cache-primary-key }}
+
+      - name: Build Visualizer
+        run: xmake --all --yes
