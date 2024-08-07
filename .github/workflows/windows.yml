@@ -14,21 +14,58 @@ jobs:
             fail-fast: false
 
             matrix:
-                build-config: [ debug]
+                mode: [ debug]
+                arch: [ x64 ]
                 rhi: [ dx11 ] # We currently do not support the other API's
                 # rhi: [ dx11, dx12, opengl, vulkan ]
         
         steps:
-            - uses: actions/checkout@v4
+            - name: Get current date as package key
+              id: cache_key
+              run: echo "key=$(date +'%W')" >> $GITHUB_OUTPUT
+              shell: bash
+      
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            # Force xmake to a specific folder (for cache)
+            - name: Set xmake env
+              run: echo "XMAKE_GLOBALDIR=${{ github.workspace }}/xmake-global" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            
             - uses: xmake-io/github-action-setup-xmake@v1
               with:
                   xmake-version: latest
-                  actions-cache-folder: '.xmake-cache'
-                  
-            - name: Set RHI and build config
-              run: |
-                  xmake f --file=${GITHUB_WORKSPACE}/xmake.lua --rhi=${{ matrix.rhi }} -m ${{ matrix.build-config }} -y
-                  
-            - name: Build
-              run: |
-                  xmake build --file=${GITHUB_WORKSPACE}/xmake.lua --all -y -vD
+                  actions-cache-folder: .xmake-cache-W${{ steps.cache_key.outputs.key }}
+
+            # Update xmake repository (in order to have the file that will be cached)
+            - name: Update xmake repository
+              run: xmake repo --update
+
+            # Fetch xmake dephash
+            - name: Retrieve dependencies hash
+              id: dep_hash
+              run: echo "hash=$(xmake l utils.ci.packageskey)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+            # Cache xmake dependencies
+            - name: Restore cached xmake dependencies
+              id: restore-depcache
+              uses: actions/cache/restore@v4
+              with:
+                path: ${{ env.XMAKE_GLOBALDIR }}\.xmake\packages
+                key: ${{ matrix.rhi }}-${{ matrix.arch }}-${{ matrix.mode }}-${{ steps.dep_hash.outputs.hash }}-W${{ steps.cache_key.outputs.key }}
+
+            # Setup compilation mode and install project dependencies
+            - name: Configure xmake and install dependencies
+              run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --ccache=n --rhi=${{ matrix.rhi }} --yes
+
+            # Save dependencies
+            - name: Save cached xmake dependencies
+              if: ${{ !steps.restore-depcache.outputs.cache-hit }}
+              uses: actions/cache/save@v4
+              with:
+                path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+                key: ${{ steps.restore-depcache.outputs.cache-primary-key }}
+
+            # Build the visualizer
+            - name: Build Visualizer
+              run: xmake --all --yes
