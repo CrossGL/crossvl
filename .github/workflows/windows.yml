@@ -26,7 +26,7 @@ jobs:
                   
             - name: Set RHI and build config
               run: |
-                  xmake f --file=${GITHUB_WORKSPACE}/xmake.lua --rhi=${{ matrix.rhi }} -m=${{ matrix.build-config }} -y
+                  xmake f --file=${GITHUB_WORKSPACE}/xmake.lua --rhi=${{ matrix.rhi }} -m ${{ matrix.build-config }} -y
                   
             - name: Run xmake tests
               run: |
