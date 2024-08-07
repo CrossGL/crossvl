@@ -3,7 +3,6 @@ name: Windows
 
 on:
     push:
-        branches: [ "main" ]
     pull_request:
         branches: [ "main" ]
 
@@ -16,7 +15,12 @@ jobs:
 
             matrix:
                 build-config: [ debug, release ]
-                rhi: [ dx11, dx12, opengl, vulkan ]
+                rhi: [ dx11, opengl  ] # We currently do not support the other API's
+                # rhi: [ dx11, dx12, opengl, vulkan ]
+        
+        concurrency:
+            group: ${{ github.ref }}-${{ github.base_ref }}-${{ github.head_ref }}-${{ matrix.os }}-${{ matrix.arch }}-Windows
+            cancel-in-progress: true
 
         steps:
             - uses: actions/checkout@v4
