@@ -17,10 +17,6 @@ jobs:
                 rhi: [ dx11 ] # We currently do not support the other API's
                 # rhi: [ dx11, dx12, opengl, vulkan ]
         
-        concurrency:
-            group: ${{ github.ref }}-${{ github.base_ref }}-${{ github.head_ref }}-${{ matrix.os }}-${{ matrix.arch }}-Windows
-            cancel-in-progress: true
-
         steps:
             - uses: actions/checkout@v4
             - uses: xmake-io/github-action-setup-xmake@v1
@@ -34,4 +30,4 @@ jobs:
                   
             - name: Run xmake tests
               run: |
-                  xmake test test */compile_pass --file=${GITHUB_WORKSPACE}/xmake.lua -y -vD
+                  xmake test */compile_pass --file=${GITHUB_WORKSPACE}/xmake.lua -y -vD
