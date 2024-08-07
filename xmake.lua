@@ -1,4 +1,4 @@
-set_xmakever("2.9.2")
+set_xmakever("2.9.4")
 add_rules("mode.debug", "mode.release")
 set_allowedmodes("debug", "release")
 set_allowedplats("windows", "linux", "macosx")
@@ -19,8 +19,6 @@ set_warnings("all", "extra")
 
 -- Enable link time optimization
 set_policy("build.optimization.lto", true)
--- Install packages locally instead of system cache
-set_policy("package.install_locally", true)
 -- Allow auto build before running
 set_policy("run.autobuild", true)
 
