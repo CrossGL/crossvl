@@ -8,28 +8,24 @@
 
 #include "METALRendererImpl.h"
 
-namespace CGL::Graphics
-{
-     METALRendererImpl::METALRendererImpl(SDL_Window* window)
-     {
-          mView = SDL_Metal_CreateView(window);
+namespace CGL::Graphics {
+METALRendererImpl::METALRendererImpl(SDL_Window *window) {
+  mView = SDL_Metal_CreateView(window);
 
-          mLayer = static_cast<CA::MetalLayer*>(SDL_Metal_GetLayer(mView));
-          mLayer->setDevice(MTL::CreateSystemDefaultDevice());
-          mLayer->setPixelFormat(MTL::PixelFormatRGBA8Unorm_sRGB);
+  mLayer = static_cast<CA::MetalLayer *>(SDL_Metal_GetLayer(mView));
+  mLayer->setDevice(MTL::CreateSystemDefaultDevice());
+  mLayer->setPixelFormat(MTL::PixelFormatRGBA8Unorm_sRGB);
 
-          mDevice = mLayer->device();
+  mDevice = mLayer->device();
 
-          mQueue = mDevice->newCommandQueue();
+  mQueue = mDevice->newCommandQueue();
 
-          arPool = nullptr;
-
-     }
-
-     METALRendererImpl::~METALRendererImpl()
-     {
-          mDevice->release();
-          SDL_Metal_DestroyView(mView);
-     }
-
+  arPool = nullptr;
 }
+
+METALRendererImpl::~METALRendererImpl() {
+  mDevice->release();
+  SDL_Metal_DestroyView(mView);
+}
+
+} // namespace CGL::Graphics

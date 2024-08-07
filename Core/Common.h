@@ -1,15 +1,15 @@
 #pragma once
 
+#include <array>
 #include <cassert>
-#include <string>
-#include <string_view>
-#include <memory>
-#include <functional>
 #include <format>
 #include <fstream>
-#include <vector>
-#include <array>
+#include <functional>
+#include <memory>
+#include <string>
+#include <string_view>
 #include <utility>
+#include <vector>
 
-#include <Core/Types.h>
 #include <Core/Defines.h>
+#include <Core/Types.h>

@@ -4,85 +4,83 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-//IMGUI
-#include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_opengl3.h"
+// IMGUI
 #include "ImGuiFileDialog.h"
+#include "imgui.h"
+#include "imgui_impl_opengl3.h"
+#include "imgui_impl_sdl2.h"
 
-//Using SDL, SDL OpenGL, GLEW, standard IO, and strings
+// Using SDL, SDL OpenGL, GLEW, standard IO, and strings
 #include <SDL.h>
 #undef main
-#include <gl\glew.h>
+#include "Cube.h"
+#include "Shader.h"
 #include <SDL_opengl.h>
+#include <gl\glew.h>
+#include <iostream>
 #include <stdio.h>
 #include <string>
-#include <iostream>
 #include <vector>
-#include "Shader.h"
-#include "Cube.h"
 
-//Screen dimension constants
+// Screen dimension constants
 const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 800;
 
 class Application {
 public:
-    Application();
-    ~Application();
-    void run();
-    char* vertexPathAdd = new char[256] {""};
-    char* fragmentPathAdd = new char[256] {""};
+  Application();
+  ~Application();
+  void run();
+  char *vertexPathAdd = new char[256]{""};
+  char *fragmentPathAdd = new char[256]{""};
+
 private:
-    bool initSDL();
-    bool initGL();
-    void handleEvents();
-    void update(float deltaTime);
-    void render();
-    void close();
+  bool initSDL();
+  bool initGL();
+  void handleEvents();
+  void update(float deltaTime);
+  void render();
+  void close();
 
-    //IMGUI
-    void initImGui();
-    void handleImGui();
+  // IMGUI
+  void initImGui();
+  void handleImGui();
 
+  float accumulatedTime = 0.0f;
 
-    float accumulatedTime = 0.0f;
+  bool sdlSuccess = true;
+  bool openGLSuccess = true;
+  bool isWindowOpen = true;
+  bool fileSelectSucceed = false;
+  SDL_Window *window;
+  SDL_GLContext gContext;
 
-    bool sdlSuccess = true;
-    bool openGLSuccess = true;
-    bool isWindowOpen = true;
-    bool fileSelectSucceed = false;
-    SDL_Window* window;
-    SDL_GLContext gContext;
-   
-    GLenum glewError;
+  GLenum glewError;
 
-    //Graphics program
-    GLuint gProgramID = 0;
+  // Graphics program
+  GLuint gProgramID = 0;
 
-    //SHADER
-    Shader* shader;
+  // SHADER
+  Shader *shader;
 
-    Cube* cube;
+  Cube *cube;
 
-    //uniform locations
-    GLint modelLoc;
-    GLint viewLoc;
-    GLint projectionLoc;
+  // uniform locations
+  GLint modelLoc;
+  GLint viewLoc;
+  GLint projectionLoc;
 
+  // projection matrix
+  glm::mat4 projection;
 
-    //projection matrix
-    glm::mat4 projection;
+  // Set the view matrix
+  glm::mat4 view;
 
-    // Set the view matrix
-    glm::mat4 view;
+  // Set model matrix (rotation)
+  glm::mat4 model;
 
-    // Set model matrix (rotation)
-    glm::mat4 model;
+  bool gRenderCube = true;
 
-    bool gRenderCube = true;
-
-    float startTime;
-    float endTime;
-
+  float startTime;
+  float endTime;
 };
