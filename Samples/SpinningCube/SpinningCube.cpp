@@ -54,7 +54,7 @@ namespace CGL
 		}
 
 		// Define cube vertices
-		constexpr std::array vertices =
+		constexpr std::array< Graphics::VertexTypes::PositionColor, 8> vertices =
 		{
 			Graphics::VertexTypes::PositionColor
 			{

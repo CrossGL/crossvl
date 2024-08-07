@@ -25,17 +25,16 @@ namespace CGL::Graphics
 
 	namespace Mapping
 	{
-		static constexpr std::array PrimitiveTopology =
+		static constexpr std::array< D3D_PRIMITIVE_TOPOLOGY, 5> PrimitiveTopology =
 		{
 			D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 			D3D_PRIMITIVE_TOPOLOGY_LINELIST,
 			D3D_PRIMITIVE_TOPOLOGY_POINTLIST,
 			D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP,
 			D3D_PRIMITIVE_TOPOLOGY_LINESTRIP,
-			D3D_PRIMITIVE_TOPOLOGY_TRIANGLEFAN
 		};
 
-		static constexpr std::array BufferUsage =
+		static constexpr std::array<D3D11_USAGE, 4> BufferUsage =
 		{
 			D3D11_USAGE_DEFAULT,
 			D3D11_USAGE_IMMUTABLE,

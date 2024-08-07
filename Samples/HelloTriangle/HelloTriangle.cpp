@@ -53,7 +53,7 @@ namespace CGL
 		}
 
 		 // Define triangle vertices
-		constexpr std::array vertices =
+		constexpr std::array< Graphics::VertexTypes::PositionColor, 3> vertices =
 		{
 			Graphics::VertexTypes::PositionColor
 			{

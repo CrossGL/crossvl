@@ -20,7 +20,6 @@ namespace CGL::Graphics
 		PointList,
 		TriangleStrip,
 		LineStrip,
-		TriangleFan,
 		COUNT
 	};
 
