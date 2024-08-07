@@ -12,9 +12,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mode: [ debug ]
+        mode: [ debug, release ]
         arch: [ x64 ]
-        rhi: [ dx11 ] # We currently do not support the other APIs
+        rhi: [ dx11, opengl ] # We currently do not support the other APIs
         # rhi: [ dx11, dx12, opengl, vulkan ]
 
     steps:
