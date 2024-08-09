@@ -1,9 +1,9 @@
-#include <Core/Graphics/Renderer.h>
 #include <Core/Graphics/RHI/OpenGL/OPENGLRendererImpl.h>
+#include <Core/Graphics/Renderer.h>
 
 namespace CGL::Graphics
 {
-    #ifdef CGL_RHI_OPENGL
+#ifdef CGL_RHI_OPENGL
     void Renderer::Constructor_OPENGL(SDL_Window* window)
     {
         this->m_impl = new OPENGLRendererImpl(window);
@@ -28,18 +28,18 @@ namespace CGL::Graphics
     void Renderer::BeginFrame_OPENGL()
     {
         glClearDepth(1.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
-    
+
     void Renderer::EndFrame_OPENGL()
-    { 
+    {
         GetImpl()->SwapWindow();
     }
 
     void Renderer::Resize_OPENGL(u32 width, u32 height)
-	{
-	    glViewport(0, 0, width, height);
-	}
+    {
+        glViewport(0, 0, width, height);
+    }
 
-    #endif // CGL_RHI_OPENGL
-}
+#endif  // CGL_RHI_OPENGL
+}  // namespace CGL::Graphics

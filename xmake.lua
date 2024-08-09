@@ -1,4 +1,4 @@
-set_xmakever("2.9.2")
+set_xmakever("2.9.4")
 add_rules("mode.debug", "mode.release")
 set_allowedmodes("debug", "release")
 set_allowedplats("windows", "linux", "macosx")
@@ -19,13 +19,8 @@ set_warnings("all", "extra")
 
 -- Enable link time optimization
 set_policy("build.optimization.lto", true)
--- Install packages locally instead of system cache
-set_policy("package.install_locally", true)
 -- Allow auto build before running
 set_policy("run.autobuild", true)
-
--- TODO: remove this policy when all RHI's are in
-set_policy("test.return_zero_on_failure", true)
 
 -- Generate compile_commands.json on build_should_pas
 add_rules("plugin.compile_commands.autoupdate")
@@ -35,25 +30,6 @@ add_rules("plugin.compile_commands.autoupdate")
  includes("Scripts/Packages.lua")
  includes("Scripts/Plugins/xmake.lua")
 
--- Fail D3D builds on non Win32 platforms
-if is_plat("macosx", "linux") then
-	if has_config("rhi") then
-		local rhi = string.upper(get_config("rhi"))
-		if rhi == "DX11" or rhi == "DX12" then
-			print("Trying to build for " .. rhi .. " on an unsupported platform!")
-		end
-	end
-end
-
--- Fail Metal builds on non MacOSX platforms
-if is_plat("windows", "linux") then
-	if has_config("rhi") then
-		local rhi = string.upper(get_config("rhi"))
-		if rhi == "METAL" then
-			print("Trying to build for " .. rhi .. " on an unsupported platform!")
-		end
-	end
-end
 
 -- Set RHI macros
 if has_config("rhi") then

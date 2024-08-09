@@ -1,325 +1,217 @@
 #include "Renderer.h"
 #include "Core/Graphics/Types.h"
-#include <Core/Graphics/RendererImpl.h>
 #include <SDL2/SDL.h>
 
 namespace CGL::Graphics
 {
-	CGL_DEFINE_LOG_CATEGORY(Renderer);
+    CGL_DEFINE_LOG_CATEGORY(Renderer);
 
-	namespace
-	{
-		RHIType g_api = RHIType::None;
-	}
+    Renderer::Renderer(SDL_Window* window)
+        : m_impl(nullptr), m_clearColor({ 1.0f, 0.0f, 1.0f, 1.0f })
+    {
+        i32 width, height;
+        SDL_GetWindowSize(window, &width, &height);
+        m_width  = u32(width);
+        m_height = u32(height);
 
-	RHIType GetAPI()
-	{
-		return g_api;
-	}
+#if defined(CGL_RHI_DX11)
+        CGL_LOG(Renderer, Debug, "Using RHI: DirectX11");
+        Constructor_D3D11(window);
+#elif defined(CGL_RHI_OPENGL)
+        CGL_LOG(Renderer, Debug, "Using RHI: OpenGL");
+        Constructor_OPENGL(window);
+#elif defined(CGL_RHI_METAL)
+        CGL_LOG(Renderer, Debug, "Using RHI: Metal");
+        Constructor_METAL(window);
+#endif
+    }
 
-	Renderer::Renderer(SDL_Window* window, RHIType api)
-		: m_impl(nullptr)
-		, m_clearColor({ 1.0f, 0.0f, 1.0f, 1.0f })
-	{
-		g_api = api;
+    Renderer::~Renderer()
+    {
+#if defined(CGL_RHI_DX11)
+        CGL_LOG(Renderer, Info, "Destructing RHI: DirectX11");
+        Destructor_D3D11();
+#elif defined(CGL_RHI_OPENGL)
+        CGL_LOG(Renderer, Info, "Destructing RHI: OpenGL");
+        Destructor_OPENGL();
+#elif defined(CGL_RHI_METAL)
+        CGL_LOG(Renderer, Info, "Destructing RHI: Metal");
+        Destructor_METAL();
+#endif
+    }
 
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			CGL_LOG(Renderer, Debug, "Using RHI: DirectX11");
-			Constructor_D3D11(window);
-			return;
-		}
-#endif // CGL_RHI_DX11
+    void Renderer::BeginFrame()
+    {
+#if defined(CGL_RHI_DX11)
+        BeginFrame_D3D11();
+#elif defined(CGL_RHI_OPENGL)
+        BeginFrame_OPENGL();
+#elif defined(CGL_RHI_METAL_)
+        BeginFrame_METAL();
+#endif
+    }
 
-#ifdef CGL_RHI_OPENGL
-		if (g_api == RHIType::OpenGL)
-		{
-			CGL_LOG(Renderer, Debug, "Using RHI: OpenGL");
-			Constructor_OPENGL(window);
-			return;
-		}
-#endif // CGL_RHI_OPENGL
+    void Renderer::EndFrame()
+    {
+#if defined(CGL_RHI_DX11)
+        EndFrame_D3D11();
+#elif defined(CGL_RHI_OPENGL)
+        EndFrame_OPENGL();
+#elif defined(CGL_RHI_METAL)
+        EndFrame_METAL();
+#endif
+    }
 
-#ifdef CGL_RHI_METAL
-		if (g_api == RHIType::Metal)
-		{
-			CGL_LOG(Renderer, Debug, "Using RHI: Metal");
-			Constructor_METAL(window);
-			return;
-		}
+    void Renderer::Resize(u32 width, u32 height)
+    {
+        if (m_width == width && m_height == height)
+        {
+            return;
+        }
+
+        m_width  = width;
+        m_height = height;
+
+#if defined(CGL_RHI_DX11)
+        Resize_D3D11(width, height);
+#elif defined(CGL_RHI_OPENGL)
+        Resize_OPENGL(width, height);
+#elif defined(CGL_RHI_METAL)
+        Resize_METAL(width, height);
+#endif
+    }
+
+    void Renderer::SetClearColor(f32 r, f32 g, f32 b, f32 a)
+    {
+        m_clearColor = { r, g, b, a };
+    }
+
+    void Renderer::SetPrimitiveTopology(PrimitiveType topology)
+    {
+#if defined(CGL_RHI_DX11)
+        SetPrimitiveTopology_D3D11(topology);
+#elif defined(CGL_RHI_OPENGL)
+        SetPrimitiveTopology_OPENGL(topology);
+#elif defined(CGL_RHI_METAL)
+        SetPrimitiveTopology_METAL(topology);
+#endif
+    }
+
+    void Renderer::SetVertexShader(const VertexShader& shader)
+    {
+#if defined(CGL_RHI_DX11)
+        SetVertexShader_D3D11(shader);
+#endif
+    }
+
+    void Renderer::SetPixelShader(const PixelShader& shader)
+    {
+#if defined(CGL_RHI_DX11)
+        SetPixelShader_D3D11(shader);
+#endif
+    }
+
+    void Renderer::SetMaterial(const Material& material)
+    {
+        auto& vs = material.m_vs;
+        auto& ps = material.m_ps;
+
+        // Ensure all shaders are compiled before trying to set them
+        assert(vs->State == ShaderState::Compiled);
+        assert(ps->State == ShaderState::Compiled);
+
+        SetVertexShader(vs->Shader);
+        SetPixelShader(ps->Shader);
+    }
+
+    void Renderer::SetVertexBuffer(const VertexBuffer& buffer)
+    {
+#if defined(CGL_RHI_DX11)
+        SetVertexBuffer_D3D11(buffer);
+#endif
+    }
+
+    void Renderer::SetIndexBuffer(const IndexBuffer& buffer)
+    {
+#if defined(CGL_RHI_DX11)
+        SetIndexBuffer_D3D11(buffer);
+#endif
+    }
+
+    bool Renderer::CompileVertexShader(const ShaderSource& source, VertexShader* outShader)
+    {
+        assert(outShader);
+
+#if defined(CGL_RHI_DX11)
+        ShaderCompileResult result = CompileVertexShader_D3D11(source, outShader);
 #endif
 
-		// We should always have an RHI, should never reach here
-		std::unreachable();
-	}
+        ShaderCompiler::ReportResult(result, source.Name.data());
+        return result.Status == ShaderCompileStatus::Success || result.Status == ShaderCompileStatus::HasWarnings;
+    }
 
-	Renderer::~Renderer()
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			CGL_LOG(Renderer, Info, "Destructing RHI: DirectX11");
-			Destructor_D3D11();
-			return;
-		}
-#endif // CGL_RHI_DX11
+    bool Renderer::CompilePixelShader(const ShaderSource& source, PixelShader* outShader)
+    {
+        assert(outShader);
 
-#ifdef CGL_RHI_OPENGL
-		if (g_api == RHIType::OpenGL)
-		{
-			CGL_LOG(Renderer, Info, "Destructing RHI: OpenGL");
-			Destructor_OPENGL();
-			return;
-		}
-#endif // CGL_RHI_OPENGL
-
-#ifdef CGL_RHI_METAL
-		if (g_api == RHIType::Metal)
-		{
-			CGL_LOG(Renderer, Info, "Destructing RHI: Metal");
-			Destructor_METAL();
-			return;
-		}
+#if defined(CGL_RHI_DX11)
+        ShaderCompileResult result = CompilePixelShader_D3D11(source, outShader);
 #endif
 
-		// We should always have an RHI, should never reach here
-		std::unreachable();
-	}
+        ShaderCompiler::ReportResult(result, source.Name.data());
+        return result.Status == ShaderCompileStatus::Success || result.Status == ShaderCompileStatus::HasWarnings;
+    }
 
-	void Renderer::BeginFrame()
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			BeginFrame_D3D11();
-			return;
-		}
-#endif // CGL_RHI_DX11
-
-#ifdef CGL_RHI_OPENGL
-		if (g_api == RHIType::OpenGL)
-		{
-			BeginFrame_OPENGL();
-			return;
-		}
-#endif // CGL_RHI_OPENGL
-
-#ifdef CGL_RHI_METAL
-		if (g_api == RHIType::Metal)
-		{
-			BeginFrame_METAL();
-			return;
-		}
+    VertexBuffer Renderer::CreateVertexBuffer(const BufferSource& source)
+    {
+#if defined(CGL_RHI_DX11)
+        return CreateVertexBuffer_D3D11(source);
 #endif
+    }
 
-		// We should always have an RHI, should never reach here
-		std::unreachable();
-	}
-
-	void Renderer::EndFrame()
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			EndFrame_D3D11();
-			return;
-		}
-#endif // CGL_RHI_DX11
-
-#ifdef CGL_RHI_OPENGL
-		if (g_api == RHIType::OpenGL)
-		{
-			EndFrame_OPENGL();
-			return;
-		}
-#endif // CGL_RHI_OPENGL
-
-#ifdef CGL_RHI_METAL
-		if (g_api == RHIType::Metal)
-		{
-			EndFrame_METAL();
-			return;
-		}
+    IndexBuffer Renderer::CreateIndexBuffer(const BufferSource& source)
+    {
+#if defined(CGL_RHI_DX11)
+        return CreateIndexBuffer_D3D11(source);
 #endif
+    }
 
-		// We should always have an RHI, should never reach here
-		std::unreachable();
-	}
+    bool Renderer::CompileMaterial(Material* material)
+    {
+        assert(material);
+        bool result = true;
 
-	void Renderer::Resize(u32 width, u32 height)
-	{
-		if (m_width == width && m_height == height)
-		{
-			return;
-		}
+        // Compile vertex shader
+        assert(material->m_vs->State == ShaderState::CompilePending);
+        if (bool vsResult = CompileVertexShader(material->m_vs->Source, &material->m_vs->Shader))
+        {
+            result &= vsResult;
+            material->m_vs->State = ShaderState::Compiled;
+        }
 
-		m_width = width;
-		m_height = height;
+        // Compile pixel shader
+        assert(material->m_ps->State == ShaderState::CompilePending);
+        if (bool psResult = CompilePixelShader(material->m_ps->Source, &material->m_ps->Shader))
+        {
+            result &= psResult;
+            material->m_ps->State = ShaderState::Compiled;
+        }
 
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			Resize_D3D11(width, height);
-			return;
-		}
-#endif // CGL_RHI_DX11
+        // TODO: Add other shader types
+        return result;
+    }
 
-#ifdef CGL_RHI_OPENGL
-		if (g_api == RHIType::OpenGL)
-		{
-			Resize_OPENGL(width, height);
-			return;
-		}
-#endif // CGL_RHI_OPENGL
-
-#ifdef CGL_RHI_METAL
-		if (g_api == RHIType::Metal)
-		{
-			Resize_METAL(width, height);
-			return;
-		}
+    void Renderer::Draw(u32 vertexCount, u32 startVertex)
+    {
+#if defined(CGL_RHI_DX11)
+        Draw_D3D11(vertexCount, startVertex);
 #endif
+    }
 
-		// We should always have an RHI, should never reach here
-		std::unreachable();
-	}
-
-	void Renderer::SetClearColor(f32 r, f32 g, f32 b, f32 a)
-	{
-		m_clearColor = { r, g, b, a };
-	}
-
-	void Renderer::SetPrimitiveTopology(PrimitiveType topology)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			SetPrimitiveTopology_D3D11(topology);
-			return;
-		}
-#endif // CGL_RHI_DX11
-		// We should always have an RHI, should never reach here
-		std::unreachable();
-	}
-
-	void Renderer::SetVertexShader(const std::shared_ptr<VertexShader>& shader)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			SetVertexShader_D3D11(shader);
-			return;
-		}
-#endif // CGL_RHI_DX11
-	}
-
-	void Renderer::SetPixelShader(const std::shared_ptr<PixelShader>& shader)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			SetPixelShader_D3D11(shader);
-			return;
-		}
-#endif // CGL_RHI_DX11
-	}
-
-	void Renderer::SetVertexBuffer(const std::shared_ptr<VertexBuffer>& buffer)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			SetVertexBuffer_D3D11(buffer);
-			return;
-		}
-#endif // CGL_RHI_DX11
-	}
-
-	void Renderer::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& buffer)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			SetIndexBuffer_D3D11(buffer);
-			return;
-		}
-#endif // CGL_RHI_DX11
-	}
-
-	std::shared_ptr<VertexShader> Renderer::CreateVertexShader(const ShaderSource& source)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			std::shared_ptr<VertexShader> vs = std::make_shared<VertexShader>();
-			ShaderCompileResult result = CreateVertexShader_D3D11(source, vs);
-
-			ShaderCompiler::ReportResult(result, source.Name.data());
-
-			// Return even if we have warnings
-			return (result.Status != ShaderCompileStatus::Failure) ? std::move(vs) : nullptr;
-		}
-#endif // CGL_RHI_DX11
-	}
-
-	std::shared_ptr<PixelShader> Renderer::CreatePixelShader(const ShaderSource& source)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			std::shared_ptr<PixelShader> ps = std::make_shared<PixelShader>();
-			ShaderCompileResult result = CreatePixelShader_D3D11(source, ps);
-
-			ShaderCompiler::ReportResult(result, source.Name.data());
-
-			// Return even if we have warnings
-			return (result.Status != ShaderCompileStatus::Failure) ? std::move(ps) : nullptr;
-		}
-#endif // CGL_RHI_DX11
-	}
-
-	std::shared_ptr<VertexBuffer> Renderer::CreateVertexBuffer(const BufferSource& source)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			ID3D11Buffer* vb = CreateVertexBuffer_D3D11(source);
-			return (vb == nullptr) ? nullptr : std::make_shared<VertexBuffer>(vb, source.Size, 0);
-		}
-#endif // CGL_RHI_DX11
-	}
-
-	std::shared_ptr<IndexBuffer> Renderer::CreateIndexBuffer(const BufferSource& source)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			ID3D11Buffer* ib = CreateIndexBuffer_D3D11(source);
-			return (ib == nullptr) ? nullptr : std::make_shared<IndexBuffer>(ib);
-		}
-#endif // CGL_RHI_DX11
-	}
-	
-	void Renderer::Draw(u32 vertexCount, u32 startVertex)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			Draw_D3D11(vertexCount, startVertex);
-			return;
-		}
-#endif // CGL_RHI_DX11
-	}
-
-	void Renderer::DrawIndexed(u32 indexCount, u32 startIndex, u32 baseVertex)
-	{
-#ifdef CGL_RHI_DX11
-		if (g_api == RHIType::DirectX11)
-		{
-			DrawIndexed_D3D11(indexCount, startIndex, baseVertex);
-			return;
-		}
-#endif // CGL_RHI_DX11
-	}
-}
+    void Renderer::DrawIndexed(u32 indexCount, u32 startIndex, u32 baseVertex)
+    {
+#if defined(CGL_RHI_DX11)
+        DrawIndexed_D3D11(indexCount, startIndex, baseVertex);
+#endif
+    }
+}  // namespace CGL::Graphics

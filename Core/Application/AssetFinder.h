@@ -1,8 +1,8 @@
 #pragma once
-#include <string>
 #include <Core/Types.h>
+#include <string>
 
 namespace CGL::Core
 {
-	std::string DataToString(const byte* data, size_t size);
+    std::string DataToString(const byte* data, size_t size);
 }

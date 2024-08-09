@@ -1,0 +1,78 @@
+name: Windows
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        mode: [ debug, release ]
+        arch: [ x64 ]
+        rhi: [ dx11, opengl ] # We currently do not support the other APIs
+        # rhi: [ dx11, dx12, opengl, vulkan ]
+
+    steps:
+      - name: Get current date as package key
+        id: cache_key
+        run: echo "key=$(date +'%W')" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set xmake env
+        run: echo "XMAKE_GLOBALDIR=${{ github.workspace }}/xmake-global" >> $GITHUB_ENV
+
+      # Install xmake
+      - name: Setup xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+          actions-cache-folder: .xmake-cache-W${{ env.key }}
+
+      - name: Update xmake repository
+        run: xmake repo --update
+
+      - name: Retrieve dependencies hash
+        id: dep_hash
+        run: echo "hash=$(xmake l utils.ci.packageskey)" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Restore cached xmake dependencies
+        id: restore-depcache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+          key: ${{ matrix.rhi }}-${{ matrix.arch }}-${{ matrix.mode }}-${{ env.hash }}-W${{ env.key }}
+
+      - name: Check xmake packages directory exists
+        shell: bash
+        run: |
+          if [ -d "${{ env.XMAKE_GLOBALDIR }}/.xmake/packages" ]; then
+            echo "Packages directory exists."
+            ls -la "${{ env.XMAKE_GLOBALDIR }}/.xmake/packages"
+          else
+            echo "Packages directory does not exist."
+          fi
+
+      - name: Configure xmake and install dependencies
+        run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --ccache=n --rhi=${{ matrix.rhi }} --yes
+
+      - name: Save cached xmake dependencies
+        if: ${{ !steps.restore-depcache.outputs.cache-hit }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+          key: ${{ steps.restore-depcache.outputs.cache-primary-key }}
+
+      # - name: Build Visualizer
+      #   run: xmake --all --yes
+
+      - name: Run tests
+        run: xmake test */compile_pass

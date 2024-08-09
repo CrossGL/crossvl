@@ -14,15 +14,32 @@ target("BlankApp")
 	add_headerfiles("**.h", { install = false })
 
 	add_deps("VisualizerCore")
+
+	-- Throw errors if trying to build using RHI for an unsupported platform
+	on_config(function (target)
+		if is_plat("macosx", "linux") then
+			if has_config("rhi") then
+				local rhi = string.upper(get_config("rhi"))
+				if rhi == "DX11" or rhi == "DX12" then
+					raise("Trying to build for " .. rhi .. " on an unsupported platform!")
+				end
+			end
+		end
+
+		if is_plat("windows", "linux") then
+			if has_config("rhi") then
+				local rhi = string.upper(get_config("rhi"))
+				if rhi == "METAL" then
+					raise("Trying to build for " .. rhi .. " on an unsupported platform!")
+				end
+			end
+		end
+	end)
+	
 	if has_config("rhi") then
 		add_links("VisualizerCore" .. "_" .. string.upper(get_config("rhi")))
 	end
 
-	on_config (function (target)
-			local asset_dir = path.join("$(scriptdir)", "Assets")
-			local macro = "CGL_ASSET_DIR=".. "\"" .. asset_dir .. "\""
-			target:add("defines", macro)
-		end)
-
 	add_tests("compile_pass", {build_should_pass = true})
+	add_tests("run_5_seconds", { runargs = {"-test"} })
 target_end()

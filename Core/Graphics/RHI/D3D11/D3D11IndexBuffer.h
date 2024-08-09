@@ -3,21 +3,11 @@
 
 namespace CGL::Graphics
 {
-	class D3D11IndexBuffer
-	{
-		friend class Renderer;
+    struct D3D11IndexBuffer
+    {
+        u32 IndicesCount;
+        DXGI_FORMAT Format;
+        ComPtr<ID3D11Buffer> Buffer;
+    };
 
-	public:
-		D3D11IndexBuffer(ID3D11Buffer* buffer)
-			: m_buffer(nullptr)
-		{
-			m_buffer.Attach(buffer);
-		}
-
-		~D3D11IndexBuffer() = default;
-
-	private:
-		ComPtr<ID3D11Buffer> m_buffer;
-	};
-
-}
+}  // namespace CGL::Graphics

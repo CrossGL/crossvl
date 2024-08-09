@@ -1,15 +1,14 @@
 #pragma once
 
+#include <Core/Math/Math.h>
+#include <Core/Types.h>
+#include <array>
 #include <cassert>
-#include <string>
-#include <string_view>
-#include <memory>
-#include <functional>
 #include <format>
 #include <fstream>
-#include <vector>
-#include <array>
+#include <functional>
+#include <memory>
+#include <string>
+#include <string_view>
 #include <utility>
-
-#include <Core/Types.h>
-#include <Core/Defines.h>
+#include <vector>

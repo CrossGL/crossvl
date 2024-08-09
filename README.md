@@ -12,6 +12,9 @@ Tool for loading and testing transpiled shader files.
 | **Linux**    | Not Supported | Not Supported   | In Progress | Not Supported | Not Implemented |
 | **MacOSX**   | Not Supported | Not Supported   | In Progress | In Progress   | Not Implemented |
 
+# Build Status
+[![Windows](https://github.com/CrossGL/visualizer/actions/workflows/windows.yml/badge.svg?branch=main)](https://github.com/CrossGL/visualizer/actions/workflows/windows.yml)
+
 # Project Structure
 
 The project is divided into two sub projects

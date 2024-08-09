@@ -1,0 +1,34 @@
+---
+BasedOnStyle: Microsoft
+AccessModifierOffset: -4
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments:
+  Enabled: true
+AlignConsecutiveShortCaseStatements:
+  AlignCaseColons: true
+AlignEscapedNewlines: Left
+AlignTrailingComments:
+  OverEmptyLines: 2
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: InlineOnly
+AlwaysBreakTemplateDeclarations: Yes
+BreakAfterAttributes: Never
+BreakBeforeBraces: Allman
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+CommentPragmas: ""
+Cpp11BracedListStyle: false
+IncludeBlocks: Merge
+IndentPPDirectives: BeforeHash
+InsertNewlineAtEOF: true
+KeepEmptyLinesAtTheStartOfBlocks: false
+LineEnding: CRLF
+MaxEmptyLinesToKeep: 2
+NamespaceIndentation: All
+PackConstructorInitializers: NextLineOnly
+PointerAlignment: Left
+SpaceAroundPointerQualifiers: Before
+SpacesBeforeTrailingComments: 2
+SpacesInLineCommentPrefix:
+  Maximum: 1

@@ -7,7 +7,7 @@ target("VisualizerCore")
 	set_kind("static")
 	set_group("CrossGL")
 
-	add_packages("libsdl", "dxmath")
+	add_packages("libsdl", "directxmath")
 	set_options("rhi")
 
 	add_includedirs("..")

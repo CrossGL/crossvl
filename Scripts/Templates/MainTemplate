@@ -1,18 +1,18 @@
-#include "HelloTriangleApp/HelloTriangleApp.h"
+#include "%PROJECT_NAME%/%PROJECT_NAME%.h"
 #include <Core/Utils/Singleton.h>
 #include <Core/Platform/LogOutput.h>
 #include <Core/Logging/LogManager.h>
 
-int main()
+int main(int argc, char** argv)
 {
 	using namespace CGL::Core;
 
 	auto& logManager = Utils::Singleton<LogManager>::Get();
 	logManager.AttachOutput<ConsoleLogOutput>("ConsoleLogOutput", "CGL Log");
-	logManager.AttachOutput<FileLogOutput>("FileLogOutput", "HelloTriangleSampleLog.txt");
+	logManager.AttachOutput<FileLogOutput>("FileLogOutput", "%PROJECT_NAME%Log.txt");
 
 	{
-		CGL::HelloTriangleApp app;
+		CGL::%PROJECT_NAME% app(argc, argv);
 		app.Run();
 	}
 

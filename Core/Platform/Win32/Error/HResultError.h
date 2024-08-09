@@ -3,5 +3,5 @@
 
 namespace CGL::Platform::Win32
 {
-	std::string GetErrorString(int errorCode);
+    std::string GetErrorString(int errorCode);
 }
