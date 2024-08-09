@@ -1,7 +1,6 @@
 #pragma once
 #include <Core/Common.h>
 #include <Core/Logging/Log.h>
-#include <Core/Math/Internal/MathInternal.h>
 
 namespace CGL::Graphics
 {

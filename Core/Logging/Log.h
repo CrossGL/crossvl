@@ -2,6 +2,8 @@
 #include <Core/Logging/LogLevel.h>
 #include <mutex>
 
+#define CGL_LOGGING_ENABLED 1
+
 namespace CGL::Core
 {
     struct LogMessage
@@ -92,7 +94,7 @@ namespace CGL::Core
 
 #define CGL_DEFINE_LOG_CATEGORY(Name) Log##Name LOG_CONCATENATE(g_Log, Name)
 
-#ifdef CGL_LOGGING_ENABLED
+#if CGL_LOGGING_ENABLED
     #define CGL_LOG(Name, Level, ...) LOG_CONCATENATE(g_Log, Name).Level(__VA_ARGS__)
 #else
     #define CGL_LOG(Name, Level, ...) (void)0
