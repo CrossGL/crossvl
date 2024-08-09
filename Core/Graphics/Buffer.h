@@ -1,4 +1,6 @@
 #pragma once
+
+#include <Core/Graphics/Types.h>
 #if defined(CGL_RHI_DX11)
     #include <Core/Graphics/RHI/D3D11/D3D11ConstantBuffer.h>
     #include <Core/Graphics/RHI/D3D11/D3D11IndexBuffer.h>
