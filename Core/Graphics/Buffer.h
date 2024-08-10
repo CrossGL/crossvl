@@ -13,8 +13,9 @@
 #endif
 
 #if defined(CGL_RHI_OPENGL)
-    #include <Core/Graphics/RHI/OpenGL/OPENGLIndexBuffer.h>
     #include <Core/Graphics/RHI/OpenGL/OPENGLVertexBuffer.h>
+    #include <Core/Graphics/RHI/OpenGL/OPENGLIndexBuffer.h>
+    #include <Core/Graphics/RHI/OpenGL/OPENGLConstantBuffer.h>
 #endif
 
 #if defined(CGL_RHI_METAL)
@@ -47,8 +48,9 @@ namespace CGL::Graphics
     using VertexBuffer = D3D12VertexBuffer;
     using IndexBuffer  = D3D12IndexBuffer;
 #elif defined(CGL_RHI_OPENGL)
-    using VertexBuffer = OPENGLVertexBuffer;
-    using IndexBuffer  = OPENGLIndexBuffer;
+	  using VertexBuffer = OPENGLVertexBuffer;
+	  using IndexBuffer  = OPENGLIndexBuffer;
+	  template <typename T> using ConstantBuffer = OPENGLConstantBuffer<T>;
 #elif defined(CGL_RHI_METAL)
     using VertexBuffer = METALVertexBuffer;
     using IndexBuffer  = METALIndexBuffer;

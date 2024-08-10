@@ -29,15 +29,14 @@ namespace CGL::Graphics
     }
 
 #if defined(CGL_RHI_D3D)
-    ShaderCompileResult ShaderCompiler::Compile(const ShaderSource& shader, const CompileConfig& config,
-                                                ComPtr<ID3DBlob>& outBlob)
+    ShaderCompileResult ShaderCompiler::Compile(const ShaderSource& shader, const CompileConfig& config, ComPtr<ID3DBlob>& outBlob)
     {
         ShaderCompileResult result{};
 
         if (shader.SourceData.empty())
         {
-            result.Status  = ShaderCompileStatus::Failure;
-            result.Message = "Shader file path is empty";
+            result.Status = ShaderCompileStatus::Failure;
+            result.Message = "Shader file content is empty";
             return result;
         }
 
@@ -59,9 +58,19 @@ namespace CGL::Graphics
         ID3DBlob* errorBlob  = nullptr;
         ID3DBlob* shaderBlob = nullptr;
 
-        HRESULT hr = D3DCompile(shader.SourceData.c_str(), shader.SourceData.length(), shader.Name.c_str(),
-                                config.Defines.data(), D3D_COMPILE_STANDARD_FILE_INCLUDE, config.EntryPoint.data(),
-                                config.Target.data(), compileFlags, 0, &shaderBlob, &errorBlob);
+        HRESULT hr = D3DCompile(
+            shader.SourceData.c_str(), 
+            shader.SourceData.length(), 
+            shader.Name.c_str(),
+            config.Defines.data(), 
+            D3D_COMPILE_STANDARD_FILE_INCLUDE, 
+            config.EntryPoint.data(),
+            config.Target.data(), 
+            compileFlags, 
+            0, 
+            &shaderBlob, 
+            &errorBlob
+        );
 
         if (FAILED(hr) || shaderBlob == nullptr)
         {
@@ -91,6 +100,55 @@ namespace CGL::Graphics
             return result;
         }
     }
+#elif defined(CGL_RHI_OPENGL)
+    ShaderCompileResult ShaderCompiler::Compile(const ShaderSource& shader, [[maybe_unused]] const CompileConfig& config, GLuint& outShader)
+    {
+        ShaderCompileResult result{};
+
+        if (shader.SourceData.empty())
+        {
+            result.Status = ShaderCompileStatus::Failure;
+            result.Message = "Shader file content is empty";
+            return result;
+        }
+        switch (shader.Type)
+        {
+            case Graphics::ShaderType::Vertex:
+            {
+                outShader = glCreateShader(GL_VERTEX_SHADER);
+                break;
+            }
+            case Graphics::ShaderType::Pixel:
+            {
+                outShader = glCreateShader(GL_FRAGMENT_SHADER);
+                break;
+            }
+            default:
+                std::unreachable();
+                break;
+        }
+
+        auto src = shader.SourceData.c_str();
+
+        glShaderSource(outShader, 1, &src, nullptr);
+        glCompileShader(outShader);
+
+        GLint success;
+        glGetShaderiv(outShader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            char infoLog[512];
+            glGetShaderInfoLog(outShader, 512, nullptr, infoLog);
+
+            result.Message = std::string(infoLog);
+            result.Status = ShaderCompileStatus::Failure;
+            return result;
+        }
+        else
+        {
+            result.Status = ShaderCompileStatus::Success;
+            return result;
+        }
+    }
 
 #endif
-}  // namespace CGL::Graphics
+}
