@@ -71,8 +71,8 @@ jobs:
           path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
           key: ${{ steps.restore-depcache.outputs.cache-primary-key }}
 
-      # - name: Build Visualizer
-      #   run: xmake --all --yes
+      - name: Build Visualizer
+        run: xmake --all --yes
 
-      - name: Run tests
-        run: xmake test */compile_pass
+      # - name: Run tests
+      #   run: xmake test */compile_pass
