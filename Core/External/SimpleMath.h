@@ -14,6 +14,12 @@
     #include <dxgi1_2.h>
 #endif
 
+#if defined(_MSC_VER)
+    #define CGL_CDECL __cdecl
+#else
+    #define CGL_CDECL
+#endif
+
 #include <cassert>
 #include <cstddef>
 #include <cstring>
@@ -1017,7 +1023,7 @@ namespace DirectX
             float Dot(const Quaternion& Q) const noexcept;
 
             void RotateTowards(const Quaternion& target, float maxAngle) noexcept;
-            void __cdecl RotateTowards(const Quaternion& target, float maxAngle, Quaternion& result) const noexcept;
+            void CGL_CDECL RotateTowards(const Quaternion& target, float maxAngle, Quaternion& result) const noexcept;
 
             // Computes rotation about y-axis (y), then x-axis (x), then z-axis (z)
             Vector3 ToEuler() const noexcept;
@@ -1043,11 +1049,10 @@ namespace DirectX
             static void Concatenate(const Quaternion& q1, const Quaternion& q2, Quaternion& result) noexcept;
             static Quaternion Concatenate(const Quaternion& q1, const Quaternion& q2) noexcept;
 
-            static void __cdecl FromToRotation(const Vector3& fromDir, const Vector3& toDir,
-                                               Quaternion& result) noexcept;
+            static void CGL_CDECL FromToRotation(const Vector3& fromDir, const Vector3& toDir, Quaternion& result) noexcept;
             static Quaternion FromToRotation(const Vector3& fromDir, const Vector3& toDir) noexcept;
 
-            static void __cdecl LookRotation(const Vector3& forward, const Vector3& up, Quaternion& result) noexcept;
+            static void CGL_CDECL LookRotation(const Vector3& forward, const Vector3& up, Quaternion& result) noexcept;
             static Quaternion LookRotation(const Vector3& forward, const Vector3& up) noexcept;
 
             static float Angle(const Quaternion& q1, const Quaternion& q2) noexcept;
@@ -1254,15 +1259,16 @@ namespace DirectX
                 : x(ix), y(iy), width(iw), height(ih), minDepth(iminz), maxDepth(imaxz)
             {
             }
-            explicit Viewport(const RECT& rct) noexcept
-                : x(float(rct.left))
-                , y(float(rct.top))
-                , width(float(rct.right - rct.left))
-                , height(float(rct.bottom - rct.top))
-                , minDepth(0.f)
-                , maxDepth(1.f)
+          
+#ifdef CGL_PLATFORM_WINDOWS
+            explicit Viewport(const RECT& rct) noexcept :
+                x(float(rct.left)), y(float(rct.top)),
+                width(float(rct.right - rct.left)),
+                height(float(rct.bottom - rct.top)),
+                minDepth(0.f), maxDepth(1.f)
             {
             }
+#endif
 
 #if defined(__d3d11_h__) || defined(__d3d11_x_h__)
             // Direct3D 11 interop
@@ -1314,8 +1320,9 @@ namespace DirectX
 #endif
 
             // Assignment operators
-            Viewport& operator=(const RECT& rct) noexcept;
-
+#ifdef CGL_PLATFORM_WINDOWS
+            Viewport& operator= (const RECT& rct) noexcept;
+#endif
             // Viewport operations
             float AspectRatio() const noexcept;
 

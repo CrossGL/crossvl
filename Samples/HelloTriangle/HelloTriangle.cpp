@@ -5,15 +5,29 @@ namespace CGL
 {
     CGL_DEFINE_LOG_CATEGORY(HelloTriangle);
 
-    static constexpr byte s_vertexShader[] = {
-#include "HelloTriangleVS.hlsl.h"
+    static constexpr byte s_vertexShader[] =
+    {
+  #if defined(CGL_RHI_DX11)
+        #include "HelloTriangleVS.hlsl.h"		
+  #elif defined(CGL_RHI_OPENGL)
+        #include "HelloTriangleVS.vert.h"
+  #elif defined(CGL_RHI_METAL)
+        #include "HelloTriangleVS.metal.h"
+  #endif
     };
 
-    static constexpr byte s_pixelShader[] = {
-#include "HelloTrianglePS.hlsl.h"
+    static constexpr byte s_pixelShader[] =
+    {
+  #if defined(CGL_RHI_DX11)
+         #include "HelloTrianglePS.hlsl.h"		
+  #elif defined(CGL_RHI_OPENGL)
+         #include "HelloTrianglePS.frag.h"
+  #elif defined(CGL_RHI_METAL)
+         #include "HelloTrianglePS.metal.h"
+  #endif
     };
 
-    HelloTriangle::HelloTriangle(i32 argc, char** argv)
+    HelloTriangle::HelloTriangle(i32 argc, char** argv) 
         : Super("[CGL] Hello Triangle Sample", argc, argv)
     {
         CGL_LOG(HelloTriangle, Trace, "Created HelloTriangle App");
@@ -39,8 +53,8 @@ namespace CGL
         // Define pixel shader source
         Graphics::ShaderSource psSrc;
         psSrc.SourceData = Core::DataToString(s_pixelShader, sizeof(s_pixelShader));
-        psSrc.Type       = Graphics::ShaderType::Pixel;
-        psSrc.Name       = "HelloTrianglePS";
+        psSrc.Type = Graphics::ShaderType::Pixel;
+        psSrc.Name = "HelloTrianglePS";
 
         // Compile material
         m_material.AddSource(vsSrc);
@@ -50,21 +64,25 @@ namespace CGL
             CGL_LOG(HelloTriangle, Error, "Failed to compile material for triangle");
         }
 
-        // Define triangle vertices
-        constexpr std::array<Graphics::VertexTypes::PositionColor, 3> vertices = {
-            Graphics::VertexTypes::PositionColor{
-                                                 .Position = SM::Vector3(0.0f, 0.5f, 0.0f),
-                                                 .Color    = SM::Vector4(1.0f,                                   0.0f,                                                                                     0.0f, 1.0f),
-                                                 },
-            Graphics::VertexTypes::PositionColor{
-                                                 .Position = SM::Vector3(0.5f,                            -0.5f,                                                                                    0.0f),
-                                                 .Color    = SM::Vector4(0.0f, 1.0f, 0.0f,                                                                                                                                   1.0f),
-                                                 },
-            Graphics::VertexTypes::PositionColor{
-                                                 .Position = SM::Vector3(-0.5f,                        -0.5f,                      0.0f),
-                                                 .Color    = SM::Vector4(0.0f,                                                                                                                0.0f,                                                                                                                            1.0f,                                                                                                    1.0f),
-                                                 },
-        };
+         // Define triangle vertices
+        constexpr std::array<Graphics::VertexTypes::PositionColor, 3> vertices =
+        {
+            Graphics::VertexTypes::PositionColor
+            {
+                .Position = SM::Vector3(  0.0f,  0.5f, 0.0f ),
+                .Color    = SM::Vector4( 1.0f, 0.0f, 0.0f, 1.0f ),
+            },
+            Graphics::VertexTypes::PositionColor
+            {
+                .Position = SM::Vector3(  0.5f, -0.5f, 0.0f ),
+                .Color    = SM::Vector4( 0.0f, 1.0f, 0.0f, 1.0f ),
+            },
+            Graphics::VertexTypes::PositionColor
+            {
+                .Position = SM::Vector3( -0.5f, -0.5f, 0.0f ),
+                .Color    = SM::Vector4( 0.0f, 0.0f, 1.0f, 1.0f ),
+            },
+          };
 
         Graphics::BufferSource vbs;
         vbs.Data       = (void*)vertices.data();
@@ -100,4 +118,4 @@ namespace CGL
 
         Super::OnShutdown();
     }
-}  // namespace CGL
+}

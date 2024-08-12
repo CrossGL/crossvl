@@ -3797,7 +3797,8 @@ inline bool Viewport::operator!=(const Viewport& vp) const noexcept
 // Assignment operators
 //------------------------------------------------------------------------------
 
-inline Viewport& Viewport::operator=(const RECT& rct) noexcept
+#ifdef CGL_PLATFORM_WINDOWS
+inline Viewport& Viewport::operator= (const RECT& rct) noexcept
 {
     x        = float(rct.left);
     y        = float(rct.top);
@@ -3807,6 +3808,7 @@ inline Viewport& Viewport::operator=(const RECT& rct) noexcept
     maxDepth = 1.f;
     return *this;
 }
+#endif
 
 #if defined(__d3d11_h__) || defined(__d3d11_x_h__)
 inline Viewport& Viewport::operator=(const D3D11_VIEWPORT& vp) noexcept

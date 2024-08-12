@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "SDL_scancode.h"
 #include <SDL2/SDL.h>
 #include <chrono>
 
@@ -10,7 +9,9 @@ namespace CGL::Core
     bool g_isTestMode{ false };
 
     Application::Application(std::string_view name, i32 argc, char** argv)
-        : m_name(name), m_isRunning(true), m_window(nullptr)
+        : m_isRunning(true)
+        , m_name(name)
+        , m_window(nullptr)
     {
         // Parse command line arguments
         for (int i = 1; i < argc; ++i)
@@ -56,7 +57,9 @@ namespace CGL::Core
                 {
                     switch (e.window.event)
                     {
-                    case SDL_WINDOWEVENT_RESIZED: OnResize(e.window.data1, e.window.data2); break;
+                    case SDL_WINDOWEVENT_RESIZED:
+                        OnResize(e.window.data1, e.window.data2);
+                        break;
                     }
                 }
             }
@@ -80,21 +83,18 @@ namespace CGL::Core
                 }
             }
         }
-
         OnShutdown();
     }
 
-    bool Application::OnInit()
+	bool Application::OnInit()
     {
-        // Create SDL window
+		// Create SDL window
         u32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
-
 #if defined(CGL_RHI_OPENGL)
         flags |= SDL_WINDOW_OPENGL;
 #elif defined(CGL_RHI_VULKAN)
         flags |= SDL_WINDOW_VULKAN;
 #elif defined(CGL_RHI_METAL)
-
         flags |= SDL_WINDOW_METAL;
 #endif
 
