@@ -1,6 +1,5 @@
-#include "Application.h"
-#include "SDL_scancode.h"
 #include <SDL2/SDL.h>
+#include "Application.h"
 #include <chrono>
 
 namespace CGL::Core
@@ -10,7 +9,9 @@ namespace CGL::Core
     bool g_isTestMode{ false };
 
     Application::Application(std::string_view name, i32 argc, char** argv)
-        : m_name(name), m_isRunning(true), m_window(nullptr)
+        : m_isRunning(true)
+        , m_name(name)
+        , m_window(nullptr)
     {
         // Parse command line arguments
         for (int i = 1; i < argc; ++i)
@@ -56,39 +57,39 @@ namespace CGL::Core
                 {
                     switch (e.window.event)
                     {
-                    case SDL_WINDOWEVENT_RESIZED: OnResize(e.window.data1, e.window.data2); break;
+                    case SDL_WINDOWEVENT_RESIZED:
+                        OnResize(e.window.data1, e.window.data2);
+                        break;
                     }
                 }
-            }
+          }
 
-            OnUpdate(e);
+          OnUpdate(e);
 
-            // Call begin and end frame before calling render itself
-            m_renderer->BeginFrame();
-            OnRender();
-            m_renderer->EndFrame();
+          // Call begin and end frame before calling render itself
+          m_renderer->BeginFrame();
+          OnRender();
+          m_renderer->EndFrame();
 
-            // Check for test mode and elapsed time
-            if (g_isTestMode)
-            {
-                auto currentTime = std::chrono::steady_clock::now();
-                auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
-                if (elapsedTime >= 5)  // Run for 5 Seconds
-                {
-                    CGL_LOG(CoreApp, Info, "Test run completed after 5 seconds. Shutting Down...");
-                    m_isRunning = false;
-                }
-            }
+          // Check for test mode and elapsed time
+          if (g_isTestMode)
+          {
+              auto currentTime = std::chrono::steady_clock::now();
+              auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
+              if (elapsedTime >= 5)  // Run for 5 Seconds
+              {
+                  CGL_LOG(CoreApp, Info, "Test run completed after 5 seconds. Shutting Down...");
+                  m_isRunning = false;
+              }
+          }
         }
-
         OnShutdown();
     }
 
-    bool Application::OnInit()
-    {
-        // Create SDL window
-        u32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
-
+	  bool Application::OnInit()
+	  {
+		// Create SDL window
+		    u32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
 #if defined(CGL_RHI_OPENGL)
         flags |= SDL_WINDOW_OPENGL;
 #elif defined(CGL_RHI_VULKAN)
