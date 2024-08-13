@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/Math/Internal/MathInternal.h>
+#include <Core/Math/Math.h>
 
 namespace CGL::Graphics
 {

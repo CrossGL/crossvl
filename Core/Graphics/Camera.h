@@ -1,7 +1,7 @@
 	#pragma once
 #include <Core/Common.h>
-#include <Core/Math/Internal/MathInternal.h>
 #include <Core/Logging/Log.h>
+#include <Core/Math/Math.h>
 
 namespace CGL::Graphics
 {
@@ -45,13 +45,13 @@ namespace CGL::Graphics
 		SM::Vector3 m_position;
 		SM::Vector3 m_target;
 		SM::Vector3 m_up;
-		f32 m_angle;
-		f32 m_width;
-		f32 m_height;
-		f32 m_nearPlane;
-		f32 m_farPlane;
-		SM::Matrix m_view;
-		SM::Matrix m_proj;
-		SM::Matrix m_ortho;
+		f32         m_angle;
+		f32         m_width;
+		f32         m_height;
+		f32         m_nearPlane;
+		f32         m_farPlane;
+		SM::Matrix  m_view;
+		SM::Matrix  m_proj;
+		SM::Matrix  m_ortho;
 	};
 }
