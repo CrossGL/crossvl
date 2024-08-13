@@ -1,7 +1,7 @@
 #include "OPENGLRendererImpl.h"
 
 namespace CGL::Graphics
-{
+{   
     CGL_DEFINE_LOG_CATEGORY(OPENGLRendererImpl);
 
     OPENGLRendererImpl::OPENGLRendererImpl(SDL_Window* window)
@@ -17,18 +17,18 @@ namespace CGL::Graphics
         glewExperimental = GL_TRUE;
 
         glewError = glewInit();
-
+        
         glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-        SDL_GL_SetSwapInterval(1);
+        SDL_GL_SetSwapInterval(1);            
     }
 
     OPENGLRendererImpl::~OPENGLRendererImpl()
     {
         SDL_GL_DeleteContext(gContext);
     }
-
+    
     void OPENGLRendererImpl::SwapWindow()
     {
         SDL_GL_SwapWindow(gWindow);
     }
-}  // namespace CGL::Graphics
+}
