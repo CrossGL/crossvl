@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Math/Math.h>
+#include <Core/Defines.h>
 #include <Core/Types.h>
 #include <array>
 #include <cassert>
