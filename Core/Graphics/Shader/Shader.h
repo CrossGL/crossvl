@@ -1,7 +1,7 @@
 #pragma once
 #if defined(CGL_RHI_DX11)
-#include <Core/Graphics/RHI/D3D11/D3D11PixelShader.h>
 #include <Core/Graphics/RHI/D3D11/D3D11VertexShader.h>
+#include <Core/Graphics/RHI/D3D11/D3D11PixelShader.h>
 #endif
 
 #if defined(CGL_RHI_DX12)
@@ -20,23 +20,24 @@
 #include <Core/Graphics/RHI/Vulkan/VULKANVertexShader.h>
 #endif
 
-namespace CGL::Graphics {
+namespace CGL::Graphics
+{
 #if defined(CGL_RHI_DX11)
-using VertexShader = D3D11VertexShader;
-using PixelShader = D3D11PixelShader;
+	using VertexShader = D3D11VertexShader;
+	using PixelShader  = D3D11PixelShader;
 #elif defined(CGL_RHI_DX12)
-using VertexShader = D3D12VertexShader;
-using PixelShader = D3D12PixelShader;
+	using VertexShader = D3D12VertexShader;
+	using PixelShader  = D3D12PixelShader;
 #elif defined(CGL_RHI_OPENGL)
-using VertexShader = OPENGLVertexShader;
-using PixelShader = OPENGLPixelShader;
+	using VertexShader = OPENGLVertexShader;
+	using PixelShader  = OPENGLPixelShader;
 #elif defined(CGL_RHI_METAL)
-using VertexShader = METALVertexShader;
-using PixelShader = METALPixelShader;
+	using VertexShader = METALVertexShader;
+	using PixelShader  = METALPixelShader;
 #elif defined(CGL_RHI_VULKAN)
-using VertexShader = VULKANVertexShader;
-using PixelShader = VULKANPixelShader;
+	using VertexShader = VULKANVertexShader;
+	using PixelShader  = VULKANPixelShader;
 #else
-#error Unsupported shader RHI
+	#error Unsupported shader RHI
 #endif
-} // namespace CGL::Graphics
+}
