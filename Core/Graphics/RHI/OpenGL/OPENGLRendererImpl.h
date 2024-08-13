@@ -1,25 +1,25 @@
 #pragma once
-#include "Core/Logging/Log.h"
-#include "SDL2/SDL_opengl.h"
 #include <Core/Graphics/Types.h>
+
+#include "SDL2/SDL_opengl.h"
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 
-namespace CGL::Graphics
-{
-    CGL_DECLARE_LOG_CATEGORY(OPENGLRendererImpl);
+#include "Core/Logging/Log.h"
 
-    class OPENGLRendererImpl
-    {
-    public:
-        explicit OPENGLRendererImpl(SDL_Window* window);
-        ~OPENGLRendererImpl();
+namespace CGL::Graphics {
+CGL_DECLARE_LOG_CATEGORY(OPENGLRendererImpl);
 
-        void SwapWindow();
+class OPENGLRendererImpl {
+public:
+  explicit OPENGLRendererImpl(SDL_Window *window);
+  ~OPENGLRendererImpl();
 
-    private:
-        SDL_Window* gWindow;
-        SDL_GLContext gContext;
-        GLenum glewError;
-    };
-}  // namespace CGL::Graphics
+  void SwapWindow();
+
+private:
+  SDL_Window *gWindow;
+  SDL_GLContext gContext;
+  GLenum glewError;
+};
+} // namespace CGL::Graphics

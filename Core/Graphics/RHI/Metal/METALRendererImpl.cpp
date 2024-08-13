@@ -2,32 +2,30 @@
 #define CA_PRIVATE_IMPLEMENTATION
 #define MTL_PRIVATE_IMPLEMENTATION
 
-#include "METALRendererImpl.h"
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 #include <QuartzCore/QuartzCore.hpp>
 
-namespace CGL::Graphics
-{
-    METALRendererImpl::METALRendererImpl(SDL_Window* window)
-    {
-        mView = SDL_Metal_CreateView(window);
+#include "METALRendererImpl.h"
 
-        mLayer = static_cast<CA::MetalLayer*>(SDL_Metal_GetLayer(mView));
-        mLayer->setDevice(MTL::CreateSystemDefaultDevice());
-        mLayer->setPixelFormat(MTL::PixelFormatRGBA8Unorm_sRGB);
+namespace CGL::Graphics {
+METALRendererImpl::METALRendererImpl(SDL_Window *window) {
+  mView = SDL_Metal_CreateView(window);
 
-        mDevice = mLayer->device();
+  mLayer = static_cast<CA::MetalLayer *>(SDL_Metal_GetLayer(mView));
+  mLayer->setDevice(MTL::CreateSystemDefaultDevice());
+  mLayer->setPixelFormat(MTL::PixelFormatRGBA8Unorm_sRGB);
 
-        mQueue = mDevice->newCommandQueue();
+  mDevice = mLayer->device();
 
-        arPool = nullptr;
-    }
+  mQueue = mDevice->newCommandQueue();
 
-    METALRendererImpl::~METALRendererImpl()
-    {
-        mDevice->release();
-        SDL_Metal_DestroyView(mView);
-    }
+  arPool = nullptr;
+}
 
-}  // namespace CGL::Graphics
+METALRendererImpl::~METALRendererImpl() {
+  mDevice->release();
+  SDL_Metal_DestroyView(mView);
+}
+
+} // namespace CGL::Graphics

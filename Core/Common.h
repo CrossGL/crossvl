@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Core/Defines.h>
-#include <Core/Types.h>
 #include <array>
 #include <cassert>
 #include <format>
@@ -12,3 +10,6 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+
+#include <Core/Defines.h>
+#include <Core/Types.h>
