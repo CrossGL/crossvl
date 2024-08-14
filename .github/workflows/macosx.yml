@@ -1,4 +1,4 @@
-name: Windows
+name: MacOSX
 
 on:
   pull_request:
