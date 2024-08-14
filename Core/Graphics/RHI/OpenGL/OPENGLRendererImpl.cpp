@@ -36,7 +36,7 @@ namespace CGL::Graphics
 			m_primitive = primitive;
     }
     
-    void OPENGLRendererImpl::SwapWindow()
+    void OPENGLRendererImpl::Present()
     {
 			SDL_GL_SwapWindow(m_gWindow);
     }

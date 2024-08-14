@@ -39,4 +39,4 @@ namespace CGL::Graphics
 		static ShaderCompileResult Compile(const ShaderSource& shader, const CompileConfig& config, GLuint& outBlob);
 #endif
 	};
-} // namespace CGL::Graphics
+}

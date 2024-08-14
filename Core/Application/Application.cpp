@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "SDL_scancode.h"
+#include <SDL_scancode.h>
 #include <chrono>
 #include <SDL2/SDL.h>
 

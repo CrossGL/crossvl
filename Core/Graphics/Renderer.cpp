@@ -129,7 +129,7 @@ namespace CGL::Graphics
 		SetPixelShader(ps->Shader);
 
 #if defined(CGL_RHI_OPENGL)
-		glUseProgram(material.GetMaterialID());
+		glUseProgram(material.m_id);
 #endif
 	 }
 
@@ -241,4 +241,4 @@ namespace CGL::Graphics
 		DrawIndexed_OPENGL(indexCount, startIndex, baseVertex);
 #endif
 	}
-}  // namespace CGL::Graphics
+}

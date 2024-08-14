@@ -5,6 +5,6 @@ namespace CGL::Graphics
 {
 	struct OPENGLPixelShader
 	{
-		GLuint FragmentShader;
+		GLuint PixelShader;
 	};
 } // namespace CGL::Graphics

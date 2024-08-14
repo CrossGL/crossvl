@@ -41,4 +41,4 @@ namespace CGL::Graphics
 #else
 	#error Unsupported shader RHI
 #endif
-} // namespace CGL::Graphics
+}

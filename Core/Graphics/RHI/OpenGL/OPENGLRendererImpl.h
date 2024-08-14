@@ -17,7 +17,7 @@ namespace CGL::Graphics
 		void SetPrimitive(GLenum primitive);
 		inline GLenum GetPrimitive() { return m_primitive;}
 
-		void SwapWindow();
+		void Present();
 	private:
 		SDL_Window* m_gWindow;
 		SDL_GLContext m_gContext;

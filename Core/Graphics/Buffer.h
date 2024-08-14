@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Core/Graphics/Buffer.h>
 #include <Core/Types.h>
 
 #if defined(CGL_RHI_DX11)

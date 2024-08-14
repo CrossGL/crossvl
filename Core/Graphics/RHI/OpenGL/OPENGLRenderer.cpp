@@ -55,7 +55,7 @@ namespace CGL::Graphics
     
     void Renderer::EndFrame_OPENGL()
     { 
-			GetImpl()->SwapWindow();
+			GetImpl()->Present();
     }
 
     void Renderer::Resize_OPENGL(u32 width, u32 height)
@@ -129,10 +129,10 @@ namespace CGL::Graphics
 			cfg.Optimize = false;
 #endif
 
-			ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->FragmentShader);
+			ShaderCompileResult result = ShaderCompiler::Compile(source, cfg, outShader->PixelShader);
 			if (result.Status != ShaderCompileStatus::Failure)
 			{
-				assert(outShader->FragmentShader);
+				assert(outShader->PixelShader);
 			}
 
 			return result;
@@ -142,7 +142,7 @@ namespace CGL::Graphics
 		{
 			material->m_id = glCreateProgram();
 			glAttachShader(material->m_id, material->GetVertexShader()->Shader.VertexShader);
-			glAttachShader(material->m_id, material->GetPixelShader()->Shader.FragmentShader);
+			glAttachShader(material->m_id, material->GetPixelShader()->Shader.PixelShader);
 			glLinkProgram(material->m_id);
 
 			GLint success;
@@ -158,7 +158,7 @@ namespace CGL::Graphics
 				material->m_vs->State = ShaderState::Compiled;            
 				material->m_ps->State = ShaderState::Compiled;
 				glDeleteShader(material->GetVertexShader()->Shader.VertexShader);
-				glDeleteShader(material->GetPixelShader()->Shader.FragmentShader);
+				glDeleteShader(material->GetPixelShader()->Shader.PixelShader);
 			}
 		}
 
