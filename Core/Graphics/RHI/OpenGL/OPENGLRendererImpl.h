@@ -1,9 +1,11 @@
 #pragma once
-#include "Core/Logging/Log.h"
-#include "SDL2/SDL_opengl.h"
 #include <Core/Graphics/Types.h>
+
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
+#include "SDL2/SDL_opengl.h"
+
+#include "Core/Logging/Log.h"
 
 namespace CGL::Graphics
 {
@@ -14,7 +16,7 @@ namespace CGL::Graphics
     public:
         explicit OPENGLRendererImpl(SDL_Window* window);
         ~OPENGLRendererImpl();
-
+        
         void SwapWindow();
 
     private:
@@ -22,4 +24,4 @@ namespace CGL::Graphics
         SDL_GLContext gContext;
         GLenum glewError;
     };
-}  // namespace CGL::Graphics
+}

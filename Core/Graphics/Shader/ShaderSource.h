@@ -5,9 +5,9 @@
 namespace CGL::Graphics
 {
     struct ShaderSource
-    {
-        ShaderType Type;
-        std::string SourceData;
-        std::string Name;
-    };
-}  // namespace CGL::Graphics
+	{
+		ShaderType Type;
+		std::string SourceData;
+		std::string Name;
+	};
+}

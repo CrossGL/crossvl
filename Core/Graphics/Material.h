@@ -25,7 +25,6 @@ namespace CGL::Graphics
     class Material
     {
         friend class Renderer;
-
     public:
 #if defined(CGL_RHI_OPENGL)
         using ID = GLuint;
@@ -43,9 +42,9 @@ namespace CGL::Graphics
         inline const ShaderProgram<PixelShader>* GetPixelShader() const noexcept { return m_ps.get(); }
 
     private:
-        ID m_id;
+        ID                                           m_id;
         std::unique_ptr<ShaderProgram<VertexShader>> m_vs;
-        std::unique_ptr<ShaderProgram<PixelShader>> m_ps;
+        std::unique_ptr<ShaderProgram<PixelShader>>  m_ps;
         // TODO: Add other shader types
     };
-}  // namespace CGL::Graphics
+}
