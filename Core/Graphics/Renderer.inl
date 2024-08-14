@@ -7,6 +7,8 @@ namespace CGL::Graphics
 	{
 #if defined(CGL_RHI_DX11)
 		CreateContantBuffer_D3D11(source, outBuffer.Buffer);
+#elif defined(CGL_RHI_OPENGL)
+		CreateConstantBuffer_OPENGL(source, outBuffer.Buffer);
 #endif
 	}
 
@@ -15,6 +17,8 @@ namespace CGL::Graphics
 	{
 #if defined(CGL_RHI_DX11)
 		SetConstantBufferData_D3D11(buffer.Buffer.Get(), static_cast<const void*>(&data), sizeof(T));
+#elif defined(CGL_RHI_OPENGL)
+		SetConstantBufferData_OPENGL(buffer.Buffer.Get(), static_cast<const void*>(&data), sizeof(T));
 #endif  
 	}
 	template <typename T> 
@@ -22,6 +26,8 @@ namespace CGL::Graphics
 	{
 #if defined(CGL_RHI_DX11)
 		SetContantBuffer_D3D11(shaderType, startSlot, buffer.Buffer);
+#elif defined(CGL_RHI_OPENGL)
+		SetConstantBuffer_OPENGL(shaderType, startSlot, buffer.Buffer);
 #endif 
 	}
 }

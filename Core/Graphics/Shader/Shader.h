@@ -10,6 +10,7 @@
 
 #if defined(CGL_RHI_OPENGL)
 #include <Core/Graphics/RHI/OpenGL/OPENGLVertexShader.h>
+#include <Core/Graphics/RHI/OpenGL/OPENGLPixelShader.h>
 #endif
 
 #if defined(CGL_RHI_METAL)

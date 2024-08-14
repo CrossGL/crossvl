@@ -7,12 +7,24 @@ namespace CGL
 
 	static constexpr byte s_vertexShader[] =
 	{
-		#include "HelloTriangleVS.hlsl.h"
+#if defined(CGL_RHI_DX11)
+		#include "HelloTriangleVS.hlsl.h"		
+#elif defined(CGL_RHI_OPENGL)
+		#include "HelloTriangleVS.vert.h"
+#elif defined(CGL_RHI_METAL)
+		#include "HelloTriangleVS.metal.h"
+#endif
 	};
 
 	static constexpr byte s_pixelShader[] =
 	{
-		#include "HelloTrianglePS.hlsl.h"
+#if defined(CGL_RHI_DX11)
+		#include "HelloTrianglePS.hlsl.h"		
+#elif defined(CGL_RHI_OPENGL)
+		#include "HelloTrianglePS.frag.h"
+#elif defined(CGL_RHI_METAL)
+		#include "HelloTrianglePS.metal.h"
+#endif
 	};
 
 	HelloTriangle::HelloTriangle(i32 argc, char** argv) 

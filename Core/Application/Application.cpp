@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "SDL_scancode.h"
+#include <SDL_scancode.h>
 #include <chrono>
 #include <SDL2/SDL.h>
 
@@ -99,7 +99,6 @@ namespace CGL::Core
 #elif defined(CGL_RHI_VULKAN)
 		flags |= SDL_WINDOW_VULKAN;
 #elif defined(CGL_RHI_METAL)
-
 		flags |= SDL_WINDOW_METAL;
 #endif
 

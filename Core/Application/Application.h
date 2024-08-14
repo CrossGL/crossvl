@@ -1,7 +1,7 @@
 #pragma once
+#include <SDL2/SDL_events.h>
 #include <Core/Common.h>
 #include <Core/Graphics/Renderer.h>
-#include <SDL2/SDL_events.h>
 
 struct SDL_Window;
 

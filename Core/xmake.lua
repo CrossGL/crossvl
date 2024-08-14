@@ -65,7 +65,11 @@ target("VisualizerCore")
 			add_files("Graphics/RHI/OpenGL/**.cpp")
 			add_headerfiles("Graphics/RHI/OpenGL/**.h")
 			add_packages("glew")
-			add_links("GL")
+			if is_os("windows") then
+				add_links("opengl32")
+			elseif is_os("linux") then
+				add_links("GL")
+			end
 		elseif rhi == "VULKAN" then
 			add_files("Graphics/RHI/Vulkan/**.cpp")
 			add_headerfiles("Graphics/RHI/Vulkan/**.h")

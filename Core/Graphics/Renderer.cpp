@@ -1,6 +1,6 @@
 #include "Renderer.h"
 #include "Core/Graphics/Types.h"
-#include <SDL2/SDL.h>
+#include <SDL2/SDL_video.h>
 
 namespace CGL::Graphics
 {
@@ -102,6 +102,8 @@ namespace CGL::Graphics
 	{
 #if defined(CGL_RHI_DX11)
 		SetVertexShader_D3D11(shader);
+#elif defined(CGL_RHI_OPENGL)
+		SetVertexShader_OPENGL(shader);
 #endif
 	}
 
@@ -109,6 +111,8 @@ namespace CGL::Graphics
 	{
 #if defined(CGL_RHI_DX11)
 		SetPixelShader_D3D11(shader);
+#elif defined(CGL_RHI_OPENGL)
+		SetPixelShader_OPENGL(shader);
 #endif
 	}
 
@@ -123,12 +127,19 @@ namespace CGL::Graphics
 
 		SetVertexShader(vs->Shader);
 		SetPixelShader(ps->Shader);
-	}
+
+#if defined(CGL_RHI_OPENGL)
+		glUseProgram(material.m_id);
+#endif
+	 }
+
 
 	void Renderer::SetVertexBuffer(const VertexBuffer& buffer)
 	{
 #if defined(CGL_RHI_DX11)
 		SetVertexBuffer_D3D11(buffer);
+#elif defined(CGL_RHI_OPENGL)
+		SetVertexBuffer_OPENGL(buffer);
 #endif
 	}
 
@@ -136,6 +147,8 @@ namespace CGL::Graphics
 	{
 #if defined(CGL_RHI_DX11)
 		SetIndexBuffer_D3D11(buffer);
+#elif defined(CGL_RHI_OPENGL)
+		SetIndexBuffer_OPENGL(buffer);
 #endif
 	}
 
@@ -145,11 +158,11 @@ namespace CGL::Graphics
 
 #if defined(CGL_RHI_DX11)
 		ShaderCompileResult result = CompileVertexShader_D3D11(source, outShader);
+#elif defined(CGL_RHI_OPENGL)
+		ShaderCompileResult result = CompileVertexShader_OPENGL(source, outShader);
 #endif
-
 		ShaderCompiler::ReportResult(result, source.Name.data());
-		return result.Status == ShaderCompileStatus::Success ||
-			result.Status == ShaderCompileStatus::HasWarnings;
+		return result.Status == ShaderCompileStatus::Success || result.Status == ShaderCompileStatus::HasWarnings;
 	}
 
 	bool Renderer::CompilePixelShader(const ShaderSource& source, PixelShader* outShader)
@@ -158,17 +171,19 @@ namespace CGL::Graphics
 
 #if defined(CGL_RHI_DX11)
 		ShaderCompileResult result = CompilePixelShader_D3D11(source, outShader);
+#elif defined(CGL_RHI_OPENGL)
+		ShaderCompileResult result = CompilePixelShader_OPENGL(source, outShader);
 #endif
-
 		ShaderCompiler::ReportResult(result, source.Name.data());
-		return result.Status == ShaderCompileStatus::Success ||
-			result.Status == ShaderCompileStatus::HasWarnings;
+		return result.Status == ShaderCompileStatus::Success || result.Status == ShaderCompileStatus::HasWarnings;
 	}
 
 	VertexBuffer Renderer::CreateVertexBuffer(const BufferSource& source)
 	{
 #if defined(CGL_RHI_DX11)
 		return CreateVertexBuffer_D3D11(source);
+#elif defined(CGL_RHI_OPENGL)
+		return CreateVertexBuffer_OPENGL(source);
 #endif
 	}
 
@@ -176,6 +191,8 @@ namespace CGL::Graphics
 	{
 #if defined(CGL_RHI_DX11)
 		return CreateIndexBuffer_D3D11(source);
+#elif defined(CGL_RHI_OPENGL)
+		return CreateIndexBuffer_OPENGL(source);
 #endif
 	}
 
@@ -200,6 +217,9 @@ namespace CGL::Graphics
 			material->m_ps->State = ShaderState::Compiled;
 		}
 
+#if defined(CGL_RHI_OPENGL)
+		LinkShaders_OPENGL(material);
+#endif
 		// TODO: Add other shader types
 		return result;
 	}
@@ -208,6 +228,8 @@ namespace CGL::Graphics
 	{
 #if defined(CGL_RHI_DX11)
 		Draw_D3D11(vertexCount, startVertex);
+#elif defined(CGL_RHI_OPENGL)
+		Draw_OPENGL(vertexCount, startVertex);
 #endif
 	}
 
@@ -215,6 +237,8 @@ namespace CGL::Graphics
 	{
 #if defined(CGL_RHI_DX11)
 		DrawIndexed_D3D11(indexCount, startIndex, baseVertex);
+#elif defined(CGL_RHI_OPENGL)
+		DrawIndexed_OPENGL(indexCount, startIndex, baseVertex);
 #endif
 	}
 }

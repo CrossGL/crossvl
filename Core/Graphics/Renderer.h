@@ -81,13 +81,30 @@ namespace CGL::Graphics
 		void Draw_D3D11(u32 vertexCount, u32 startVertex = 0);
 		void DrawIndexed_D3D11(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
 		D3D11RendererImpl* GetImpl() const;
+
 #elif defined(CGL_RHI_OPENGL)
 		void Constructor_OPENGL(SDL_Window* window);
 		void Destructor_OPENGL();
 		void BeginFrame_OPENGL();
 		void EndFrame_OPENGL();
 		void Resize_OPENGL(u32 width, u32 height);
+		void SetPrimitiveTopology_OPENGL(PrimitiveType topology);
+		void SetVertexShader_OPENGL(const VertexShader& shader);
+		void SetPixelShader_OPENGL(const PixelShader& shader);
+		void SetVertexBuffer_OPENGL(const VertexBuffer& buffer);
+		void SetIndexBuffer_OPENGL(const IndexBuffer& buffer);
+		ShaderCompileResult CompileVertexShader_OPENGL(const ShaderSource& source, VertexShader* outShader);
+		ShaderCompileResult CompilePixelShader_OPENGL(const ShaderSource& source, PixelShader* outShader);
+		void LinkShaders_OPENGL(Material* material);
+		void CreateConstantBuffer_OPENGL(const BufferSource& source, GLuint& outBuffer);
+		void SetConstantBufferData_OPENGL(GLuint* buffer, const void* data, size_t size);
+		void SetConstantBuffer_OPENGL(ShaderType type, u32 startSlot, const GLuint& buffer);
+		VertexBuffer CreateVertexBuffer_OPENGL(const BufferSource& source);
+		IndexBuffer CreateIndexBuffer_OPENGL(const BufferSource& source);
+		void Draw_OPENGL(u32 vertexCount, u32 startVertex = 0);
+		void DrawIndexed_OPENGL(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
 		OPENGLRendererImpl* GetImpl() const;
+      
 #elif defined(CGL_RHI_METAL)
 		void Constructor_METAL(SDL_Window* window);
 		void Destructor_METAL();
