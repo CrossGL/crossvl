@@ -12,9 +12,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mode: [ debug, release ]
-        rhi: [ opengl ] # Add vulkan
-        # rhi: [ dx11, dx12, opengl, vulkan, metal ]
+        prj: [ BlankApp, HelloTriangle, SpinningCube ]
+        rhi: [ opengl ] # TODO: Add vulkan
 
     steps:
       - name: Get current date as package key
@@ -48,7 +47,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
-          key: ${{ matrix.rhi }}-${{ matrix.arch }}-${{ matrix.mode }}-${{ env.hash }}-W${{ env.key }}
+          key: ${{ matrix.rhi }}-${{ matrix.prj }}-${{ env.hash }}-W${{ env.key }}
 
       - name: Check xmake packages directory exists
         shell: bash
@@ -61,7 +60,7 @@ jobs:
           fi
 
       - name: Configure xmake and install dependencies
-        run: xmake config --mode=${{ matrix.mode }} --ccache=n --rhi=${{ matrix.rhi }} --yes
+        run: xmake config --mode=release --ccache=n --rhi=${{ matrix.rhi }} --yes
 
       - name: Save cached xmake dependencies
         if: ${{ !steps.restore-depcache.outputs.cache-hit }}
@@ -71,10 +70,7 @@ jobs:
           key: ${{ steps.restore-depcache.outputs.cache-primary-key }}
 
       - name: Build Visualizer
-        run: xmake --all --yes
-
-      - name: Run compile tests
-        run: xmake test */compile_pass
+        run: xmake build ${{ matrix.prj }} --yes
 
       - name: Run tests
-        run: xmake test */run_5_seconds
+        run: xmake test ${{ matrix.prj }}/*
