@@ -74,5 +74,8 @@ jobs:
       - name: Build Visualizer
         run: xmake --all --yes
 
-      # - name: Run tests
-      #   run: xmake test */compile_pass
+      - name: Run compile tests
+        run: xmake test */compile_pass
+
+      - name: Run tests
+        run: xmake test */run_5_seconds
