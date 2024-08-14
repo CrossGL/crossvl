@@ -70,7 +70,7 @@ jobs:
           key: ${{ steps.restore-depcache.outputs.cache-primary-key }}
 
       - name: Build Visualizer
-        run: xmake build ${{ matrix.prj }} --yes
+        run: xmake build ${{ matrix.prj }}
 
       - name: Run tests
         run: xmake test ${{ matrix.prj }}/*
