@@ -41,6 +41,15 @@ target("%PROJECT_NAME%")
 		local rhi = string.upper(get_config("rhi"))
 		add_links("VisualizerCore" .. "_" .. rhi)
 
+		if rhi == "OPENGL" then
+			add_packages("glew")
+			if is_plat("windows") then
+				add_links("opengl32")
+			elseif is_plat("linux") then
+				add_links("GL")
+			end
+		end
+
 		if rhi == "DX11" or rhi == "DX12" then
 			add_rules("utils.bin2c", { extensions = { ".hlsl" } })
 			add_files("Assets/**.hlsl")
