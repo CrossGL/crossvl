@@ -1,6 +1,12 @@
 name: MacOSX
 
 on:
+  push:
+    branches: [ "main" ]
+    paths:
+        - "Core/**"
+        - "Samples/**"
+        - "Scripts/**"
   pull_request:
     branches: [ "main" ]
     paths:
