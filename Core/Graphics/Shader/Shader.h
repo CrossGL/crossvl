@@ -15,6 +15,7 @@
 
 #if defined(CGL_RHI_METAL)
 #include <Core/Graphics/RHI/Metal/METALVertexShader.h>
+#include <Core/Graphics/RHI/Metal/METALPixelShader.h>
 #endif
 
 #if defined(CGL_RHI_VULKAN)

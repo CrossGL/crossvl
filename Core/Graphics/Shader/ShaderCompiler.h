@@ -12,6 +12,10 @@
 #include <GL/glew.h>
 #endif
 
+#if defined (CGL_RHI_METAL)
+#include <Core/Graphics/RHI/METALCommon.h>
+#endif
+
 namespace CGL::Graphics
 {
 	CGL_DECLARE_LOG_CATEGORY(ShaderCompiler);
@@ -37,6 +41,8 @@ namespace CGL::Graphics
 		static ShaderCompileResult Compile(const ShaderSource& shader, const CompileConfig& config, ComPtr<ID3DBlob>& outBlob);
 #elif defined(CGL_RHI_OPENGL)
 		static ShaderCompileResult Compile(const ShaderSource& shader, const CompileConfig& config, GLuint& outBlob);
+#elif defined (CGL_RHI_METAL)
+		static ShaderCompileResult Compile(const ShaderSource& shader, const CompileConfig& config, METALCompileObjects& outBlob);
 #endif
 	};
 }

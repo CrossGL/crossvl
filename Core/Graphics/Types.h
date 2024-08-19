@@ -141,24 +141,24 @@ namespace CGL::Graphics
 	{
 		struct Position
 		{
-			SM::Vector3 Position;
+			SM::Vector4 Position;
 		};
 
 		struct PositionColor
 		{
-			SM::Vector3 Position;
+			SM::Vector4 Position;
 			SM::Vector4 Color;
 		};
 
 		struct PositionTexture
 		{
-			SM::Vector3 Position;
+			SM::Vector4 Position;
 			SM::Vector2 Texture;
 		};
 
 		struct PositionColorTexture
 		{
-			SM::Vector3 Position;
+			SM::Vector4 Position;
 			SM::Vector4 Color;
 			SM::Vector2 Texture;
 		};

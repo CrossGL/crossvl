@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Core/Graphics/Buffer.h>
+#include <Core/Graphics/Types.h>
 #include <Core/Types.h>
 
 #if defined(CGL_RHI_DX11)
@@ -23,6 +23,7 @@
 #if defined(CGL_RHI_METAL)
 #include <Core/Graphics/RHI/Metal/METALVertexBuffer.h>
 #include <Core/Graphics/RHI/Metal/METALIndexBuffer.h>
+#include <Core/Graphics/RHI/Metal/METALConstantBuffer.h>
 #endif
 
 #if defined(CGL_RHI_VULKAN)
@@ -55,6 +56,7 @@ namespace CGL::Graphics
 #elif defined(CGL_RHI_METAL)
 	using VertexBuffer = METALVertexBuffer;
 	using IndexBuffer  = METALIndexBuffer;
+	template <typename T> using ConstantBuffer = METALConstantBuffer<T>;
 #elif defined(CGL_RHI_VULKAN)
 	using VertexBuffer = VULKANVertexBuffer;
 	using IndexBuffer  = VULKANIndexBuffer;

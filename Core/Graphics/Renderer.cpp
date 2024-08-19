@@ -47,7 +47,7 @@ namespace CGL::Graphics
 		BeginFrame_D3D11();
 #elif defined(CGL_RHI_OPENGL)
 		BeginFrame_OPENGL();
-#elif defined(CGL_RHI_METAL_)
+#elif defined(CGL_RHI_METAL)
 		BeginFrame_METAL();
 #endif
 	}
@@ -104,6 +104,8 @@ namespace CGL::Graphics
 		SetVertexShader_D3D11(shader);
 #elif defined(CGL_RHI_OPENGL)
 		SetVertexShader_OPENGL(shader);
+#elif defined (CGL_RHI_METAL)
+        SetVertexShader_METAL(shader);
 #endif
 	}
 
@@ -113,6 +115,8 @@ namespace CGL::Graphics
 		SetPixelShader_D3D11(shader);
 #elif defined(CGL_RHI_OPENGL)
 		SetPixelShader_OPENGL(shader);
+#elif defined (CGL_RHI_METAL)
+        SetPixelShader_METAL(shader);
 #endif
 	}
 
@@ -130,8 +134,10 @@ namespace CGL::Graphics
 
 #if defined(CGL_RHI_OPENGL)
 		glUseProgram(material.m_id);
+#elif defined (CGL_RHI_METAL)
+        SetRenderPipeline_METAL();
 #endif
-	 }
+	}
 
 
 	void Renderer::SetVertexBuffer(const VertexBuffer& buffer)
@@ -140,6 +146,8 @@ namespace CGL::Graphics
 		SetVertexBuffer_D3D11(buffer);
 #elif defined(CGL_RHI_OPENGL)
 		SetVertexBuffer_OPENGL(buffer);
+#elif defined (CGL_RHI_METAL)
+        SetVertexBuffer_METAL(buffer);
 #endif
 	}
 
@@ -149,6 +157,8 @@ namespace CGL::Graphics
 		SetIndexBuffer_D3D11(buffer);
 #elif defined(CGL_RHI_OPENGL)
 		SetIndexBuffer_OPENGL(buffer);
+#elif defined (CGL_RHI_METAL)
+        SetIndexBuffer_METAL(buffer);
 #endif
 	}
 
@@ -160,6 +170,8 @@ namespace CGL::Graphics
 		ShaderCompileResult result = CompileVertexShader_D3D11(source, outShader);
 #elif defined(CGL_RHI_OPENGL)
 		ShaderCompileResult result = CompileVertexShader_OPENGL(source, outShader);
+#elif defined (CGL_RHI_METAL)
+        ShaderCompileResult result = CompileVertexShader_METAL(source, outShader);
 #endif
 		ShaderCompiler::ReportResult(result, source.Name.data());
 		return result.Status == ShaderCompileStatus::Success || result.Status == ShaderCompileStatus::HasWarnings;
@@ -173,6 +185,8 @@ namespace CGL::Graphics
 		ShaderCompileResult result = CompilePixelShader_D3D11(source, outShader);
 #elif defined(CGL_RHI_OPENGL)
 		ShaderCompileResult result = CompilePixelShader_OPENGL(source, outShader);
+#elif defined (CGL_RHI_METAL)
+        ShaderCompileResult result = CompilePixelShader_METAL(source, outShader);
 #endif
 		ShaderCompiler::ReportResult(result, source.Name.data());
 		return result.Status == ShaderCompileStatus::Success || result.Status == ShaderCompileStatus::HasWarnings;
@@ -184,6 +198,8 @@ namespace CGL::Graphics
 		return CreateVertexBuffer_D3D11(source);
 #elif defined(CGL_RHI_OPENGL)
 		return CreateVertexBuffer_OPENGL(source);
+#elif defined (CGL_RHI_METAL)
+        return CreateVertexBuffer_METAL(source);
 #endif
 	}
 
@@ -193,6 +209,8 @@ namespace CGL::Graphics
 		return CreateIndexBuffer_D3D11(source);
 #elif defined(CGL_RHI_OPENGL)
 		return CreateIndexBuffer_OPENGL(source);
+#elif defined (CGL_RHI_METAL)
+        return CreateIndexBuffer_METAL(source);
 #endif
 	}
 
@@ -223,13 +241,15 @@ namespace CGL::Graphics
 		// TODO: Add other shader types
 		return result;
 	}
-	
+
 	void Renderer::Draw(u32 vertexCount, u32 startVertex)
 	{
 #if defined(CGL_RHI_DX11)
 		Draw_D3D11(vertexCount, startVertex);
 #elif defined(CGL_RHI_OPENGL)
 		Draw_OPENGL(vertexCount, startVertex);
+#elif defined (CGL_RHI_METAL)
+        Draw_METAL(vertexCount, startVertex);
 #endif
 	}
 
@@ -239,6 +259,8 @@ namespace CGL::Graphics
 		DrawIndexed_D3D11(indexCount, startIndex, baseVertex);
 #elif defined(CGL_RHI_OPENGL)
 		DrawIndexed_OPENGL(indexCount, startIndex, baseVertex);
+#elif defined (CGL_RHI_METAL)
+        DrawIndexed_METAL(indexCount, startIndex, baseVertex);
 #endif
 	}
 }
