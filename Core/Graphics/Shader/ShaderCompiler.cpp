@@ -152,5 +152,42 @@ namespace CGL::Graphics
 		}
 	}
 
+#elif defined (CGL_RHI_METAL)
+
+    ShaderCompileResult ShaderCompiler::Compile(const ShaderSource& shader, const CompileConfig& config, METALCompileObjects& outSource)
+    {
+        ShaderCompileResult result;
+
+        if(shader.SourceData.empty())
+        {
+            result.Status  = ShaderCompileStatus::Failure;
+            result.Message = "Shader file path is empty";
+            return result;
+        }
+
+        NS::Error* ns_error{};
+
+        const auto& [library, device] = outSource;
+
+        library = std::make_unique<MTL::Library*>();
+
+        *library.get() = device->newLibrary(
+            NS::String::string(shader.SourceData.c_str(), NS::UTF8StringEncoding),
+            nullptr, &ns_error
+        );
+
+        if(!outSource.library)
+        {
+            result.Status = ShaderCompileStatus::HasWarnings;
+            result.Message = ns_error->localizedDescription()->utf8String();
+            assert(false);
+            return result;
+        }
+
+        result.Status = ShaderCompileStatus::Success;
+        result.Message = "Compiled successfully";
+        return result;
+    }
+
 #endif
 }

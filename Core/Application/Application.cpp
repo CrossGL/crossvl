@@ -1,5 +1,4 @@
 #include "Application.h"
-#include <SDL_scancode.h>
 #include <chrono>
 #include <SDL2/SDL.h>
 
@@ -10,8 +9,8 @@ namespace CGL::Core
 	bool g_isTestMode{ false };
 
 	Application::Application(std::string_view name, i32 argc, char** argv)
-		: m_name(name)
-		, m_isRunning(true)
+		: m_isRunning(true)
+		, m_name(name)
 		, m_window(nullptr)
 	{
 		// Parse command line arguments

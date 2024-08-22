@@ -1,66 +1,185 @@
 #include "Core/Graphics/Renderer.h"
 #include "Core/Graphics/RHI/Metal/METALRendererImpl.h"
-#include "Metal/MTLRenderPass.hpp"
 
 namespace CGL::Graphics
 {
+
     void Renderer::Constructor_METAL(SDL_Window* window)
     {
-         this->m_impl = new METALRendererImpl(window);
+        this->m_impl = new METALRendererImpl(window);
 
-         CGL_LOG(Renderer, Info, "Metal Renderer Initialized");
+        CGL_LOG(Renderer, Info, "Renderer Initialized");
     }
 
     void Renderer::Destructor_METAL()
     {
-         delete static_cast<METALRendererImpl*>(m_impl);
-         m_impl = nullptr;
+        delete static_cast<METALRendererImpl*>(m_impl);
+        m_impl = nullptr;
 
-         CGL_LOG(Renderer, Info, "Metal Renderer Destroyed");
+        CGL_LOG(Renderer, Info, "Renderer Destroyed");
     }
 
     void Renderer::BeginFrame_METAL()
     {
-         GetImpl()->GetPoolRef()->alloc()->init();
-         GetImpl()->SetDrawable(GetImpl()->GetMetalLayer()->nextDrawable());
+        assert(GetImpl());
 
-         GetImpl()->SetCmdBuffer(GetImpl()->GetQueue()->commandBuffer());
+        GetImpl()->InitAutoReleasePool();
 
-         const f32 r = m_clearColor[0];
-         const f32 g = m_clearColor[1];
-         const f32 b = m_clearColor[2];
-         const f32 a = m_clearColor[3];
+        GetImpl()->SetNextDrawable();
+        GetImpl()->SetCommandBuffer();
 
-         auto  rpDescriptor = MTL::RenderPassDescriptor::alloc()->init();
-         rpDescriptor->colorAttachments()->object(0)->setTexture(GetImpl()->GetDrawable()->texture());
-         rpDescriptor->colorAttachments()->object(0)->setLoadAction(MTL::LoadActionClear);
-         rpDescriptor->colorAttachments()->object(0)->setClearColor(MTL::ClearColor{ r, g, b, a });
-         rpDescriptor->colorAttachments()->object(0)->setStoreAction(MTL::StoreActionStore);
-
-         auto rCmdEncoder = GetImpl()->GetCmdBuffer()->renderCommandEncoder(rpDescriptor);
-
-         rCmdEncoder->endEncoding();
-         rpDescriptor->release();
+        GetImpl()->startEncoding(m_clearColor);
     }
 
     void Renderer::EndFrame_METAL()
     {
-         GetImpl()->GetCmdBuffer()->presentDrawable(GetImpl()->GetDrawable());
-         GetImpl()->GetCmdBuffer()->commit();
+        assert(GetImpl());
 
-         GetImpl()->GetPoolRef()->release();
+        GetImpl()->GetRenderCommandEncoder()->endEncoding();
+        GetImpl()->GetCommandBuffer()->presentDrawable(GetImpl()->GetMetalContext());
+        GetImpl()->GetCommandBuffer()->commit();
+        GetImpl()->GetAutoReleasePool()->release();
     }
 
     void Renderer::Resize_METAL(u32 width, u32 height)
     {
-         GetImpl()->GetMetalLayer()->setDrawableSize(
-              CGSize { (f32)width, (f32)height }
-         );
+        assert(GetImpl());
+
+        GetImpl()->GetMetalLayer()->setDrawableSize(
+            CGSize { (f32)width, (f32)height }
+        );
     }
 
     METALRendererImpl* Renderer::GetImpl() const
     {
-         assert(GetAPI() == RHIType::Metal);
-         return static_cast<METALRendererImpl*>(m_impl);
+        return static_cast<METALRendererImpl*>(m_impl);
+    }
+
+    void Renderer::SetRenderPipeline_METAL()
+    {
+        GetImpl()->GetRenderPipelineHandler()->CreateRenderPipelineState(GetImpl()->GetDevice());
+        GetImpl()->GetRenderCommandEncoder()->setRenderPipelineState(GetImpl()->GetRenderPipelineHandler()->GetRenderPipelineState());
+    }
+
+    void Renderer::SetPrimitiveTopology_METAL(PrimitiveType topology)
+    {
+        static constexpr std::array<MTL::PrimitiveType, 5> MTLPrimitives = {
+            MTL::PrimitiveTypeTriangle,
+            MTL::PrimitiveTypeLine,
+            MTL::PrimitiveTypePoint,
+            MTL::PrimitiveTypeTriangleStrip,
+            MTL::PrimitiveTypeLineStrip
+        };
+
+        static_assert(MTLPrimitives.size() == (size_t)PrimitiveType::COUNT);
+
+        GetImpl()->SetPrimitiveType(MTLPrimitives[size_t(topology)]);
+    }
+
+    void Renderer::SetVertexShader_METAL(const VertexShader& shader)
+    {
+        const auto rpDescriptor = GetImpl()->GetRenderPipelineHandler()->GetRenderPipelineDescriptor();
+
+        rpDescriptor->setVertexFunction(shader.Shader);
+    }
+
+    void Renderer::SetPixelShader_METAL(const PixelShader& shader)
+    {
+        const auto rpDescriptor = GetImpl()->GetRenderPipelineHandler()->GetRenderPipelineDescriptor();
+
+        rpDescriptor->setFragmentFunction(shader.Shader);
+    }
+
+    void Renderer::SetVertexBuffer_METAL(const VertexBuffer& buffer)
+    {
+        GetImpl()->GetRenderCommandEncoder()->setVertexBuffer(
+            buffer.Buffer, buffer.Offset, buffer.Index
+        );
+    }
+
+    void Renderer::SetIndexBuffer_METAL(const IndexBuffer& buffer)
+    {
+        // TODO: implement index buffer
+    }
+
+    ShaderCompileResult Renderer::CompileVertexShader_METAL(const ShaderSource& source, VertexShader* outShader)
+    {
+        assert(GetImpl() && GetImpl()->GetDevice() && outShader);
+
+        CompileConfig Config;
+
+    #ifdef CGL_BUILD_DEBUG
+        Config.Debug = true;
+        Config.Optimize = false;
+    #endif
+
+        METALCompileObjects metal_object = {
+            .device = GetImpl()->GetDevice(),
+            .library = outShader->SourceContent
+        };
+
+        ShaderCompileResult result = ShaderCompiler::Compile(source, Config, metal_object);
+
+        outShader->Shader = (*outShader->SourceContent)->newFunction(
+            NS::String::string(source.Name.c_str(), NS::StringEncoding::ASCIIStringEncoding)
+        );
+
+        return result;
+    }
+
+    ShaderCompileResult Renderer::CompilePixelShader_METAL(const ShaderSource& source, PixelShader* outShader)
+    {
+        assert(GetImpl() && GetImpl()->GetDevice() && outShader);
+
+        CompileConfig Config;
+
+    #ifdef CGL_BUILD_DEBUG
+        Config.Debug = true;
+        Config.Optimize = false;
+    #endif
+
+        METALCompileObjects metal_object = {
+            .device = GetImpl()->GetDevice(),
+            .library = outShader->SourceContent
+        };
+
+        ShaderCompileResult result = ShaderCompiler::Compile(source, Config, metal_object);
+
+
+        outShader->Shader = (*outShader->SourceContent)->newFunction(
+            NS::String::string(source.Name.c_str(), NS::StringEncoding::ASCIIStringEncoding)
+        );
+
+        return result;
+    }
+
+    VertexBuffer Renderer::CreateVertexBuffer_METAL(const BufferSource& source)
+    {
+        assert(GetImpl() && GetImpl()->GetDevice());
+
+        const u32 sourceSZ = source.TypeSize * source.Count;
+
+        return VertexBuffer {
+            .Buffer = GetImpl()->GetDevice()->newBuffer(source.Data, sourceSZ, MTL::ResourceStorageModeShared),
+            .Offset = 0,
+            .Index = 0
+        };
+    }
+
+    IndexBuffer Renderer::CreateIndexBuffer_METAL(const BufferSource& source)
+    {
+        // TODO: implement Index Buffer
+    }
+
+    void Renderer::Draw_METAL(u32 vertexCount, u32 startVertex)
+    {
+        GetImpl()->GetRenderCommandEncoder()->drawPrimitives(
+            GetImpl()->GetPrimitiveType(), startVertex, vertexCount
+        );
+    }
+
+    void Renderer::DrawIndexed_METAL(u32 indexCount, u32 startIndex, u32 baseVertex)
+    {
+        // TODO: implement indexed drawcall
     }
 }

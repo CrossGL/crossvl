@@ -1,5 +1,6 @@
 #pragma once
 
+#ifndef EXCLUDE_STDHEADERS
 #include <cassert>
 #include <string>
 #include <string_view>
@@ -12,4 +13,10 @@
 #include <utility>
 
 #include <Core/Types.h>
-#include <Core/Math/Math.h>
+#endif
+
+#if defined (CGL_RHI_METAL)
+#include "Foundation/Foundation.hpp"
+#include "QuartzCore/QuartzCore.hpp"
+#include "Metal/Metal.hpp"
+#endif

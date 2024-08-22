@@ -1,0 +1,10 @@
+
+#if defined (CGL_RHI_METAL)
+#define NS_PRIVATE_IMPLEMENTATION
+#define CA_PRIVATE_IMPLEMENTATION
+#define MTL_PRIVATE_IMPLEMENTATION
+
+#define EXCLUDE_STDHEADERS
+#include <Core/Common.h>
+
+#endif
