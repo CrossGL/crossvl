@@ -14,8 +14,8 @@ namespace CGL::Graphics
     public:
         METALPipelineHandler();
 
-        inline auto GetRenderPipelineDescriptor() const { return m_rpDescriptor; }
-        inline auto GetRenderPipelineState() const { return m_rpState; }
+        inline MTL::RenderPipelineDescriptor* GetRenderPipelineDescriptor() const { return m_rpDescriptor; }
+        inline MTL::RenderPipelineState* GetRenderPipelineState() const { return m_rpState; }
 
         void CreateRenderPipelineState(MTL::Device* gpu_device);
 

@@ -58,9 +58,7 @@ namespace CGL::Graphics
     void Renderer::SetRenderPipeline_METAL()
     {
         GetImpl()->GetRenderPipelineHandler()->CreateRenderPipelineState(GetImpl()->GetDevice());
-        GetImpl()->GetRenderCommandEncoder()->setRenderPipelineState(
-            GetImpl()->GetRenderPipelineHandler()->GetRenderPipelineState()
-        );
+        GetImpl()->GetRenderCommandEncoder()->setRenderPipelineState(GetImpl()->GetRenderPipelineHandler()->GetRenderPipelineState());
     }
 
     void Renderer::SetPrimitiveTopology_METAL(PrimitiveType topology)

@@ -23,7 +23,8 @@ namespace CGL::Graphics {
 
         m_rpState = gpu_device->newRenderPipelineState(m_rpDescriptor, &ns_error);
 
-        if(!m_rpState) {
+        if(!m_rpState) 
+	{
             CGL_LOG(METALPipelineHandler, Error, ns_error->localizedDescription()->utf8String());
             return;
         }
