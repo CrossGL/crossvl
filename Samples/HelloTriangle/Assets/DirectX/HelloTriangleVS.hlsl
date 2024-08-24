@@ -13,7 +13,7 @@ struct VS_OUTPUT
 VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output = (VS_OUTPUT)0;
-    output.Position  = float4(input.Position, 1.0);
+    output.Position  = input.Position;
     output.Color     = input.Color;
     return output;
 }
