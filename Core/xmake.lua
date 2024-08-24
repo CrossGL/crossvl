@@ -5,7 +5,7 @@ target("VisualizerCore")
 
 	set_default(false)
 	set_kind("static")
-	set_group("CrossGL")
+	set_group("CrossVL")
 
 	add_packages("libsdl", "directxmath")
 	set_options("rhi")
