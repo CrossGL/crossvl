@@ -10,7 +10,7 @@ set_languages("c17", "cxx23")
 set_defaultmode("debug")
 
 -- Project name and version
-set_project("CrossGLVisualizer")
+set_project("CrossVL")
 set_version("0.0.1")
 
 -- Enable all warnings and handle them as compilation errors
