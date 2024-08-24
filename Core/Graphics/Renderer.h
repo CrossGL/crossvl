@@ -111,18 +111,18 @@ namespace CGL::Graphics
 		void BeginFrame_METAL();
 		void EndFrame_METAL();
 		void Resize_METAL(u32 width, u32 height);
-        void SetRenderPipeline_METAL();
-        void SetPrimitiveTopology_METAL(PrimitiveType topology);
-        void SetVertexShader_METAL(const VertexShader& shader);
-        void SetPixelShader_METAL(const PixelShader& shader);
-        void SetVertexBuffer_METAL(const VertexBuffer& buffer);
-        void SetIndexBuffer_METAL(const IndexBuffer& buffer);
-        ShaderCompileResult CompileVertexShader_METAL(const ShaderSource& source, VertexShader* outShader);
-        ShaderCompileResult CompilePixelShader_METAL(const ShaderSource& source, PixelShader* outShader);
-        VertexBuffer CreateVertexBuffer_METAL(const BufferSource& source);
-        IndexBuffer CreateIndexBuffer_METAL(const BufferSource& source);
-        void Draw_METAL(u32 vertexCount, u32 startVertex = 0);
-        void DrawIndexed_METAL(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
+		void SetRenderPipeline_METAL();
+		void SetPrimitiveTopology_METAL(PrimitiveType topology);
+		void SetVertexShader_METAL(const VertexShader& shader);
+		void SetPixelShader_METAL(const PixelShader& shader);
+		void SetVertexBuffer_METAL(const VertexBuffer& buffer);
+		void SetIndexBuffer_METAL(const IndexBuffer& buffer);
+		ShaderCompileResult CompileVertexShader_METAL(const ShaderSource& source, VertexShader* outShader);
+		ShaderCompileResult CompilePixelShader_METAL(const ShaderSource& source, PixelShader* outShader);
+		VertexBuffer CreateVertexBuffer_METAL(const BufferSource& source);
+		IndexBuffer CreateIndexBuffer_METAL(const BufferSource& source);
+		void Draw_METAL(u32 vertexCount, u32 startVertex = 0);
+		void DrawIndexed_METAL(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
 		METALRendererImpl* GetImpl() const;
 #endif
 
