@@ -52,13 +52,13 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: ${{ github.workspace }}/metal-cpp
-          key: ${{ matrix.rhi }}-${{ matrix.prj }}-W${{ env.key }}-metal
+          key: ${{ matrix.rhi }}-${{ matrix.prj }}-W${{ env.key }}
           
       - name: Downloading Metal-Cpp
         if: ${{ !steps.restore-metal.outputs.cache-hit }}
         run: xmake lua ./Scripts/Macros/macOS.lua
 
-      - name: Save cached xmake dependencies
+      - name: Save cached Metal-Cpp
         if: ${{ !steps.restore-metal.outputs.cache-hit }}
         uses: actions/cache/save@v4
         with:
@@ -96,5 +96,5 @@ jobs:
         run: xmake build ${{ matrix.prj }}
 
       - name: Run tests
-        run: xmake test ${{ matrix.prj }}
+        run: xmake test ${{ matrix.prj }}/*
 
