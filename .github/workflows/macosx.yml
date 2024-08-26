@@ -47,17 +47,30 @@ jobs:
       - name: Update xmake repository
         run: xmake repo --update
 
-      - name: Retrieve dependencies hash
-        id: dep_hash
-        run: echo "hash=$(xmake l utils.ci.packageskey)" >> $GITHUB_ENV
-        shell: bash
+      - name: Restore cached Metal-Cpp
+        id: restore-metal
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ github.workspace }}/metal-cpp
+          key: ${{ matrix.rhi }}-${{ matrix.prj }}-W${{ env.key }}-metal
+          
+      - name: Downloading Metal-Cpp
+        if: ${{ !steps.restore-metal.outputs.cache-hit }}
+        run: xmake lua ./Scripts/Macros/macOS.lua
+
+      - name: Save cached xmake dependencies
+        if: ${{ !steps.restore-metal.outputs.cache-hit }}
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ github.workspace }}/metal-cpp
+          key: ${{ steps.restore-metal.outputs.cache-primary-key }}
 
       - name: Restore cached xmake dependencies
         id: restore-depcache
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
-          key: ${{ matrix.rhi }}-${{ matrix.prj }}-${{ env.hash }}-W${{ env.key }}
+          key: ${{ matrix.rhi }}-${{ matrix.prj }}-W${{ env.key }}
 
       - name: Check xmake packages directory exists
         shell: bash
@@ -83,5 +96,5 @@ jobs:
         run: xmake build ${{ matrix.prj }}
 
       - name: Run tests
-        run: xmake test ${{ matrix.prj }}/*
+        run: xmake test ${{ matrix.prj }}
 
