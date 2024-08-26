@@ -27,6 +27,7 @@ add_rules("plugin.compile_commands.autoupdate")
 
  -- Include xmake build scripts
  includes("Scripts/Options.lua")
+ includes("Scripts/Rules.lua")
  includes("Scripts/Packages.lua")
  includes("Scripts/Plugins/xmake.lua")
 

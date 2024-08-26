@@ -7,6 +7,7 @@ target("HelloTriangle")
 	set_kind("binary")
 	set_group("Samples")
 
+    add_rules("RHICompat")
 	add_packages("libsdl", "directxmath", "tinyobjloader")
 
 	add_includedirs("..", "$(projectdir)")
@@ -14,27 +15,6 @@ target("HelloTriangle")
 	add_headerfiles("**.h", { install = false })
 
 	add_deps("VisualizerCore")
-
-	-- Throw errors if trying to build using RHI for an unsupported platform
-	on_config(function (target)
-		if is_plat("macosx", "linux") then
-			if has_config("rhi") then
-				local rhi = string.upper(get_config("rhi"))
-				if rhi == "DX11" or rhi == "DX12" then
-					raise("Trying to build for " .. rhi .. " on an unsupported platform!")
-				end
-			end
-		end
-
-		if is_plat("windows", "linux") then
-			if has_config("rhi") then
-				local rhi = string.upper(get_config("rhi"))
-				if rhi == "METAL" then
-					raise("Trying to build for " .. rhi .. " on an unsupported platform!")
-				end
-			end
-		end
-	end)
 
 	-- Add RHI specific rules
 	if has_config("rhi") then
