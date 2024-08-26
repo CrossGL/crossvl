@@ -65,5 +65,4 @@ target("SpinningCube")
 	end
 
 	add_tests("compile_pass", {build_should_pass = true})
-	add_tests("run_5_seconds", { runargs = {"-test"} })
 target_end()

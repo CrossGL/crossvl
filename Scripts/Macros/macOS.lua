@@ -4,7 +4,6 @@ function main(argv)
     )
 
     os.exec("unzip ./metalcpp.zip -d .")
-    os.exec("clear")
 
     print("downloaded metal-cpp")
     

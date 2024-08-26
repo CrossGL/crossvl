@@ -63,4 +63,5 @@ elseif is_mode("release") then
 end
 
  -- include xmake projects
-includes("**/xmake.lua")
+includes("Core/xmake.lua")
+includes("Samples/**/xmake.lua")
