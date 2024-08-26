@@ -6,8 +6,8 @@ target("%PROJECT_NAME%")
 	set_default(true)
 	set_kind("binary")
 	set_group("Samples")
-	
-	add_packages("libsdl")
+
+	add_packages("libsdl", "tinyobjloader")
 
 	add_includedirs("..", "$(projectdir)")
 	add_files("**.cpp")

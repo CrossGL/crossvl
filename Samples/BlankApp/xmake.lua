@@ -7,7 +7,7 @@ target("BlankApp")
 	set_kind("binary")
 	set_group("Samples")
 
-	add_packages("libsdl", "directxmath")
+	add_packages("libsdl", "directxmath", "tinyobjloader")
 
 	add_includedirs("..", "$(projectdir)")
 	add_files("**.cpp")
@@ -35,11 +35,11 @@ target("BlankApp")
 			end
 		end
 	end)
-	
+
 	if has_config("rhi") then
 		local rhi = string.upper(get_config("rhi"))
 		add_links("VisualizerCore" .. "_" .. rhi)
-		
+
 		if rhi == "OPENGL" then
 			add_packages("glew")
 			if is_plat("windows") then

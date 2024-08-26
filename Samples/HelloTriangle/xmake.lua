@@ -6,8 +6,8 @@ target("HelloTriangle")
 	set_default(true)
 	set_kind("binary")
 	set_group("Samples")
-	
-	add_packages("libsdl", "directxmath")
+
+	add_packages("libsdl", "directxmath", "tinyobjloader")
 
 	add_includedirs("..", "$(projectdir)")
 	add_files("**.cpp")

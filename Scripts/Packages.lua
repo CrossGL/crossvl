@@ -35,3 +35,5 @@ end
 if is_os("linux") then
 	add_requires("ncurses", { debug = use_package_debug })
 end
+
+add_requires("tinyobjloader")

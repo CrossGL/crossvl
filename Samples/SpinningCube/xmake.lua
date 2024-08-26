@@ -6,13 +6,13 @@ target("SpinningCube")
 	set_default(true)
 	set_kind("binary")
 	set_group("Samples")
-	
-	add_packages("libsdl", "directxmath")
+
+	add_packages("libsdl", "directxmath", "tinyobjloader")
 
 	add_includedirs("..", "$(projectdir)")
 	add_files("**.cpp")
 	add_headerfiles("**.h", { install = false })
-	
+
 	add_deps("VisualizerCore")
 
 	-- Throw errors if trying to build using RHI for an unsupported platform
