@@ -178,7 +178,7 @@ namespace CGL
 	{
 		GetRenderer()->SetPrimitiveTopology(Graphics::PrimitiveType::TriangleList);
 		GetRenderer()->SetMaterial(m_material);
-		GetRenderer()->SetContantBuffer(Graphics::ShaderType::Vertex, 0, m_constantBuffer);
+		GetRenderer()->SetConstantBuffer(Graphics::ShaderType::Vertex, 0, m_constantBuffer);
 		GetRenderer()->SetVertexBuffer(m_vertexBuffer);
 		GetRenderer()->SetIndexBuffer(m_indexBuffer);
 
