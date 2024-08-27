@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        prj: [ BlankApp, HelloTriangle, SpinningCube ]
+        prj: [ BlankApp, HelloTriangle, SpinningCube, ModelLoading ]
         rhi: [ dx11, opengl ] # TODO: Add vulkan, dx12
 
     steps:
