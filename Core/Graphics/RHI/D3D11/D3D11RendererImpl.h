@@ -21,6 +21,7 @@ namespace CGL::Graphics
 		inline IDXGISwapChain* GetSwapChain() const { return m_swapChain.Get(); }
 		inline ID3D11RenderTargetView* GetBackBuffer() const { return m_backBuffer.Get(); }
 		inline ID3D11Texture2D* GetBackBufferTexture() const { return m_backBufferTexture.Get(); }
+		inline ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
 		inline const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
 	private:
@@ -39,5 +40,7 @@ namespace CGL::Graphics
 		ComPtr<IDXGISwapChain>         m_swapChain;
 		ComPtr<ID3D11RenderTargetView> m_backBuffer;
 		ComPtr<ID3D11Texture2D>        m_backBufferTexture;
+		ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+		ComPtr<ID3D11Texture2D>        m_depthStencilTexture;
 	};
 }

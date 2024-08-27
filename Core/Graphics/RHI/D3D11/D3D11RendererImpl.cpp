@@ -54,12 +54,32 @@ namespace CGL::Graphics
 		
 		// Create render target view
 		DXCall(hr = m_device->CreateRenderTargetView(m_backBufferTexture.Get(), nullptr, &m_backBuffer));
+
+		// Create depth/stencil buffer
+		D3D11_TEXTURE2D_DESC depthStencilDesc{};
+
+		depthStencilDesc.Width              = width;
+		depthStencilDesc.Height             = height;
+		depthStencilDesc.MipLevels          = 1;
+		depthStencilDesc.ArraySize          = 1;
+		depthStencilDesc.Format             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilDesc.SampleDesc.Count   = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+		depthStencilDesc.Usage              = D3D11_USAGE_DEFAULT;
+		depthStencilDesc.BindFlags          = D3D11_BIND_DEPTH_STENCIL;
+		depthStencilDesc.CPUAccessFlags     = 0;
+		depthStencilDesc.MiscFlags          = 0;
+
+		m_device->CreateTexture2D(&depthStencilDesc, NULL, &m_depthStencilTexture);
+		m_device->CreateDepthStencilView(m_depthStencilTexture.Get(), NULL, &m_depthStencilView);
 	}
 
 	void Graphics::D3D11RendererImpl::ReleaseSizeDependentResources()
 	{
 		m_backBufferTexture.Reset();
 		m_backBuffer.Reset();
+		m_depthStencilTexture.Reset();
+		m_depthStencilView.Reset();
 	}
 
 	void D3D11RendererImpl::Init()
