@@ -23,7 +23,7 @@ rule_end()
 
 -- Rule to copy obj files
 rule("CopyOBJ")
-    before_build(function (target)
+    after_build(function (target)
         cprint("Copying .obj files to build directory...")
         local assetdir = path.join(target:scriptdir(), "Assets", "**.obj")
         local copydir = path.join(path.directory(target:targetfile()), "Models/")
