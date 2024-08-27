@@ -41,6 +41,7 @@ namespace CGL::Core
 		CGL_LOG(CoreApp, Trace, "Running application");
 
 		auto startTime = std::chrono::steady_clock::now();
+		auto lastFrameTime = startTime;
 		OnInit();
 
 		SDL_Event e;
@@ -65,7 +66,11 @@ namespace CGL::Core
 				}
 			}
 
-			OnUpdate(e);
+			// Calculate deltatime
+			auto currentFrameTime = std::chrono::steady_clock::now();
+			f32 deltaTime = std::chrono::duration<f32>(currentFrameTime - lastFrameTime).count();
+			
+			OnUpdate(e, deltaTime);
 
 			// Call begin and end frame before calling render itself
 			m_renderer->BeginFrame();
@@ -83,6 +88,8 @@ namespace CGL::Core
 					m_isRunning = false;
 				}
 			}
+
+			lastFrameTime = currentFrameTime;
 		}
 
 		OnShutdown();

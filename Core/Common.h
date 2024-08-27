@@ -11,6 +11,8 @@
 #include <vector>
 #include <array>
 #include <utility>
+#include <typeindex>
+#include <cstddef>
 
 #include <Core/Types.h>
 #endif

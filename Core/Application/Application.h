@@ -22,7 +22,7 @@ namespace CGL::Core
 
 	protected:
 		virtual bool OnInit();
-		virtual void OnUpdate(const SDL_Event& e) = 0;
+		virtual void OnUpdate(const SDL_Event& e, f32 deltaTime) = 0;
 		virtual void OnRender() = 0;
 		virtual void OnShutdown();
 		virtual void OnResize(u32 width, u32 height);

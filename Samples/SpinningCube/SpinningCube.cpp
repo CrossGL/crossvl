@@ -1,5 +1,14 @@
 #include "SpinningCube.h"
 #include <Core/Application/AssetFinder.h>
+
+#if defined(CGL_RHI_OPENGL) || defined(CGL_RHI_VULKAN)
+#define CGL_UPLOAD_MATRIX(mat) mat
+#else
+#define CGL_UPLOAD_MATRIX(mat) mat.Transpose()
+#endif
+
+
+
 namespace CGL
 {
 	CGL_DEFINE_LOG_CATEGORY(SpinningCube);
@@ -115,10 +124,11 @@ namespace CGL
 		vbs.Type       = Graphics::BufferType::Vertex;
 		vbs.TypeSize   = sizeof(decltype(vertices)::value_type);
 		vbs.Count      = u32(vertices.size());
+		vbs.VertexType = typeid(decltype(vertices)::value_type);
 		m_vertexBuffer = GetRenderer()->CreateVertexBuffer(vbs);
 
 		// Define cube indices
-		constexpr std::array<u16, 36> indices =
+		constexpr std::array<u32, 36> indices =
 		{
 			3,1,0,
 			2,1,3,
@@ -161,14 +171,14 @@ namespace CGL
 	}
 
 	f32 time = 0.0f;
-	void SpinningCube::OnUpdate([[maybe_unused]] const SDL_Event& e)
+	void SpinningCube::OnUpdate([[maybe_unused]] const SDL_Event& e,[[maybe_unused]] f32 deltaTime)
 	{
-		time += 0.0001f;
+		time += deltaTime;
 		FrameData data
 		{
-			.World      = SM::Matrix::CreateRotationY(time),
-			.View       = m_camera.GetViewMatrix().Transpose(),
-			.Projection = m_camera.GetProjectionMatrix().Transpose()
+			.World      = CGL_UPLOAD_MATRIX(SM::Matrix::CreateRotationY(time).Transpose()),
+			.View       = CGL_UPLOAD_MATRIX(m_camera.GetViewMatrix()),
+			.Projection = CGL_UPLOAD_MATRIX(m_camera.GetProjectionMatrix())
 		};
 
 		GetRenderer()->SetConstantBufferData(m_constantBuffer, data);

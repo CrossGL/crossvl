@@ -6,7 +6,7 @@ namespace CGL::Graphics
 {
     struct OPENGLVertexBuffer
     {
-        u32 Stride;
+        u32 Size;
         u32 Offset;
         GLuint VBO;
         GLuint VAO;

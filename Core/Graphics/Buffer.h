@@ -40,6 +40,7 @@ namespace CGL::Graphics
 		u32 TypeSize      = 0;
 		u32 Count         = 0;
 		void* Data        = nullptr;
+		std::type_index VertexType = typeid(void);
 	};
 
 #if defined(CGL_RHI_DX11)
