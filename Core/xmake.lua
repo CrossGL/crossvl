@@ -7,7 +7,7 @@ target("VisualizerCore")
 	set_kind("static")
 	set_group("CrossVL")
 
-	add_packages("libsdl", "directxmath")
+	add_packages("libsdl", "directxmath", "tinyobjloader")
 	set_options("rhi")
 
 	add_includedirs("..")

@@ -54,7 +54,7 @@ namespace CGL::Graphics
 
 		template <typename T> void CreateContantBuffer(const BufferSource& source, ConstantBuffer<T>& outBuffer);
 		template <typename T> void SetConstantBufferData(const ConstantBuffer<T>& buffer, const T& data);
-		template <typename T> void SetContantBuffer(ShaderType shaderType, u32 startSlot, const ConstantBuffer<T>& buffer);
+		template <typename T> void SetConstantBuffer(ShaderType shaderType, u32 startSlot, const ConstantBuffer<T>& buffer);
 
 		void Draw(u32 vertexCount, u32 startVertex = 0);
 		void DrawIndexed(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);

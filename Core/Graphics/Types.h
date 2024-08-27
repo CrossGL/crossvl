@@ -162,5 +162,12 @@ namespace CGL::Graphics
 			SM::Vector4 Color;
 			SM::Vector2 Texture;
 		};
+
+		struct PositionNormalTexture
+		{
+			SM::Vector4 Position;
+			SM::Vector3 Normal;
+			SM::Vector2 Texture;
+		};
 	}
 }

@@ -78,9 +78,11 @@ namespace CGL::Graphics
 		assert(impl && impl->GetContext());
 
 		auto renderTarget = impl->GetBackBuffer();
+		auto depthStencil = impl->GetDepthStencilView();
 		impl->GetContext()->RSSetViewports(1, &impl->GetViewport());
-		impl->GetContext()->OMSetRenderTargets(1, &renderTarget, nullptr);
+		impl->GetContext()->OMSetRenderTargets(1, &renderTarget, depthStencil);
 		impl->GetContext()->ClearRenderTargetView(renderTarget, m_clearColor.data());
+		impl->GetContext()->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 
 	void Renderer::EndFrame_D3D11()
@@ -386,7 +388,8 @@ namespace CGL::Graphics
 
 	void Renderer::SetConstantBufferData_D3D11(ID3D11Buffer* buffer, const void* data, size_t size)
 	{
-		assert(buffer && GetImpl() && GetImpl()->GetContext());
+		assert(buffer && "Invalid buffer");
+		assert(GetImpl() && GetImpl()->GetContext());
 
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		if (SUCCEEDED(GetImpl()->GetContext()->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))

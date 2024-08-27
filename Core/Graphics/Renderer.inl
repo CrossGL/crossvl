@@ -22,7 +22,7 @@ namespace CGL::Graphics
 #endif  
 	}
 	template <typename T> 
-	void Renderer::SetContantBuffer(ShaderType shaderType, u32 startSlot, const ConstantBuffer<T>& buffer)
+	void Renderer::SetConstantBuffer(ShaderType shaderType, u32 startSlot, const ConstantBuffer<T>& buffer)
 	{
 #if defined(CGL_RHI_DX11)
 		SetContantBuffer_D3D11(shaderType, startSlot, buffer.Buffer);
