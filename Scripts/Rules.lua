@@ -20,3 +20,18 @@ rule("RHICompat")
 		end
 	end)
 rule_end()
+
+-- Rule to copy obj files
+rule("CopyOBJ")
+    before_build(function (target)
+        cprint("Copying .obj files to build directory...")
+        local assetdir = path.join(target:scriptdir(), "Assets", "**.obj")
+        local copydir = path.join(path.directory(target:targetfile()), "Models/")
+
+        if not os.isdir(copydir) then
+            os.mkdir(copydir)
+        end
+
+        os.cp(assetdir, copydir)
+    end)
+rule_end()
