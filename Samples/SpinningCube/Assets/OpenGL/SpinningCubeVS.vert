@@ -15,9 +15,7 @@ out vec3 fragColor;
 void main()
 {
     vec4 position = vec4(inPosition, 1.0);
-    position = WorldMatrix * position;
-    position = ViewMatrix * position;
-    position = ProjMatrix * position;
+    position = ProjMatrix * ViewMatrix * WorldMatrix * position;
 
     gl_Position = position;
     fragColor = inColor;

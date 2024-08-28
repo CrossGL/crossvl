@@ -185,6 +185,19 @@ namespace CGL::Graphics
 			{
 				OPENGLEnableVertexAttributes<VertexTypes::PositionColor>();
 			}
+			else if (source.VertexType == typeid(VertexTypes::PositionTexture))
+			{
+				OPENGLEnableVertexAttributes<VertexTypes::PositionTexture>();
+			}
+			else if (source.VertexType == typeid(VertexTypes::PositionColorTexture))
+			{
+				OPENGLEnableVertexAttributes<VertexTypes::PositionColorTexture>();
+			}
+			else if (source.VertexType == typeid(VertexTypes::PositionNormalTexture))
+			{
+				OPENGLEnableVertexAttributes<VertexTypes::PositionNormalTexture>();
+			}
+
 			glBindVertexArray(0);       
 
 			return vb;

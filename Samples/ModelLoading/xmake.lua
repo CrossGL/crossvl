@@ -8,7 +8,7 @@ target("ModelLoading")
 	set_group("Samples")
 
     add_rules("RHICompat", "CopyOBJ")
-	add_packages("libsdl", "tinyobjloader")
+	add_packages("libsdl", "directxmath", "tinyobjloader")
 
 	add_includedirs("..", "$(projectdir)")
 	add_files("**.cpp")
@@ -35,7 +35,9 @@ target("ModelLoading")
 			add_files("Assets/**.hlsl")
 		elseif rhi == "VULKAN" or rhi == "OPENGL" then
 			add_rules("utils.bin2c", { extensions = { ".vert", ".frag" } })
-			add_files("Assets/**.vert", "Assets/**.frag")
+			if rhi == "OPENGL" then
+				add_files("Assets/OpenGL/**.vert", "Assets/OpenGL/**.frag")
+			end
 		elseif rhi == "METAL" then
 			add_rules("utils.bin2c", { extensions = { ".metal" } })
 			add_files("Assets/**.metal")

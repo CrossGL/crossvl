@@ -19,4 +19,7 @@ namespace CGL::Graphics
 
 	template <>
 	void OPENGLEnableVertexAttributes<VertexTypes::PositionColorTexture>();
+	
+	template <>
+	void OPENGLEnableVertexAttributes<VertexTypes::PositionNormalTexture>();
 }

@@ -1,6 +1,8 @@
 #include "Mesh.h"
 #define TINYOBJLOADER_IMPLEMENTATION
+#define NULL nullptr
 #include <tiny_obj_loader.h>
+#undef NULL
 
 namespace CGL::Graphics
 {
