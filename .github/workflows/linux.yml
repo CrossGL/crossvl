@@ -32,7 +32,7 @@ jobs:
         shell: bash
 
       - name: installing OpenGL
-        run: apt install libgl-dev
+        run: sudo apt-get install -y libgl-dev
 
       - name: Checkout repository
         uses: actions/checkout@v4
