@@ -47,17 +47,12 @@ jobs:
       - name: Update xmake repository
         run: xmake repo --update
 
-      - name: Retrieve dependencies hash
-        id: dep_hash
-        run: echo "hash=$(xmake l utils.ci.packageskey)" >> $GITHUB_ENV
-        shell: bash
-
       - name: Restore cached xmake dependencies
         id: restore-depcache
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
-          key: ${{ matrix.rhi }}-${{ matrix.prj }}-${{ env.hash }}-W${{ env.key }}
+          key: ${{ matrix.rhi }}-${{ matrix.prj }}-W${{ env.key }}
 
       - name: Check xmake packages directory exists
         shell: bash
