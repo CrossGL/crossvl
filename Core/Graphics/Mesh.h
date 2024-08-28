@@ -10,8 +10,8 @@ namespace CGL::Graphics
 
 	struct MeshData
 	{
-		VertexBuffer VertexBuffer;
-		IndexBuffer IndexBuffer;
+		VertexBuffer VBuffer;
+		IndexBuffer IBuffer;
 	};
 
 

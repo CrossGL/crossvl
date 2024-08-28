@@ -1,6 +1,12 @@
 #include "ModelLoading.h"
 #include <Core/Application/AssetFinder.h>
 
+#if defined(CGL_RHI_OPENGL) || defined(CGL_RHI_VULKAN)
+	#define CGL_UPLOAD_MATRIX(mat) mat
+#else
+	#define CGL_UPLOAD_MATRIX(mat) mat.Transpose()
+#endif
+
 namespace CGL
 {
 	CGL_DEFINE_LOG_CATEGORY(ModelLoading);
@@ -8,14 +14,18 @@ namespace CGL
 	static constexpr byte s_vertexShader[] =
 	{
 #if defined(CGL_RHI_DX11)
-		#include "ModelLoadingVS.hlsl.h"		
+		#include "ModelLoadingVS.hlsl.h"	
+#elif defined(CGL_RHI_OPENGL)
+		#include "ModelLoadingVS.vert.h"
 #endif
 	};
 
 	static constexpr byte s_pixelShader[] =
 	{
 #if defined(CGL_RHI_DX11)
-		#include "ModelLoadingPS.hlsl.h"		
+		#include "ModelLoadingPS.hlsl.h"	
+#elif defined(CGL_RHI_OPENGL)
+		#include "ModelLoadingPS.frag.h"
 #endif	
 	};
 
@@ -94,7 +104,8 @@ namespace CGL
 			vbs.Type              = Graphics::BufferType::Vertex;
 			vbs.TypeSize          = sizeof(decltype(vb)::value_type);
 			vbs.Count             = u32(vb.size());
-			meshData.VertexBuffer = GetRenderer()->CreateVertexBuffer(vbs);
+			vbs.VertexType = typeid(decltype(vb)::value_type);
+			meshData.VBuffer = GetRenderer()->CreateVertexBuffer(vbs);
 
 			// Create index buffer
 			Graphics::BufferSource ibs;			
@@ -102,7 +113,7 @@ namespace CGL
 			ibs.Type             = Graphics::BufferType::Index;
 			ibs.TypeSize         = sizeof(u32);
 			ibs.Count            = u32(indices.size());
-			meshData.IndexBuffer = GetRenderer()->CreateIndexBuffer(ibs);
+			meshData.IBuffer = GetRenderer()->CreateIndexBuffer(ibs);
 		}
 
 		// Create constant buffer
@@ -122,14 +133,14 @@ namespace CGL
 	}
 
 	f32 time = 0.0f;
-	void ModelLoading::OnUpdate([[maybe_unused]] const SDL_Event& e)
+	void ModelLoading::OnUpdate([[maybe_unused]] const SDL_Event& e, f32 deltaTime)
 	{
-		time += 0.0001f;
+		time += deltaTime;
 		FrameData data
 		{
-			.World = SM::Matrix::CreateRotationY(time),
-			.View = m_camera.GetViewMatrix().Transpose(),
-			.Projection = m_camera.GetProjectionMatrix().Transpose()
+			.World = CGL_UPLOAD_MATRIX(SM::Matrix::CreateRotationY(time).Transpose()),
+			.View = CGL_UPLOAD_MATRIX(m_camera.GetViewMatrix()),
+			.Projection = CGL_UPLOAD_MATRIX(m_camera.GetProjectionMatrix())
 		};
 
 		GetRenderer()->SetConstantBufferData(m_constantBuffer, data);
@@ -144,10 +155,10 @@ namespace CGL
 		for (auto& subMesh : m_mesh.SubMeshes)
 		{
 			auto& meshData = subMesh.GetMeshData();
-			GetRenderer()->SetVertexBuffer(meshData.VertexBuffer);
-			GetRenderer()->SetIndexBuffer(meshData.IndexBuffer);
+			GetRenderer()->SetVertexBuffer(meshData.VBuffer);
+			GetRenderer()->SetIndexBuffer(meshData.IBuffer);
 
-			GetRenderer()->DrawIndexed(meshData.IndexBuffer.IndicesCount);
+			GetRenderer()->DrawIndexed(meshData.IBuffer.IndicesCount);
 		}
 	}
 

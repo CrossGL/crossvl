@@ -8,18 +8,20 @@ layout(std140, binding = 0) uniform Matrices
 };
 
 layout(location = 0) in vec3 inPosition;
-layout(location = 1) in vec3 inColor;
+layout(location = 1) in vec3 inNormal;
+layout(location = 2) in vec3 inColor;
 
-out vec3 fragColor;
+out vec3 vColor;
+out vec3 vNormal;
 
 void main()
 {
     vec4 position = vec4(inPosition, 1.0);
-
     position = WorldMatrix * position;
     position = ViewMatrix * position;
     position = ProjMatrix * position;
 
     gl_Position = position;
-    fragColor = inColor;
+    vNormal = inNormal;
+    vColor = inColor;
 }
