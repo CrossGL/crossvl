@@ -18,7 +18,7 @@ namespace CGL::Graphics
 #if defined(CGL_RHI_DX11)
 		SetConstantBufferData_D3D11(buffer.Buffer.Get(), static_cast<const void*>(&data), sizeof(T));
 #elif defined(CGL_RHI_OPENGL)
-		SetConstantBufferData_OPENGL(buffer.Buffer.Get(), static_cast<const void*>(&data), sizeof(T));
+		SetConstantBufferData_OPENGL(buffer.Buffer, static_cast<const void*>(&data), sizeof(T));	
 #endif  
 	}
 	template <typename T> 

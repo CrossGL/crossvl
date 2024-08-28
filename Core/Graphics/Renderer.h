@@ -97,7 +97,7 @@ namespace CGL::Graphics
 		ShaderCompileResult CompilePixelShader_OPENGL(const ShaderSource& source, PixelShader* outShader);
 		void LinkShaders_OPENGL(Material* material);
 		void CreateConstantBuffer_OPENGL(const BufferSource& source, GLuint& outBuffer);
-		void SetConstantBufferData_OPENGL(GLuint* buffer, const void* data, size_t size);
+		void SetConstantBufferData_OPENGL(const GLuint& buffer, const void* data, size_t size);
 		void SetConstantBuffer_OPENGL(ShaderType type, u32 startSlot, const GLuint& buffer);
 		VertexBuffer CreateVertexBuffer_OPENGL(const BufferSource& source);
 		IndexBuffer CreateIndexBuffer_OPENGL(const BufferSource& source);

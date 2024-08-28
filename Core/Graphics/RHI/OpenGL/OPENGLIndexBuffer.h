@@ -5,7 +5,8 @@ namespace CGL::Graphics
 {
 	struct OPENGLIndexBuffer
 	{
-		u32 Stride;
+		u32 IndicesCount;
+		u32 Size;
 		GLuint EBO;
 	};
 } // namespace CGL::Graphics

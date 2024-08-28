@@ -1,5 +1,6 @@
 #include <Core/Graphics/Renderer.h>
 #include <Core/Graphics/RHI/OpenGL/OPENGLRendererImpl.h>
+#include <Core/Graphics/RHI/OpenGL/OPENGLVertexAttributes.h>
 
 namespace CGL::Graphics
 {
@@ -50,7 +51,8 @@ namespace CGL::Graphics
     void Renderer::BeginFrame_OPENGL()
     {
 			glClearDepth(1.0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);        
+			glClearColor(m_clearColor[0], m_clearColor[1], m_clearColor[2], m_clearColor[3]);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
     
     void Renderer::EndFrame_OPENGL()
@@ -59,47 +61,46 @@ namespace CGL::Graphics
     }
 
     void Renderer::Resize_OPENGL(u32 width, u32 height)
-		{
+	{
 			glViewport(0, 0, width, height);
-		}
+	}
 
-		void Renderer::SetPrimitiveTopology_OPENGL(PrimitiveType topology)
-		{
+	void Renderer::SetPrimitiveTopology_OPENGL(PrimitiveType topology)
+	{
 			assert(GetImpl());
 			GetImpl()->SetPrimitive(Mapping::PrimitiveTopology[size_t(topology)]);
-		}
+	}
 
-		void Renderer::SetVertexShader_OPENGL([[maybe_unused]] const VertexShader& shader)
-		{
+	void Renderer::SetVertexShader_OPENGL([[maybe_unused]] const VertexShader& shader)
+	{
 			// This function is currently empty because shader creation and compilation are handled
 			// by separate functions. The SetVertexShader function will be implemented to switch to 
 			// an active vertex shader for each frame as needed.
 			assert(GetImpl());
-		}
+	}
 
-		void Renderer::SetPixelShader_OPENGL( [[maybe_unused]] const PixelShader& shader)
-		{
+	void Renderer::SetPixelShader_OPENGL( [[maybe_unused]] const PixelShader& shader)
+	{
 			// This function is currently empty because shader creation and compilation are handled
 			// by separate functions. The SetPixelShader function will be implemented to switch to 
 			// an active pixel shader for each frame as needed.
 			assert(GetImpl() );
-		}
+	}
 
-		void Renderer::SetVertexBuffer_OPENGL(const VertexBuffer& buffer)
-		{
+	void Renderer::SetVertexBuffer_OPENGL(const VertexBuffer& buffer)
+	{
 			assert(GetImpl());
 			glBindVertexArray(buffer.VAO);
-		}
+	}
 
-		void Renderer::SetIndexBuffer_OPENGL([[maybe_unused]] const IndexBuffer& buffer)
-		{
-			// This function is currently empty. The implementation will involve binding the index buffer
-			// object. As more Samples are implemented this function will be implemented asap.
+	void Renderer::SetIndexBuffer_OPENGL( const IndexBuffer& buffer)
+	{
 			assert(GetImpl());
-		}
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer.EBO);
+	}
 
-		ShaderCompileResult Renderer::CompileVertexShader_OPENGL(const ShaderSource& source, VertexShader* outShader)
-		{
+	ShaderCompileResult Renderer::CompileVertexShader_OPENGL(const ShaderSource& source, VertexShader* outShader)
+	{
 			assert(GetImpl() && outShader);
 
 			CompileConfig cfg{};
@@ -116,10 +117,10 @@ namespace CGL::Graphics
 			}
 
 			return result;
-		}
+	}
 
-		ShaderCompileResult Renderer::CompilePixelShader_OPENGL(const ShaderSource& source, PixelShader* outShader)
-		{
+	ShaderCompileResult Renderer::CompilePixelShader_OPENGL(const ShaderSource& source, PixelShader* outShader)
+	{
 			assert(GetImpl() && outShader);
 
 			CompileConfig cfg{};
@@ -136,10 +137,10 @@ namespace CGL::Graphics
 			}
 
 			return result;
-		}
+	}
 
-		void Renderer::LinkShaders_OPENGL(Material* material)
-		{
+	void Renderer::LinkShaders_OPENGL(Material* material)
+	{
 			material->m_id = glCreateProgram();
 			glAttachShader(material->m_id, material->GetVertexShader()->Shader.VertexShader);
 			glAttachShader(material->m_id, material->GetPixelShader()->Shader.PixelShader);
@@ -160,67 +161,91 @@ namespace CGL::Graphics
 				glDeleteShader(material->GetVertexShader()->Shader.VertexShader);
 				glDeleteShader(material->GetPixelShader()->Shader.PixelShader);
 			}
-		}
+	}
 
-		VertexBuffer Renderer::CreateVertexBuffer_OPENGL(const BufferSource& source)
-		{
+	VertexBuffer Renderer::CreateVertexBuffer_OPENGL(const BufferSource& source)
+	{
 			assert(source.Type == BufferType::Vertex);
 			assert(GetImpl());
 
 			VertexBuffer vb;
-			vb.Stride = source.TypeSize * source.Count;
+			vb.Size = source.TypeSize * source.Count;
 			glGenVertexArrays(1, &vb.VAO);
 			glGenBuffers(1, &vb.VBO);
 			glBindVertexArray(vb.VAO);
 
 			glBindBuffer(GL_ARRAY_BUFFER, vb.VBO);
-			glBufferData(GL_ARRAY_BUFFER, vb.Stride, source.Data, Mapping::BufferUsage[size_t(source.Usage)]);
+			glBufferData(GL_ARRAY_BUFFER, vb.Size, source.Data, Mapping::BufferUsage[size_t(source.Usage)]);
 
-			// Position Attribute
-			glVertexAttribPointer(0, sizeof(VertexTypes::PositionColor::Position) / sizeof(float), GL_FLOAT, GL_FALSE, source.TypeSize, (void*)offsetof(Graphics::VertexTypes::PositionColor,Graphics::VertexTypes::PositionColor::Position));
-			glEnableVertexAttribArray(0);
-
-			// Color Attribute
-			glVertexAttribPointer(1, sizeof(VertexTypes::PositionColor::Color)/sizeof(float), GL_FLOAT, GL_FALSE, source.TypeSize, (void*)offsetof(Graphics::VertexTypes::PositionColor, Graphics::VertexTypes::PositionColor::Color));
-			glEnableVertexAttribArray(1);
-
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			if (source.VertexType == typeid(VertexTypes::Position))
+			{
+				OPENGLEnableVertexAttributes<VertexTypes::Position>();
+			}
+			else if (source.VertexType == typeid(VertexTypes::PositionColor))
+			{
+				OPENGLEnableVertexAttributes<VertexTypes::PositionColor>();
+			}
 			glBindVertexArray(0);       
 
 			return vb;
-		}
+	}
 
-		IndexBuffer Renderer::CreateIndexBuffer_OPENGL( [[maybe_unused]] const BufferSource& source)
-		{
+	IndexBuffer Renderer::CreateIndexBuffer_OPENGL(const BufferSource& source)
+	{
 			assert(source.Type == BufferType::Index);
 			assert(GetImpl());
 
 			IndexBuffer ib;
-			ib.Stride = source.TypeSize * source.Count;
+			ib.Size = source.TypeSize * source.Count;
+			ib.IndicesCount = source.Count;
+
 			glGenBuffers(1, &ib.EBO);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib.EBO);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, ib.Stride, source.Data, Mapping::BufferUsage[size_t(source.Usage)]);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, ib.Size, source.Data, Mapping::BufferUsage[size_t(source.Usage)]);
 
 			return ib;
-		}
+	}
 
-		void Renderer::CreateConstantBuffer_OPENGL([[maybe_unused]] const BufferSource& source, [[maybe_unused]] GLuint& buffer){}
+	void Renderer::CreateConstantBuffer_OPENGL(const BufferSource& source, GLuint& outBuffer)
+	{
+			assert(source.Type == BufferType::Constant);
+			assert(GetImpl());
 
-		void Renderer::SetConstantBufferData_OPENGL([[maybe_unused]] GLuint* buffer, [[maybe_unused]] const void* data, [[maybe_unused]] size_t size){}
+			glGenBuffers(1, &outBuffer);
 
-		void Renderer::SetConstantBuffer_OPENGL([[maybe_unused]] ShaderType type, [[maybe_unused]] u32 startSlot, [[maybe_unused]] const GLuint& buffer){}
+			glBindBuffer(GL_UNIFORM_BUFFER, outBuffer);
+			glBufferData(GL_UNIFORM_BUFFER, source.TypeSize, nullptr, Mapping::BufferUsage[size_t(source.Usage)]);
+			glBindBufferBase(GL_UNIFORM_BUFFER, 0, outBuffer);
+	}
 
-		void Renderer::Draw_OPENGL(u32 vertexCount, u32 startVertex)
-		{
+	void Renderer::SetConstantBufferData_OPENGL(const GLuint& buffer, const void* data, size_t size)
+	{
+			assert(buffer);
+			glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+			
+			glBufferSubData(GL_UNIFORM_BUFFER, 0, size, data);
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+	void Renderer::SetConstantBuffer_OPENGL([[maybe_unused]] ShaderType type, [[maybe_unused]] u32 startSlot, [[maybe_unused]] const GLuint& buffer)
+	{
+			// This function is currently empty because uniform buffer binding is managed directly
+			// by the shader's 'binding' layout qualifier. If runtime shader switching or dynamic
+			// buffer management is needed, this function will handle the necessary binding logic.
+			assert(buffer);
+	}
+
+	void Renderer::Draw_OPENGL(u32 vertexCount, u32 startVertex)
+	{
 			assert(GetImpl());
 			glDrawArrays(GetImpl()->GetPrimitive(), startVertex, vertexCount);
-		}
+	}
 
-		void Renderer::DrawIndexed_OPENGL([[maybe_unused]] u32 indexCount, [[maybe_unused]] u32 startIndex, [[maybe_unused]] u32 baseVertex)
-		{
+	void Renderer::DrawIndexed_OPENGL(u32 indexCount, u32 startIndex, u32 baseVertex)
+	{
 			assert(GetImpl());
 			glDrawElementsBaseVertex(GetImpl()->GetPrimitive(), indexCount, GL_UNSIGNED_INT, (void*)(startIndex * sizeof(GLuint)), baseVertex);
-		}
+	}
 
 #endif // CGL_RHI_OPENGL
 }
