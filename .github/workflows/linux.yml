@@ -31,6 +31,9 @@ jobs:
         run: echo "key=$(date +'%W')" >> $GITHUB_ENV
         shell: bash
 
+      - name: installing OpenGL
+        run: apt install libgl-dev
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
