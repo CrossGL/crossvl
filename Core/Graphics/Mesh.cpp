@@ -1,8 +1,15 @@
 #include "Mesh.h"
 #define TINYOBJLOADER_IMPLEMENTATION
-#define NULL nullptr
-#include <tiny_obj_loader.h>
-#undef NULL
+// tinyobjloader uses NULL instead of nullptr for pointers, 
+// which can cause issues on Linux and macOS. The code below 
+// temporarily redefines NULL as nullptr to ensure compatibility.
+#if defined(__linux__) || defined(__APPLE__)
+	#define NULL nullptr
+	#include <tiny_obj_loader.h>
+	#undef NULL
+#else
+	#include <tiny_obj_loader.h>
+#endif
 
 namespace CGL::Graphics
 {
