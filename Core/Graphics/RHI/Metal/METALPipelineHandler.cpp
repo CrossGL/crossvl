@@ -23,14 +23,27 @@ namespace CGL::Graphics {
 
         m_rpState = gpu_device->newRenderPipelineState(m_rpDescriptor, &ns_error);
 
-        if(!m_rpState) 
-	{
+        if(!m_rpState)
+        {
             CGL_LOG(METALPipelineHandler, Error, ns_error->localizedDescription()->utf8String());
             return;
         }
 
         CGL_LOG(METALPipelineHandler, Info, "RenderPipelineState Created");
+
+        MTL::DepthStencilDescriptor* depthStencilDescriptor = MTL::DepthStencilDescriptor::alloc()->init();
+
+        depthStencilDescriptor->setDepthWriteEnabled(true);
+        depthStencilDescriptor->setDepthCompareFunction(MTL::CompareFunction::CompareFunctionAlways);
+
+        this->m_depthStencilState = gpu_device->newDepthStencilState(depthStencilDescriptor);
+
+        CGL_LOG(METALPipelineHandler, Info, "DepthStencilState Created");
+
         m_rpDescriptor->release();
         m_rpDescriptor = nullptr;
+
+        depthStencilDescriptor->release();
+        depthStencilDescriptor = nullptr;
     }
 }

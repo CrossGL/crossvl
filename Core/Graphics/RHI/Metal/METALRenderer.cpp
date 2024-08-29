@@ -58,7 +58,14 @@ namespace CGL::Graphics
     void Renderer::SetRenderPipeline_METAL()
     {
         GetImpl()->GetRenderPipelineHandler()->CreateRenderPipelineState(GetImpl()->GetDevice());
-        GetImpl()->GetRenderCommandEncoder()->setRenderPipelineState(GetImpl()->GetRenderPipelineHandler()->GetRenderPipelineState());
+
+        const auto& rCommandEncoder = GetImpl()->GetRenderCommandEncoder();
+
+        rCommandEncoder->setFrontFacingWinding(MTL::WindingClockwise);
+        rCommandEncoder->setCullMode(MTL::CullModeBack);
+        rCommandEncoder->setTriangleFillMode(MTL::TriangleFillMode::TriangleFillModeFill);
+        rCommandEncoder->setRenderPipelineState(GetImpl()->GetRenderPipelineHandler()->GetRenderPipelineState());
+        rCommandEncoder->setDepthStencilState(GetImpl()->GetRenderPipelineHandler()->GetDepthStencilState());
     }
 
     void Renderer::SetPrimitiveTopology_METAL(PrimitiveType topology)
@@ -99,8 +106,18 @@ namespace CGL::Graphics
 
     void Renderer::SetIndexBuffer_METAL(const IndexBuffer& buffer)
     {
-        // TODO: implement index buffer
+        GetImpl()->GetRenderPipelineHandler()->SetIndexBuffer(&const_cast<IndexBuffer&>(buffer));
     }
+
+	void Renderer::SetConstantBufferData_METAL(const MTL::Buffer* buffer, const void* data, size_t size)
+	{
+	    memcpy(const_cast<MTL::Buffer*>(buffer)->contents(), data, size);
+	}
+
+	void Renderer::SetConstantBuffer_METAL([[maybe_unused]] ShaderType type, [[maybe_unused]] u32 startSlot, const MTL::Buffer* buffer)
+	{
+	    GetImpl()->GetRenderCommandEncoder()->setVertexBuffer(buffer, 0, 1);
+	}
 
     ShaderCompileResult Renderer::CompileVertexShader_METAL(const ShaderSource& source, VertexShader* outShader)
     {
@@ -168,7 +185,20 @@ namespace CGL::Graphics
 
     IndexBuffer Renderer::CreateIndexBuffer_METAL(const BufferSource& source)
     {
-        // TODO: implement Index Buffer
+        assert(GetImpl() && GetImpl()->GetDevice());
+
+        const u32 sourceSZ = source.TypeSize * source.Count;
+
+        return IndexBuffer {
+            .Buffer = GetImpl()->GetDevice()->newBuffer(source.Data, sourceSZ, MTL::ResourceStorageModeShared),
+            .Format = (source.TypeSize == sizeof(u16) ? MTL::IndexTypeUInt16 : MTL::IndexTypeUInt32),
+            .IndicesCount = source.Count
+        };
+    }
+
+    void Renderer::CreateConstantBuffer_METAL(const BufferSource& source, MTL::Buffer** outBuffer)
+    {
+        *outBuffer = GetImpl()->GetDevice()->newBuffer(source.TypeSize, MTL::ResourceStorageModeShared);
     }
 
     void Renderer::Draw_METAL(u32 vertexCount, u32 startVertex)
@@ -178,8 +208,12 @@ namespace CGL::Graphics
         );
     }
 
-    void Renderer::DrawIndexed_METAL(u32 indexCount, u32 startIndex, u32 baseVertex)
+    void Renderer::DrawIndexed_METAL(u32 indexCount, [[maybe_unused]] u32 startIndex, [[maybe_unused]] u32 baseVertex)
     {
-        // TODO: implement indexed drawcall
+        const METALIndexBuffer* IndexBuffer = GetImpl()->GetRenderPipelineHandler()->GetIndexBuffer();
+
+        GetImpl()->GetRenderCommandEncoder()->drawIndexedPrimitives(
+            GetImpl()->GetPrimitiveType(), indexCount, IndexBuffer->Format, IndexBuffer->Buffer, 0
+        );
     }
 }
