@@ -3,8 +3,8 @@
 #include "Metal/MTLDevice.hpp"
 #include "Metal/MTLRenderPipeline.hpp"
 
-#include "Core/Graphics/Buffer.h"
-#include "Core/Logging/Log.h"
+#include <Core/Graphics/Buffer.h>
+#include <Core/Logging/Log.h>
 
 namespace CGL::Graphics
 {
