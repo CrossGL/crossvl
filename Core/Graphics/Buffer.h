@@ -2,7 +2,6 @@
 
 #include <Core/Graphics/Types.h>
 #include <Core/Types.h>
-
 #include <typeindex>
 
 #if defined(CGL_RHI_DX11)
