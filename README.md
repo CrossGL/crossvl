@@ -10,7 +10,7 @@ Tool for loading and testing transpiled shader files.
 |----------|---------------|-----------------|-------------|---------------|-----------------|
 | **Windows**  | In Progress   | Not Implemented | In Progress | Not Supported | Not Implemented |
 | **Linux**    | Not Supported | Not Supported   | In Progress | Not Supported | Not Implemented |
-| **MacOSX**   | Not Supported | Not Supported   | In Progress | In Progress   | Not Implemented |
+| **MacOSX**   | Not Supported | Not Supported   | Not Supported | In Progress   | Not Implemented |
 
 # Build Status
 [![Windows](https://github.com/CrossGL/visualizer/actions/workflows/windows.yml/badge.svg?branch=main)](https://github.com/CrossGL/visualizer/actions/workflows/windows.yml)
@@ -110,6 +110,9 @@ xmake project -k cmakelists
 
 This will generate the CMakeLists.txt in the root folder
 
+# Example Usage
+
+To test your own `.obj` models, place the model file in the `Samples/ModelLoading/Assets/` directory. Then, update the filename in `ModelLoading.cpp` to match your `.obj` file.
 
 # Contributing
 
