@@ -121,6 +121,9 @@ namespace CGL::Graphics
 		ShaderCompileResult CompilePixelShader_METAL(const ShaderSource& source, PixelShader* outShader);
 		VertexBuffer CreateVertexBuffer_METAL(const BufferSource& source);
 		IndexBuffer CreateIndexBuffer_METAL(const BufferSource& source);
+		void CreateConstantBuffer_METAL(const BufferSource& source, MTL::Buffer** outBuffer);
+		void SetConstantBufferData_METAL(const MTL::Buffer* buffer, const void* data, size_t size);
+		void SetConstantBuffer_METAL(ShaderType type, u32 startSlot, const MTL::Buffer* buffer);
 		void Draw_METAL(u32 vertexCount, u32 startVertex = 0);
 		void DrawIndexed_METAL(u32 indexCount, u32 startIndex = 0, u32 baseVertex = 0);
 		METALRendererImpl* GetImpl() const;

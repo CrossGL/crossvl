@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         prj: [ BlankApp, HelloTriangle, SpinningCube, ModelLoading ]
-        rhi: [ metal, opengl ] # TODO: Add vulkan
+        rhi: [ metal ] # TODO: Add vulkan
 
     steps:
       - name: Get current date as package key

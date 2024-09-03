@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
@@ -30,6 +30,9 @@ jobs:
         id: cache_key
         run: echo "key=$(date +'%W')" >> $GITHUB_ENV
         shell: bash
+
+      - name: installing OpenGL
+        run: sudo apt-get install -y libgl-dev
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -47,17 +50,12 @@ jobs:
       - name: Update xmake repository
         run: xmake repo --update
 
-      - name: Retrieve dependencies hash
-        id: dep_hash
-        run: echo "hash=$(xmake l utils.ci.packageskey)" >> $GITHUB_ENV
-        shell: bash
-
       - name: Restore cached xmake dependencies
         id: restore-depcache
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
-          key: ${{ matrix.rhi }}-${{ matrix.prj }}-${{ env.hash }}-W${{ env.key }}
+          key: ${{ matrix.rhi }}-${{ matrix.prj }}-W${{ env.key }}
 
       - name: Check xmake packages directory exists
         shell: bash

@@ -1,7 +1,7 @@
 #include "SpinningCube.h"
 #include <Core/Application/AssetFinder.h>
 
-#if defined(CGL_RHI_OPENGL) || defined(CGL_RHI_VULKAN)
+#if defined(CGL_RHI_OPENGL) || defined(CGL_RHI_VULKAN) || defined(CGL_RHI_METAL)
 #define CGL_UPLOAD_MATRIX(mat) mat
 #else
 #define CGL_UPLOAD_MATRIX(mat) mat.Transpose()
