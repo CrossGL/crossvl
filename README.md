@@ -1,25 +1,25 @@
 <div style="display: block;" align="center">
-    <img class="only-dark" width="10%" height="10%" src="https://crossgl.github.io/_static/logo.png#gh-dark-mode-only"/>
+    <img class="only-dark" width="10%" height="10%" src="https://crossgl.github.io/_static/logo.png#gh-dark-mode-only" alt="CrossGL logo"/>
 </div>
 
 ------------------------------------------------------------------------
 
 <div style="display: block;" align="center">
-    <img class="dark-light" width="5%" >
+    <img class="dark-light" width="5%" alt="">
     <a href="https://crossgl.net/">
-        <img class="dark-light" height="5%" width="5%" src="https://github.com/samthakur587/docs2.0/blob/main/web_icon.png">
+        <img class="dark-light" height="5%" width="5%" src="https://github.com/samthakur587/docs2.0/blob/main/web_icon.png" alt="Website icon">
     </a>
-    <img class="dark-light" width="5%" >
+    <img class="dark-light" width="5%" alt="">
     <a href="https://crossgl.github.io/language.html">
-        <img class="dark-light" height="5%" width="5%" src="https://github.com/samthakur587/docs2.0/blob/main/docs.png">
+        <img class="dark-light" height="5%" width="5%" src="https://github.com/samthakur587/docs2.0/blob/main/docs.png" alt="Documentation icon">
     </a>
-    <img class="dark-light" width="5%" >
+    <img class="dark-light" width="5%" alt="">
     <a href="https://github.com/CrossGL/demos">
-        <img class="dark-light" height="5%" width="5%" src="https://github.com/samthakur587/docs2.0/blob/main/written.png">
+        <img class="dark-light" height="5%" width="5%" src="https://github.com/samthakur587/docs2.0/blob/main/written.png" alt="Demos icon">
     </a>
-    <img class="dark-light" width="5%" >
+    <img class="dark-light" width="5%" alt="">
     <a href="https://crossgl.github.io/design.html">
-        <img class="dark-light" height="5%" width="5%" src="https://github.com/samthakur587/docs2.0/blob/main/strategic-plan.png">
+        <img class="dark-light" height="5%" width="5%" src="https://github.com/samthakur587/docs2.0/blob/main/strategic-plan.png" alt="Design icon">
     </a>
 </div>
 
@@ -27,19 +27,19 @@
 
 <div style="margin-top: 10px; margin-bottom: 10px; display: block;" align="center">
     <a href="https://github.com/CrossGL/crossvl/issues">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/github/issues/CrossGL/crossvl">
+        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/github/issues/CrossGL/crossvl" alt="GitHub issues">
     </a>
     <a href="https://github.com/CrossGL/crossvl/network/members">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/github/forks/CrossGL/crossvl">
+        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/github/forks/CrossGL/crossvl" alt="GitHub forks">
     </a>
     <a href="https://github.com/CrossGL/crossvl/stargazers">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/github/stars/CrossGL/crossvl">
+        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/github/stars/CrossGL/crossvl" alt="GitHub stars">
     </a>
     <a href="https://github.com/CrossGL/crossvl/pulls">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg">
+        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome">
     </a>
     <a href="https://discord.com/invite/uyRQKXhcyW">
-        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/discord/1240998239206113330?color=blue&label=%20&logo=discord&logoColor=white">
+        <img class="dark-light" style="padding-right: 4px; padding-bottom: 4px;" src="https://img.shields.io/discord/1240998239206113330?color=blue&label=%20&logo=discord&logoColor=white" alt="Discord">
     </a>
 </div>
 <br clear="all" />
