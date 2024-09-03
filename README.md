@@ -46,12 +46,12 @@
 
 # CrossVL
 
-Tool for loading and testing transpiled shader files.
+CrossVL is an in-house tool for loading and testing transpiled shader files. The transpiled shader files are generated using [CrossTL](https://github.com/CrossGL/crosstl)
 - Metal Shaders
 - GLSL Shaders
 - HLSL Shaders
 
-  
+
 | Platform |     DX11      |      DX12       |   OpenGL    |     Metal     |     Vulkan      |
 |----------|---------------|-----------------|-------------|---------------|-----------------|
 | **Windows**  | In Progress   | Not Implemented | In Progress | Not Supported | Not Implemented |
@@ -74,7 +74,6 @@ The project is divided into two sub projects
 
 # Getting started
 
-## Building The Project
 To build the project ensure you have the following toolsets and external libraries installed.
 - [Xmake](https://xmake.io/)
 - C++23 compiler
@@ -155,9 +154,17 @@ xmake project -k cmakelists
 
 This will generate the CMakeLists.txt in the root folder
 
-# Example Usage
+# 🌈 Example Usage
 
 To test your own `.obj` models, place the model file in the `Samples/ModelLoading/Assets/` directory. Then, update the filename in `ModelLoading.cpp` to match your `.obj` file.
+
+Here `barrel.obj` model is used to show as an example, the output would look like :
+
+<p align="center">
+  <img src="Output/Output.gif" alt="animated" />
+</p>
+
+*Get the `barrel.obj` model from Output folder to test it out yourself.
 
 # Contributing
 
