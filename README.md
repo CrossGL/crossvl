@@ -44,9 +44,9 @@
 </div>
 <br clear="all" />
 
-# CrossVL
+# 🛠 CrossVL
 
-CrossVL is an in-house tool for loading and testing transpiled shader files. The transpiled shader files are generated using [CrossTL](https://github.com/CrossGL/crosstl)
+CrossVL is an in-house tool for loading and testing transpiled shader files. The transpiled shader files are generated using [CrossTL](https://github.com/CrossGL/crosstl).
 - Metal Shaders
 - GLSL Shaders
 - HLSL Shaders
@@ -58,21 +58,21 @@ CrossVL is an in-house tool for loading and testing transpiled shader files. The
 | **Linux**    | Not Supported | Not Supported   | In Progress | Not Supported | Not Implemented |
 | **MacOSX**   | Not Supported | Not Supported   | Not Supported | In Progress   | Not Implemented |
 
-# Build Status
-[![Windows](https://github.com/CrossGL/visualizer/actions/workflows/windows.yml/badge.svg?branch=main)](https://github.com/CrossGL/visualizer/actions/workflows/windows.yml)
+# 📊 Build Status
+[![Windows](https://github.com/CrossGL/crossvl/actions/workflows/windows.yml/badge.svg?branch=main)](https://github.com/CrossGL/crossvl/actions/workflows/windows.yml)
 
-[![MacOSX](https://github.com/CrossGL/visualizer/actions/workflows/macosx.yml/badge.svg)](https://github.com/CrossGL/visualizer/actions/workflows/macosx.yml)
+[![MacOSX](https://github.com/CrossGL/crossvl/actions/workflows/macosx.yml/badge.svg)](https://github.com/CrossGL/crossvl/actions/workflows/macosx.yml)
 
-[![Linux](https://github.com/CrossGL/visualizer/actions/workflows/linux.yml/badge.svg)](https://github.com/CrossGL/visualizer/actions/workflows/linux.yml)
+[![Linux](https://github.com/CrossGL/crossvl/actions/workflows/linux.yml/badge.svg)](https://github.com/CrossGL/crossvl/actions/workflows/linux.yml)
 
-# Project Structure
+# 📚 Project Structure
 
 The project is divided into two sub projects
 
 - **VisualizerCore**: Static library that contains the core functionality
 - **VisualizerApp**: Contains the platform independent GUI application that depends on the Core
 
-# Getting started
+# 📜 Getting started
 
 To build the project ensure you have the following toolsets and external libraries installed.
 - [Xmake](https://xmake.io/)
@@ -86,7 +86,7 @@ To build the project ensure you have the following toolsets and external librari
 ## Clone the repository
 
 ```
-git clone https://github.com/CrossGL/visualizer.git
+git clone https://github.com/CrossGL/crossvl.git
 ```
 
 ## Load Build Macros
@@ -166,7 +166,7 @@ Here `barrel.obj` model is used to show as an example, the output would look lik
 
 *Get the `barrel.obj` model from Output folder to test it out yourself.
 
-# Contributing
+# 🙌 Contributing
 
 When contributing to the project. Ensure the project passes the compilation test locally on your PC.
 
@@ -178,7 +178,7 @@ Where the valid platforms are:
 - linux
 - macosx
 
-This will run a series of matrix test for each valid API for that platform (e.g. for macosx it will test compilation for opengl, metal and vulkan). Make sure to test in both debug and release build configs.
+This will run a series of matrix test for each valid API for that platform (e.g. for macosx it will test compilation for metal and vulkan). Make sure to test in both debug and release build configs.
 
 The complete testing process should look as follows (using windows as example):
 ```bash
@@ -190,3 +190,21 @@ xmake rhitest -p windows
 ```
 
 The expected output should be such that all projects compile and link successfully
+
+# 🤝 Community
+
+<b> Stay connected and follow our latest updates and announcements. </b>
+
+- [Twitter](https://x.com/crossGL_)
+- [LinkedIn](https://www.linkedin.com/company/crossgl/?viewAsMember=true)
+- [Discord Channel](https://discord.com/invite/uyRQKXhcyW)
+- [YouTube](https://www.youtube.com/channel/UCxv7_flRCHp7p0fjMxVSuVQ)
+
+<b>If you like our work, please help us by starring the repo 🌟</b>
+<br>
+<b>Feel free to leave us feedback on Discord if you have any suggestions.</b>
+<br>
+<b>See you there!</b>
+<br>
+
+<br>
